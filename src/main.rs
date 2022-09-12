@@ -1,7 +1,7 @@
 use clap::Parser;
 
 mod file;
-use self::file::open;
+use self::file::read;
 
 #[derive(Parser)]
 #[clap(disable_help_flag = true)]
@@ -11,6 +11,6 @@ struct Args {
 
 fn main() {
   let args = Args::parse();
-  let content = open(&args.path);
+  let content = read(&args.path);
   println!("{}", content);
 }
