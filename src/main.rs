@@ -11,7 +11,6 @@ struct Args {
 
 fn main() {
   let args = Args::parse();
-  println!("{}", args.path);
-  let a = open(&args.path);
-  println!("{:?}", a);
+  let content = open(&args.path);
+  println!("{}", content);
 }
