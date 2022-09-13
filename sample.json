@@ -1,6 +1,6 @@
 {
   "a": "a-value",
-  "b": "b-value",
+  "b": 100,
   "c": {
     "ckey1": "ckey1-value",
     "ckey2": "ckey2-value"
