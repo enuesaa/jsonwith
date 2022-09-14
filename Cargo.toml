@@ -1,7 +1,10 @@
 [package]
-name = "rust-json2yaml-practice"
+name = "json2any"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 clap = { version = "3.2.20", features = ["derive"] }
+
+[[bin]]
+name = "json2yaml"

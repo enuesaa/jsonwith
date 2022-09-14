@@ -9,6 +9,7 @@ fn judge_strtype (val: &char) -> &str {
   }
 }
 
+// expecter
 pub fn parse (val: &str) {
   for i in val.chars() {
     let strtype = judge_strtype(&i);
