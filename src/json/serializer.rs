@@ -2,7 +2,7 @@ use crate::json::parts::Parts;
 
 #[derive(Debug)]
 struct ScalarJudger {
-    vals: Vec<String>,
+    vals: Vec<char>,
 }
 impl ScalarJudger {
     pub fn new() -> Self {
@@ -10,7 +10,7 @@ impl ScalarJudger {
     }
 
     fn add_val(&mut self, val: &char) {
-        self.vals.push(val.to_string());
+        self.vals.push(*val);
     }
 
     fn judge(self) -> bool {
@@ -18,6 +18,10 @@ impl ScalarJudger {
         println!("{:?}", vals);
         return true;
     }
+
+    // fn initialize(&mut self) {
+    //     self.vals = Vec::new();
+    // }
 }
 
 pub fn serialize(val: &str) {
@@ -38,7 +42,6 @@ pub fn serialize(val: &str) {
             }
         };
     }
-    println!("{:?}", buff);
     println!("{:?}", scalar_judger);
-    println!("{:?}", scalar_judger.judge());
+    scalar_judger.judge();
 }
