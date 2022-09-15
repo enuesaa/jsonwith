@@ -1,27 +1,54 @@
-use crate::json::parts::Parts;
+use crate::json::parts::{Parts, ScalarTypes};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct ScalarJudger {
-    vals: Vec<char>,
+    chars: Vec<char>,
 }
 impl ScalarJudger {
     pub fn new() -> Self {
-        ScalarJudger { vals: Vec::new() }
+        ScalarJudger {
+            chars: Vec::new(),
+        }
     }
 
-    fn add_val(&mut self, val: &char) {
-        self.vals.push(*val);
+    fn append(&mut self, char: &char) {
+        self.chars.push(*char);
     }
 
-    fn judge(self) -> bool {
-        let vals: String = self.vals.into_iter().collect();
-        println!("{:?}", vals);
-        return true;
+    /**
+     * 現状 副作用あり
+     */
+    fn judge(&mut self) -> ScalarTypes {
+        /* @memo cloneをすべきなのか、良く分かっていない */
+        let val: String = self.chars.clone().into_iter().collect();
+        if val == " ".to_string() {
+            self.initialize();
+            return ScalarTypes::NotDefined;
+        }
+        if val.starts_with("\"") && val.ends_with("\"") {
+            self.initialize();
+            return ScalarTypes::String;
+        }
+        if val == "true".to_string() || val == "false".to_string() {
+            self.initialize();
+            return ScalarTypes::Boolean;    
+        }
+        if val == "null".to_string() {
+            self.initialize();
+            return ScalarTypes::Null;    
+        }
+        /* https://programming-idioms.org/idiom/137/check-if-string-contains-only-digits/2189/rust */
+        /* @memo check last char */
+        if val.chars().all(char::is_numeric) {
+            self.initialize();
+            return ScalarTypes::Number;
+        }
+        return ScalarTypes::NotDefined;
     }
 
-    // fn initialize(&mut self) {
-    //     self.vals = Vec::new();
-    // }
+    fn initialize(&mut self) {
+        self.chars = Vec::new();
+    }
 }
 
 pub fn serialize(val: &str) {
@@ -37,11 +64,15 @@ pub fn serialize(val: &str) {
             ',' => buff.push(Parts::Comma),
             '\n' => {}
             _ => {
-                scalar_judger.add_val(&i);
-                buff.push(Parts::Others);
+                scalar_judger.append(&i);
+                let scalar_type = scalar_judger.judge();
+                /* @todo refactor */
+                match scalar_type {
+                    ScalarTypes::NotDefined => {},
+                    _ => { buff.push(Parts::Scalar(scalar_type)) },
+                }
             }
         };
     }
-    println!("{:?}", scalar_judger);
-    scalar_judger.judge();
+    println!("{:?}", buff);
 }
