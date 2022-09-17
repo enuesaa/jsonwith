@@ -41,7 +41,7 @@ impl ScalarJudger {
 
     fn judge(&mut self) -> bool {
         let val: String = self.chars.clone().into_iter().collect();
-        if val.starts_with("\"") && val.ends_with("\"") {
+        if val.chars().count() > 2 && val.starts_with("\"") && val.ends_with("\"") {
             return self.resolve_with_type(ScalarTypes::String);
         }
         if val == "true".to_string() || val == "false".to_string() {
@@ -61,6 +61,8 @@ impl ScalarJudger {
     fn resolve_with_type(&mut self, t: ScalarTypes) -> bool {
         self.resolved = true;
         self.scalar_type = t;
+        let val :String = self.chars.clone().into_iter().collect();
+        println!("{:?}", val);
         return true;
     }
 }

@@ -17,6 +17,7 @@ impl Serializer {
                 scalar_judger.append(&i);
                 if scalar_judger.resolved == true {
                     self.buff.push(Parts::Scalar(scalar_judger.scalar_type));
+                    scalar_judger = ScalarJudger::new();
                 }
             } else {
                 match i {
@@ -32,6 +33,7 @@ impl Serializer {
                         scalar_judger.append(&i);
                         if scalar_judger.resolved == true {
                             self.buff.push(Parts::Scalar(scalar_judger.scalar_type));
+                            scalar_judger = ScalarJudger::new();
                         }
                     },
                 };
