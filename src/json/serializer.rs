@@ -20,6 +20,7 @@ impl Serializer {
                     scalar_judger = ScalarJudger::new();
                 }
             } else {
+                // このへんで sclar値 として成り立つか判断する処理 が必要
                 match i {
                     '{' => self.buff.push(Parts::StartDict),
                     '}' => self.buff.push(Parts::EndDict),

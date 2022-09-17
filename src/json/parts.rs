@@ -62,7 +62,7 @@ impl ScalarJudger {
         self.resolved = true;
         self.scalar_type = t;
         let val :String = self.chars.clone().into_iter().collect();
-        println!("{:?}", val);
+        println!("{}", val);
         return true;
     }
 }
