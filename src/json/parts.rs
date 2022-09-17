@@ -16,6 +16,7 @@ pub enum Parts {
     StartList, // [
     EndList,   // ]
     Comma,     // ,
+    Colon,     // :
     Scalar(ScalarTypes),    // "aa", 99, null, true, false
     Others,    // temporary. for development.
 }

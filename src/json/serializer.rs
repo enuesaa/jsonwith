@@ -25,6 +25,7 @@ impl Serializer {
                     '[' => self.buff.push(Parts::StartList),
                     ']' => self.buff.push(Parts::EndList),
                     ',' => self.buff.push(Parts::Comma),
+                    ':' => self.buff.push(Parts::Colon),
                     '\n' => {},
                     ' ' => {},
                     _ => {
