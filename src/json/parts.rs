@@ -1,6 +1,6 @@
 
 /** https://qiita.com/togatoga/items/9d600e20325775f09547 */
-#[derive(Debug, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub enum ScalarTypes {
     NotDefined,
     String,
@@ -24,54 +24,42 @@ pub enum Parts {
 #[derive(Debug, Clone)]
 pub struct ScalarJudger {
     chars: Vec<char>,
+    pub resolved: bool,
+    pub scalar_type: ScalarTypes,
 }
 impl ScalarJudger {
     pub fn new() -> Self {
-        ScalarJudger {
-            chars: Vec::new(),
-        }
+        ScalarJudger {chars: Vec::new(), resolved: true, scalar_type: ScalarTypes::NotDefined}
     }
 
-    pub fn is_empty(&mut self) -> bool {
-        return self.chars.is_empty();
-    }
-
-    pub fn append(&mut self, char: &char) -> ScalarTypes {
+    pub fn append(&mut self, char: &char) {
+        self.resolved = false;
         self.chars.push(*char);
-        return self.judge();
+        self.judge();
     }
 
-    /**
-     * 現状 副作用あり
-     */
-    fn judge(&mut self) -> ScalarTypes {
+    fn judge(&mut self) -> bool {
         let val: String = self.chars.clone().into_iter().collect();
-        if val == " ".to_string() {
-            self.initialize();
-            return ScalarTypes::NotDefined;
-        }
         if val.starts_with("\"") && val.ends_with("\"") {
-            self.initialize();
-            return ScalarTypes::String;
+            return self.resolve_with_type(ScalarTypes::String);
         }
         if val == "true".to_string() || val == "false".to_string() {
-            self.initialize();
-            return ScalarTypes::Boolean;    
+            return self.resolve_with_type(ScalarTypes::Boolean);
         }
         if val == "null".to_string() {
-            self.initialize();
-            return ScalarTypes::Null;    
+            return self.resolve_with_type(ScalarTypes::Null);
         }
-        /* https://programming-idioms.org/idiom/137/check-if-string-contains-only-digits/2189/rust */
+        // https://programming-idioms.org/idiom/137/check-if-string-contains-only-digits/2189/rust
+        // @memo check last char
         if val.chars().all(char::is_numeric) {
-            /* @memo check last char */
-            self.initialize();
-            return ScalarTypes::Number;
+            return self.resolve_with_type(ScalarTypes::Number);
         }
-        return ScalarTypes::NotDefined;
+        return false;
     }
 
-    fn initialize(&mut self) {
-        self.chars = Vec::new();
+    fn resolve_with_type(&mut self, t: ScalarTypes) -> bool {
+        self.resolved = true;
+        self.scalar_type = t;
+        return true;
     }
 }

@@ -13,8 +13,7 @@ fn main() {
     let args = Args::parse();
     let path = args.path;
     let val = read(&path);
-    let mut serializer = Serializer::new();
-    serializer.serialize(&val);
+    let serializer = Serializer::new(&val);
     println!("{:?}", serializer.buff);
     // model to yaml
 }

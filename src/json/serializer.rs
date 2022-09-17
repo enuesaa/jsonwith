@@ -1,18 +1,23 @@
-use crate::json::parts::{Parts, ScalarTypes, ScalarJudger};
+use crate::json::parts::{Parts, ScalarJudger};
 
 pub struct Serializer {
     pub buff: Vec<Parts>,
-    scalar_judger: ScalarJudger,
 }
 impl Serializer {
-    pub fn new () -> Self {
-        Serializer {buff: Vec::new(), scalar_judger: ScalarJudger::new()}
+    pub fn new (val: &str) -> Self {
+        let mut serializer = Serializer {buff: Vec::new()};
+        serializer.serialize(val);
+        serializer
     }
 
-    pub fn serialize (&mut self, val: &str) {
+    fn serialize (&mut self, val: &str) {
+        let mut scalar_judger = ScalarJudger::new();
         for i in val.chars() {
-            if ! self.scalar_judger.is_empty() {
-                self.append_to_judger(i);
+            if scalar_judger.resolved == false {
+                scalar_judger.append(&i);
+                if scalar_judger.resolved == true {
+                    self.buff.push(Parts::Scalar(scalar_judger.scalar_type));
+                }
             } else {
                 match i {
                     '{' => self.buff.push(Parts::StartDict),
@@ -21,17 +26,15 @@ impl Serializer {
                     ']' => self.buff.push(Parts::EndList),
                     ',' => self.buff.push(Parts::Comma),
                     '\n' => {},
-                    _ => {self.append_to_judger(i)}
+                    ' ' => {},
+                    _ => {
+                        scalar_judger.append(&i);
+                        if scalar_judger.resolved == true {
+                            self.buff.push(Parts::Scalar(scalar_judger.scalar_type));
+                        }
+                    },
                 };
             }
-        };
-    }
-
-    fn append_to_judger(&mut self, i: char) {
-        let scalar_type = self.scalar_judger.append(&i);
-        match scalar_type {
-            ScalarTypes::NotDefined => {},
-            _ => { self.buff.push(Parts::Scalar(scalar_type)) },
         }
     }
 }
