@@ -1,6 +1,6 @@
 use clap::Parser;
 
-use jsonwith_formatter::json::serializer::{Serializer};
+use jsonwith_formatter::json::serializer::Serializer;
 use std::fs;
 
 #[derive(Parser)]

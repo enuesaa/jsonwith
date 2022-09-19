@@ -1,4 +1,3 @@
-
 /** https://qiita.com/togatoga/items/9d600e20325775f09547 */
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum ScalarTypes {
@@ -11,16 +10,15 @@ pub enum ScalarTypes {
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Parts {
-    StartDict, // {
-    EndDict,   // }
-    StartList, // [
-    EndList,   // ]
-    Comma,     // ,
-    Colon,     // :
-    Scalar(ScalarTypes),    // "aa", 99, null, true, false
-    Others,    // temporary. for development.
+    StartDict,           // {
+    EndDict,             // }
+    StartList,           // [
+    EndList,             // ]
+    Comma,               // ,
+    Colon,               // :
+    Scalar(ScalarTypes), // "aa", 99, null, true, false
+    Others,              // temporary. for development.
 }
-
 
 #[derive(Debug, Clone)]
 pub struct ScalarJudger {
@@ -31,7 +29,11 @@ pub struct ScalarJudger {
 impl ScalarJudger {
     pub fn new() -> Self {
         // @todo fix resolved
-        ScalarJudger {chars: Vec::new(), resolved: true, scalar_type: ScalarTypes::NotDefined}
+        ScalarJudger {
+            chars: Vec::new(),
+            resolved: true,
+            scalar_type: ScalarTypes::NotDefined,
+        }
     }
 
     pub fn resolve_next(&mut self, char: &char) {
@@ -40,7 +42,7 @@ impl ScalarJudger {
             self.resolved = false;
             self.chars.push(*char);
         } else {
-            let a : String = self.chars.clone().into_iter().collect();
+            let a: String = self.chars.clone().into_iter().collect();
             println!("{}", a);
             self.resolved = true;
         }
@@ -61,9 +63,12 @@ impl ScalarJudger {
         if val == "null".to_string() {
             return ScalarTypes::Null;
         }
-        if val.chars().count() > 1 && val.chars().all(char::is_numeric) && !val_next.chars().all(char::is_numeric) {
+        if val.chars().count() > 1
+            && val.chars().all(char::is_numeric)
+            && !val_next.chars().all(char::is_numeric)
+        {
             return ScalarTypes::Number;
         }
-        return ScalarTypes::NotDefined
+        return ScalarTypes::NotDefined;
     }
 }

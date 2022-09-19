@@ -1,5 +1,5 @@
-use crate::json::parts::{Parts, ScalarJudger, ScalarTypes};
 use crate::json::model::{Model, ModelValue};
+use crate::json::parts::{Parts, ScalarJudger, ScalarTypes};
 
 #[derive(Clone)]
 pub struct Serializer {
@@ -7,14 +7,17 @@ pub struct Serializer {
     model: Option<Model>,
 }
 impl Serializer {
-    pub fn new (val: &str) -> Self {
-        let mut serializer = Serializer {buff: Vec::new(), model: None};
+    pub fn new(val: &str) -> Self {
+        let mut serializer = Serializer {
+            buff: Vec::new(),
+            model: None,
+        };
         serializer.parse_val(val);
         serializer.to_yaml();
         serializer
     }
 
-    fn parse_val (&mut self, val: &str) {
+    fn parse_val(&mut self, val: &str) {
         let mut scalar_judger = ScalarJudger::new();
         for i in val.chars() {
             // @todo fix. this code checks `scalar judger is initialized`.
@@ -30,9 +33,9 @@ impl Serializer {
                         ']' => self.buff.push(Parts::EndList),
                         ',' => self.buff.push(Parts::Comma),
                         ':' => self.buff.push(Parts::Colon),
-                        '\n' => {},
-                        ' ' => {},
-                        _ => {},
+                        '\n' => {}
+                        ' ' => {}
+                        _ => {}
                     };
                 }
             } else {
@@ -43,22 +46,22 @@ impl Serializer {
                     ']' => self.buff.push(Parts::EndList),
                     ',' => self.buff.push(Parts::Comma),
                     ':' => self.buff.push(Parts::Colon),
-                    '\n' => {},
-                    ' ' => {},
+                    '\n' => {}
+                    ' ' => {}
                     _ => {
                         scalar_judger.resolve_next(&i);
                         if scalar_judger.resolved == true {
                             self.buff.push(Parts::Scalar(scalar_judger.scalar_type));
                             scalar_judger = ScalarJudger::new();
                         }
-                    },
+                    }
                 };
             }
         }
     }
 
     #[allow(dead_code)]
-    fn to_model (&mut self) {
+    fn to_model(&mut self) {
         let buff = self.buff.clone();
         for buf in buff {
             println!("{:?}", buf);
