@@ -13,8 +13,9 @@ impl Serializer {
     fn serialize (&mut self, val: &str) {
         let mut scalar_judger = ScalarJudger::new();
         for i in val.chars() {
+            // @todo fix. this code checks `scalar judger is initialized`.
             if scalar_judger.resolved == false {
-                scalar_judger.append(&i);
+                scalar_judger.resolve_next(&i);
                 if scalar_judger.resolved == true {
                     self.buff.push(Parts::Scalar(scalar_judger.scalar_type));
                     scalar_judger = ScalarJudger::new();
@@ -31,7 +32,7 @@ impl Serializer {
                     '\n' => {},
                     ' ' => {},
                     _ => {
-                        scalar_judger.append(&i);
+                        scalar_judger.resolve_next(&i);
                         if scalar_judger.resolved == true {
                             self.buff.push(Parts::Scalar(scalar_judger.scalar_type));
                             scalar_judger = ScalarJudger::new();

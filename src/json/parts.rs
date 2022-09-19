@@ -1,6 +1,6 @@
 
 /** https://qiita.com/togatoga/items/9d600e20325775f09547 */
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum ScalarTypes {
     NotDefined,
     String,
@@ -30,39 +30,40 @@ pub struct ScalarJudger {
 }
 impl ScalarJudger {
     pub fn new() -> Self {
+        // @todo fix resolved
         ScalarJudger {chars: Vec::new(), resolved: true, scalar_type: ScalarTypes::NotDefined}
     }
 
-    pub fn append(&mut self, char: &char) {
-        self.resolved = false;
-        self.chars.push(*char);
-        self.judge();
+    pub fn resolve_next(&mut self, char: &char) {
+        self.scalar_type = self.judge_next(char);
+        if self.scalar_type == ScalarTypes::NotDefined {
+            self.resolved = false;
+            self.chars.push(*char);
+        } else {
+            let a : String = self.chars.clone().into_iter().collect();
+            println!("{}", a);
+            self.resolved = true;
+        }
     }
 
-    fn judge(&mut self) -> bool {
+    fn judge_next(&mut self, char: &char) -> ScalarTypes {
         let val: String = self.chars.clone().into_iter().collect();
+        let mut chars_next = self.chars.clone();
+        chars_next.push(*char);
+        let val_next: String = chars_next.into_iter().collect();
+
         if val.chars().count() > 2 && val.starts_with("\"") && val.ends_with("\"") {
-            return self.resolve_with_type(ScalarTypes::String);
+            return ScalarTypes::String;
         }
         if val == "true".to_string() || val == "false".to_string() {
-            return self.resolve_with_type(ScalarTypes::Boolean);
+            return ScalarTypes::Boolean;
         }
         if val == "null".to_string() {
-            return self.resolve_with_type(ScalarTypes::Null);
+            return ScalarTypes::Null;
         }
-        // https://programming-idioms.org/idiom/137/check-if-string-contains-only-digits/2189/rust
-        // @memo check last char
-        if val.chars().all(char::is_numeric) {
-            return self.resolve_with_type(ScalarTypes::Number);
+        if val.chars().count() > 1 && val.chars().all(char::is_numeric) && !val_next.chars().all(char::is_numeric) {
+            return ScalarTypes::Number;
         }
-        return false;
-    }
-
-    fn resolve_with_type(&mut self, t: ScalarTypes) -> bool {
-        self.resolved = true;
-        self.scalar_type = t;
-        let val :String = self.chars.clone().into_iter().collect();
-        println!("{}", val);
-        return true;
+        return ScalarTypes::NotDefined
     }
 }
