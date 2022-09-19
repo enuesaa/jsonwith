@@ -9,7 +9,7 @@ pub enum ScalarTypes {
     Number,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Parts {
     StartDict, // {
     EndDict,   // }

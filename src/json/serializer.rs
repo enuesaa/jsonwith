@@ -1,16 +1,20 @@
 use crate::json::parts::{Parts, ScalarJudger};
+use crate::json::model::{Model, ModelValue};
 
+#[derive(Clone)]
 pub struct Serializer {
     pub buff: Vec<Parts>,
+    model: Option<Model>,
 }
 impl Serializer {
     pub fn new (val: &str) -> Self {
-        let mut serializer = Serializer {buff: Vec::new()};
-        serializer.serialize(val);
+        let mut serializer = Serializer {buff: Vec::new(), model: None};
+        serializer.parse_val(val);
+        serializer.to_model();
         serializer
     }
 
-    fn serialize (&mut self, val: &str) {
+    fn parse_val (&mut self, val: &str) {
         let mut scalar_judger = ScalarJudger::new();
         for i in val.chars() {
             // @todo fix. this code checks `scalar judger is initialized`.
@@ -21,7 +25,6 @@ impl Serializer {
                     scalar_judger = ScalarJudger::new();
                 }
             } else {
-                // このへんで sclar値 として成り立つか判断する処理 が必要
                 match i {
                     '{' => self.buff.push(Parts::StartDict),
                     '}' => self.buff.push(Parts::EndDict),
@@ -41,5 +44,20 @@ impl Serializer {
                 };
             }
         }
+    }
+
+    fn to_model (&mut self) {
+        let buff = self.buff.clone();
+        let mut model :Option<Model> = None;
+        for buf in buff {
+            println!("{:?}", buf);
+            if buf == Parts::StartDict {
+                model = Some(Model::DictModel(ModelValue::new()));
+            }
+            if buf == Parts::StartList {
+                model = Some(Model::ListModel(ModelValue::new()));
+            }
+        }
+        println!("{:?}", self.model);
     }
 }
