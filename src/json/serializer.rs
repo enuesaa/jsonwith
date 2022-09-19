@@ -10,7 +10,6 @@ impl Serializer {
     pub fn new (val: &str) -> Self {
         let mut serializer = Serializer {buff: Vec::new(), model: None};
         serializer.parse_val(val);
-        serializer.to_model();
         serializer
     }
 
@@ -46,16 +45,13 @@ impl Serializer {
         }
     }
 
+    #[allow(dead_code)]
     fn to_model (&mut self) {
         let buff = self.buff.clone();
-        let mut model :Option<Model> = None;
         for buf in buff {
             println!("{:?}", buf);
             if buf == Parts::StartDict {
-                model = Some(Model::DictModel(ModelValue::new()));
-            }
-            if buf == Parts::StartList {
-                model = Some(Model::ListModel(ModelValue::new()));
+                self.model = Some(Model::DictModel(ModelValue::new()));
             }
         }
         println!("{:?}", self.model);
