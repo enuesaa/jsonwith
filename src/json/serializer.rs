@@ -1,4 +1,4 @@
-use crate::json::parts::{Parts, ScalarJudger};
+use crate::json::parts::{Parts, ScalarJudger, ScalarTypes};
 use crate::json::model::{Model, ModelValue};
 
 #[derive(Clone)]
@@ -10,6 +10,7 @@ impl Serializer {
     pub fn new (val: &str) -> Self {
         let mut serializer = Serializer {buff: Vec::new(), model: None};
         serializer.parse_val(val);
+        serializer.to_yaml();
         serializer
     }
 
@@ -22,6 +23,17 @@ impl Serializer {
                 if scalar_judger.resolved == true {
                     self.buff.push(Parts::Scalar(scalar_judger.scalar_type));
                     scalar_judger = ScalarJudger::new();
+                    match i {
+                        '{' => self.buff.push(Parts::StartDict),
+                        '}' => self.buff.push(Parts::EndDict),
+                        '[' => self.buff.push(Parts::StartList),
+                        ']' => self.buff.push(Parts::EndList),
+                        ',' => self.buff.push(Parts::Comma),
+                        ':' => self.buff.push(Parts::Colon),
+                        '\n' => {},
+                        ' ' => {},
+                        _ => {},
+                    };
                 }
             } else {
                 match i {
@@ -55,5 +67,56 @@ impl Serializer {
             }
         }
         println!("{:?}", self.model);
+    }
+
+    fn to_yaml(&mut self) {
+        let buff = self.buff.clone();
+        println!("{:?}", buff);
+        let mut space_count: usize = 0;
+        let mut need_colon: bool = false;
+        for buf in buff {
+            if buf == Parts::StartDict {
+                print!("\n");
+                space_count = space_count + 2;
+                need_colon = false;
+            }
+            if buf == Parts::EndDict {
+                space_count = space_count - 2;
+            }
+            if buf == Parts::StartList {
+                print!("\n");
+                space_count = space_count + 2;
+                need_colon = false;
+            }
+            if buf == Parts::EndList {
+                space_count = space_count - 2;
+            }
+            if buf == Parts::Scalar(ScalarTypes::String) {
+                if !need_colon {
+                    print!("{}", " ".repeat(space_count));
+                }
+                print!("string");
+                need_colon = !need_colon;
+            }
+            if buf == Parts::Scalar(ScalarTypes::Number) {
+                print!("number");
+                need_colon = false;
+            }
+            if buf == Parts::Scalar(ScalarTypes::Boolean) {
+                print!("bool");
+                need_colon = false;
+            }
+            if buf == Parts::Scalar(ScalarTypes::Null) {
+                print!("null");
+                need_colon = false;
+            }
+            if buf == Parts::Colon {
+                print!(": ");
+            }
+            if buf == Parts::Comma {
+                print!("\n");
+            }
+        }
+        print!("\n");
     }
 }
