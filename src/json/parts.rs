@@ -54,13 +54,13 @@ impl ScalarJudger {
         chars_next.push(*char);
         let val_next: String = chars_next.into_iter().collect();
 
-        if val.chars().count() > 2 && val.starts_with("\"") && val.ends_with("\"") {
+        if val.chars().count() > 2 && val.starts_with('\"') && val.ends_with('\"') {
             return ScalarTypes::String;
         }
-        if val == "true".to_string() || val == "false".to_string() {
+        if val == *"true" || val == *"false" {
             return ScalarTypes::Boolean;
         }
-        if val == "null".to_string() {
+        if val == *"null" {
             return ScalarTypes::Null;
         }
         if val.chars().count() > 1
@@ -69,6 +69,12 @@ impl ScalarJudger {
         {
             return ScalarTypes::Number;
         }
-        return ScalarTypes::NotDefined;
+        ScalarTypes::NotDefined
+    }
+}
+
+impl Default for ScalarJudger {
+    fn default() -> Self {
+        Self::new()
     }
 }

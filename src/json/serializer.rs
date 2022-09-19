@@ -13,7 +13,7 @@ impl Serializer {
             model: None,
         };
         serializer.parse_val(val);
-        serializer.to_yaml();
+        serializer.print_yaml();
         serializer
     }
 
@@ -21,9 +21,9 @@ impl Serializer {
         let mut scalar_judger = ScalarJudger::new();
         for i in val.chars() {
             // @todo fix. this code checks `scalar judger is initialized`.
-            if scalar_judger.resolved == false {
+            if !scalar_judger.resolved {
                 scalar_judger.resolve_next(&i);
-                if scalar_judger.resolved == true {
+                if scalar_judger.resolved {
                     self.buff.push(Parts::Scalar(scalar_judger.scalar_type));
                     scalar_judger = ScalarJudger::new();
                     match i {
@@ -50,7 +50,7 @@ impl Serializer {
                     ' ' => {}
                     _ => {
                         scalar_judger.resolve_next(&i);
-                        if scalar_judger.resolved == true {
+                        if scalar_judger.resolved {
                             self.buff.push(Parts::Scalar(scalar_judger.scalar_type));
                             scalar_judger = ScalarJudger::new();
                         }
@@ -61,7 +61,7 @@ impl Serializer {
     }
 
     #[allow(dead_code)]
-    fn to_model(&mut self) {
+    fn convert_model(&mut self) {
         let buff = self.buff.clone();
         for buf in buff {
             println!("{:?}", buf);
@@ -72,27 +72,27 @@ impl Serializer {
         println!("{:?}", self.model);
     }
 
-    fn to_yaml(&mut self) {
+    fn print_yaml(&mut self) {
         let buff = self.buff.clone();
         println!("{:?}", buff);
         let mut space_count: usize = 0;
         let mut need_colon: bool = false;
         for buf in buff {
             if buf == Parts::StartDict {
-                print!("\n");
-                space_count = space_count + 2;
+                println!();
+                space_count += 2;
                 need_colon = false;
             }
             if buf == Parts::EndDict {
-                space_count = space_count - 2;
+                space_count -= 2;
             }
             if buf == Parts::StartList {
-                print!("\n");
-                space_count = space_count + 2;
+                println!();
+                space_count += 2;
                 need_colon = false;
             }
             if buf == Parts::EndList {
-                space_count = space_count - 2;
+                space_count -= 2;
             }
             if buf == Parts::Scalar(ScalarTypes::String) {
                 if !need_colon {
@@ -117,9 +117,9 @@ impl Serializer {
                 print!(": ");
             }
             if buf == Parts::Comma {
-                print!("\n");
+                println!();
             }
         }
-        print!("\n");
+        println!("\n");
     }
 }

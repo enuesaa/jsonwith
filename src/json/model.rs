@@ -12,6 +12,11 @@ impl ModelValue {
         self.parts.push(part);
     }
 }
+impl Default for ModelValue {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 #[derive(Debug, Clone)]
 pub enum Model {
