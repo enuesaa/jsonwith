@@ -1,4 +1,6 @@
 /** https://qiita.com/togatoga/items/9d600e20325775f09547 */
+
+/** @todo いろいろネストしているが一次元にする. たとえばPartsのenum定義の一つとしてStringをもってくる */
 #[derive(Debug, Clone, PartialEq)]
 pub enum ScalarTypes {
     NotDefined,
