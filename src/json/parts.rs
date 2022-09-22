@@ -1,11 +1,17 @@
 /** https://qiita.com/togatoga/items/9d600e20325775f09547 */
-#[derive(Debug, Copy, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ScalarTypes {
     NotDefined,
     String,
     Boolean,
     Null,
     Number,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Scalar {
+    pub scalar_type: ScalarTypes,
+    pub value: String,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -16,7 +22,7 @@ pub enum Parts {
     EndList,             // ]
     Comma,               // ,
     Colon,               // :
-    Scalar(ScalarTypes), // "aa", 99, null, true, false
+    Scalar(Scalar), // "aa", 99, null, true, false
     Others,              // temporary. for development.
 }
 
@@ -70,6 +76,10 @@ impl ScalarJudger {
             return ScalarTypes::Number;
         }
         ScalarTypes::NotDefined
+    }
+
+    pub fn get_value(self) -> String {
+        self.chars.into_iter().collect()
     }
 }
 

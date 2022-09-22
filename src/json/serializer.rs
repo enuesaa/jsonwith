@@ -1,5 +1,5 @@
 use crate::json::model::{Model, ModelValue};
-use crate::json::parts::{Parts, ScalarJudger, ScalarTypes};
+use crate::json::parts::{Parts, ScalarJudger, ScalarTypes, Scalar};
 
 #[derive(Clone)]
 pub struct Serializer {
@@ -24,7 +24,7 @@ impl Serializer {
             if !scalar_judger.resolved {
                 scalar_judger.resolve_next(&i);
                 if scalar_judger.resolved {
-                    self.buff.push(Parts::Scalar(scalar_judger.scalar_type));
+                    self.buff.push(Parts::Scalar(Scalar{scalar_type: scalar_judger.clone().scalar_type, value: scalar_judger.clone().get_value()}));
                     scalar_judger = ScalarJudger::new();
                     match i {
                         '{' => self.buff.push(Parts::StartDict),
@@ -51,7 +51,7 @@ impl Serializer {
                     _ => {
                         scalar_judger.resolve_next(&i);
                         if scalar_judger.resolved {
-                            self.buff.push(Parts::Scalar(scalar_judger.scalar_type));
+                            self.buff.push(Parts::Scalar(Scalar{scalar_type: scalar_judger.clone().scalar_type, value: scalar_judger.clone().get_value()}));
                             scalar_judger = ScalarJudger::new();
                         }
                     }
@@ -94,25 +94,25 @@ impl Serializer {
             if buf == Parts::EndList {
                 space_count -= 2;
             }
-            if buf == Parts::Scalar(ScalarTypes::String) {
-                if !need_colon {
-                    print!("{}", " ".repeat(space_count));
-                }
-                print!("string");
-                need_colon = !need_colon;
-            }
-            if buf == Parts::Scalar(ScalarTypes::Number) {
-                print!("number");
-                need_colon = false;
-            }
-            if buf == Parts::Scalar(ScalarTypes::Boolean) {
-                print!("bool");
-                need_colon = false;
-            }
-            if buf == Parts::Scalar(ScalarTypes::Null) {
-                print!("null");
-                need_colon = false;
-            }
+            // if buf == Parts::Scalar(ScalarTypes::String) {
+            //     if !need_colon {
+            //         print!("{}", " ".repeat(space_count));
+            //     }
+            //     print!("string");
+            //     need_colon = !need_colon;
+            // }
+            // if buf == Parts::Scalar(ScalarTypes::Number) {
+            //     print!("number");
+            //     need_colon = false;
+            // }
+            // if buf == Parts::Scalar(ScalarTypes::Boolean) {
+            //     print!("bool");
+            //     need_colon = false;
+            // }
+            // if buf == Parts::Scalar(ScalarTypes::Null) {
+            //     print!("null");
+            //     need_colon = false;
+            // }
             if buf == Parts::Colon {
                 print!(": ");
             }
