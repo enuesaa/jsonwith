@@ -18,14 +18,14 @@ pub struct Scalar {
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Parts {
-    StartDict,           // {
-    EndDict,             // }
-    StartList,           // [
-    EndList,             // ]
-    Comma,               // ,
-    Colon,               // :
+    StartDict,      // {
+    EndDict,        // }
+    StartList,      // [
+    EndList,        // ]
+    Comma,          // ,
+    Colon,          // :
     Scalar(Scalar), // "aa", 99, null, true, false
-    Others,              // temporary. for development.
+    Others,         // temporary. for development.
 }
 
 #[derive(Debug, Clone)]

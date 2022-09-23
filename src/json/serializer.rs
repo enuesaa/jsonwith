@@ -96,11 +96,14 @@ pub struct JsonPathValue {
 #[derive(Clone)]
 pub struct Serializer {
     pub buff: Vec<Parts>,
-    pub pathvalues: Vec<JsonPathValue>
+    pub pathvalues: Vec<JsonPathValue>,
 }
 impl Serializer {
     pub fn new(json_string: &str) -> Self {
-        let mut serializer = Serializer {buff: Vec::new(), pathvalues: Vec::new()};
+        let mut serializer = Serializer {
+            buff: Vec::new(),
+            pathvalues: Vec::new(),
+        };
         serializer.parse(json_string);
         serializer
     }
@@ -113,20 +116,26 @@ impl Serializer {
                 match i {
                     '{' => {
                         path.start_dict();
-                        self.pathvalues.push(JsonPathValue{path: path.to_string(), value: JsonParts::StartDict});
-                    },
+                        self.pathvalues.push(JsonPathValue {
+                            path: path.to_string(),
+                            value: JsonParts::StartDict,
+                        });
+                    }
                     '}' => {
                         path.end_dict();
-                    },
+                    }
                     '[' => {
                         path.start_list();
-                        self.pathvalues.push(JsonPathValue{path: path.to_string(), value: JsonParts::StartList});
-                    },
+                        self.pathvalues.push(JsonPathValue {
+                            path: path.to_string(),
+                            value: JsonParts::StartList,
+                        });
+                    }
                     ']' => {
                         path.end_list();
-                    },
-                    ',' => {},
-                    ':' => {},
+                    }
+                    ',' => {}
+                    ':' => {}
                     '\n' => {}
                     ' ' => {}
                     _ => {
@@ -142,24 +151,33 @@ impl Serializer {
                         ':' => {
                             path.add_dict_key(scalar_judger.get_value());
                             scalar_judger = ScalarJudger::new();
-                        },
+                        }
                         '}' => {
                             path.add_something_item();
-                            self.pathvalues.push(JsonPathValue{path: path.to_string(), value: JsonParts::String(scalar_judger.get_value())});
+                            self.pathvalues.push(JsonPathValue {
+                                path: path.to_string(),
+                                value: JsonParts::String(scalar_judger.get_value()),
+                            });
                             scalar_judger = ScalarJudger::new();
                             path.end_dict();
-                        },
+                        }
                         ']' => {
                             path.add_something_item();
-                            self.pathvalues.push(JsonPathValue{path: path.to_string(), value: JsonParts::String(scalar_judger.get_value())});
+                            self.pathvalues.push(JsonPathValue {
+                                path: path.to_string(),
+                                value: JsonParts::String(scalar_judger.get_value()),
+                            });
                             scalar_judger = ScalarJudger::new();
                             path.end_list();
-                        },
+                        }
                         ',' => {
                             path.add_something_item();
-                            self.pathvalues.push(JsonPathValue{path: path.to_string(), value: JsonParts::String(scalar_judger.get_value())});
+                            self.pathvalues.push(JsonPathValue {
+                                path: path.to_string(),
+                                value: JsonParts::String(scalar_judger.get_value()),
+                            });
                             scalar_judger = ScalarJudger::new();
-                        },
+                        }
                         '\n' => {}
                         ' ' => {}
                         _ => {}
