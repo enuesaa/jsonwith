@@ -1,19 +1,73 @@
 use crate::json::parts::{Parts, ScalarJudger};
 
 pub struct JsonPath {
-    pub value: Vec<String>, // [".", "aaa", ".", "0"]
+    pub value: Vec<String>, // [".", ".aaa", "[]", "[0]."]
+    list_i_vec: Vec<usize>,
+    list_i_type: Vec<String>,
 }
 impl JsonPath {
     pub fn new() -> Self {
-        JsonPath { value: Vec::new() }
+        JsonPath {
+            value: Vec::new(),
+            list_i_vec: Vec::new(),
+            list_i_type: Vec::new(),
+        }
     }
 
-    pub fn push(&mut self, value: String) {
-        self.value.push(value);
+    pub fn start_dict(&mut self) {
+        self.list_i_vec.push(0);
+        self.list_i_type.push("dict".to_string());
+        self.value.push(".".to_string());
     }
-    
-    pub fn removelast(&mut self) {
+
+    pub fn add_dict_key(&mut self, value: String) {
+        let last = self.list_i_vec.last().unwrap().clone();
+        self.list_i_vec.pop();
+        self.list_i_vec.push(last + 1);
+
+        let converted = Vec::from([".".to_string(), value]);
         self.value.pop();
+        self.value.push(converted.join(""));
+    }
+
+    pub fn end_dict(&mut self) {
+        self.value.pop();
+        self.list_i_vec.pop();
+        self.list_i_type.pop();
+    }
+
+    pub fn start_list(&mut self) {
+        self.list_i_vec.push(0);
+        self.list_i_type.push("list".to_string());
+
+        self.value.push("[]".to_string());
+    }
+
+    pub fn add_something_item(&mut self) {
+        let itemtype = self.list_i_type.last().unwrap().clone();
+        if itemtype == "list".to_string() {
+            self.add_list_item();
+        }
+        // dict の場合は add_dict_key() で既にキーが追加されている
+    }
+
+    pub fn add_list_item(&mut self) {
+        let last = self.list_i_vec.last().unwrap().clone();
+        self.list_i_vec.pop();
+        self.list_i_vec.push(last + 1);
+
+        let converted = Vec::from(["[".to_string(), last.to_string(), "]".to_string()]);
+        self.value.pop();
+        self.value.push(converted.join(""));
+    }
+
+    pub fn end_list(&mut self) {
+        // let last = self.list_i_vec.last().unwrap().clone();
+        // if last > 0 {
+            self.value.pop();
+        // }
+        self.list_i_vec.pop();
+        self.list_i_type.pop();
     }
 
     pub fn to_string(&mut self) -> String {
@@ -57,18 +111,18 @@ impl Serializer {
             if scalar_judger.initial {
                 match i {
                     '{' => {
-                        path.push(".".to_string());
+                        path.start_dict();
                         self.pathvalues.push(JsonPathValue{path: path.to_string(), value: JsonParts::StartDict});
                     },
                     '}' => {
-                        path.removelast();
+                        path.end_dict();
                     },
                     '[' => {
-                        path.push("[".to_string());
+                        path.start_list();
                         self.pathvalues.push(JsonPathValue{path: path.to_string(), value: JsonParts::StartList});
                     },
                     ']' => {
-                        path.removelast();
+                        path.end_list();
                     },
                     ',' => {},
                     ':' => {},
@@ -90,25 +144,25 @@ impl Serializer {
                 if scalar_judger.resolved {
                     match i {
                         ':' => {
-                            path.push(scalar_judger.get_value());
+                            path.add_dict_key(scalar_judger.get_value());
                             scalar_judger = ScalarJudger::new();
                         },
                         '}' => {
+                            path.add_something_item();
                             self.pathvalues.push(JsonPathValue{path: path.to_string(), value: JsonParts::String(scalar_judger.get_value())});
                             scalar_judger = ScalarJudger::new();
-                            path.removelast(); // last key of dict like "aaa-key1"
-                            path.removelast(); // dict dot like "."
-                            path.removelast(); // dict name like "aaa"
+                            path.end_dict();
                         },
                         ']' => {
+                            path.add_something_item();
                             self.pathvalues.push(JsonPathValue{path: path.to_string(), value: JsonParts::String(scalar_judger.get_value())});
                             scalar_judger = ScalarJudger::new();
-                            path.removelast();
+                            path.end_list();
                         },
                         ',' => {
+                            path.add_something_item();
                             self.pathvalues.push(JsonPathValue{path: path.to_string(), value: JsonParts::String(scalar_judger.get_value())});
                             scalar_judger = ScalarJudger::new();
-                            path.removelast();
                         },
                         '\n' => {}
                         ' ' => {}

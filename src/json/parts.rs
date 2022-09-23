@@ -53,8 +53,8 @@ impl ScalarJudger {
             self.resolved = false;
             self.chars.push(*char);
         } else {
-            let a: String = self.chars.clone().into_iter().collect();
-            println!("{}", a);
+            // let a: String = self.chars.clone().into_iter().collect();
+            // println!("{}", a);
             self.resolved = true;
         }
     }
