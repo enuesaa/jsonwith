@@ -32,6 +32,7 @@ pub enum Parts {
 pub struct ScalarJudger {
     chars: Vec<char>,
     pub resolved: bool,
+    pub initial: bool,
     pub scalar_type: ScalarTypes,
 }
 impl ScalarJudger {
@@ -40,11 +41,13 @@ impl ScalarJudger {
         ScalarJudger {
             chars: Vec::new(),
             resolved: true,
+            initial: true,
             scalar_type: ScalarTypes::NotDefined,
         }
     }
 
     pub fn resolve_next(&mut self, char: &char) {
+        self.initial = false;
         self.scalar_type = self.judge_next(char);
         if self.scalar_type == ScalarTypes::NotDefined {
             self.resolved = false;
@@ -80,8 +83,8 @@ impl ScalarJudger {
         ScalarTypes::NotDefined
     }
 
-    pub fn get_value(self) -> String {
-        self.chars.into_iter().collect()
+    pub fn get_value(&mut self) -> String {
+        self.chars.clone().into_iter().collect()
     }
 }
 

@@ -12,7 +12,12 @@ struct Args {
 fn main() {
     let args = Args::parse();
     let json_string = read(&args.path);
-    let _serializer = Serializer::new(&json_string);
+    let serializer = Serializer::new(&json_string);
+
+    let pathvalues = serializer.pathvalues.clone();
+    for i in pathvalues {
+        println!("{:?}", i);
+    }
 }
 
 pub fn read(filename: &str) -> String {
