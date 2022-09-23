@@ -11,10 +11,8 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    let path = args.path;
-    let val = read(&path);
-    let _serializer = Serializer::new(&val);
-    // model to yaml
+    let json_string = read(&args.path);
+    let _serializer = Serializer::new(&json_string);
 }
 
 pub fn read(filename: &str) -> String {
