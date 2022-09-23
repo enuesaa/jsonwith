@@ -1,5 +1,5 @@
 #[derive(Debug, Clone, PartialEq)]
-pub enum JsonParts {
+pub enum JsonPart {
     StartDict,
     StartList,
     String(String),
