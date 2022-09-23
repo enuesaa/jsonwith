@@ -1,6 +1,7 @@
 use clap::Parser;
 
 use jsonwith_formatter::json::serializer::Serializer;
+use jsonwith_formatter::yaml::deserializer::Deserializer;
 use std::fs;
 
 #[derive(Parser)]
@@ -15,10 +16,9 @@ fn main() {
     let mut serializer = Serializer::new();
     serializer.serialize(&json_string);
 
-    let value = serializer.values.clone();
-    for mut i in value {
-        println!("{}\t {:?}", i.path.to_string(), i.part);
-    }
+    let values = serializer.values.clone();
+    let mut deserializer = Deserializer::new(values);
+    deserializer.print();
 }
 
 pub fn read(filename: &str) -> String {
