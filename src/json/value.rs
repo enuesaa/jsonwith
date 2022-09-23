@@ -11,4 +11,12 @@ impl Value {
     pub fn from_scalar(path: &Path, scalar: Scalar) -> Self {
         Value { path: path.clone(), part: scalar.part }
     }
+
+    pub fn start_dict(path: &Path) -> Self {
+        Value { path: path.clone(), part: Part::StartDict }
+    }
+    
+    pub fn start_list(path: &Path) -> Self {
+        Value { path: path.clone(), part: Part::StartList }
+    }
 }

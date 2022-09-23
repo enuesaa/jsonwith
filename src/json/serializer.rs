@@ -17,9 +17,15 @@ impl Serializer {
         for i in json_string.chars() {
             if !scalar.is_initialized() {
                 match i {
-                    '{' => path.start_dict(),
+                    '{' => {
+                        path.start_dict();
+                        // self.values.push(Value::start_dict(&path));
+                    }
                     '}' => path.end_dict(),
-                    '[' => path.start_list(),
+                    '[' => {
+                        path.start_list();
+                        // self.values.push(Value::start_list(&path));
+                    }
                     ']' => path.end_list(),
                     ',' | ':' | '\n' | ' ' => {}
                     _ => scalar.with_next(&i),

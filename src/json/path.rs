@@ -1,7 +1,7 @@
 #[derive(Debug, Clone, PartialEq)]
-struct JsonPathIndicator {
-    indicate: String,
-    count: usize,
+pub struct JsonPathIndicator {
+    pub indicate: String,
+    pub count: usize,
 }
 impl JsonPathIndicator {
     fn add_count(&mut self) {
@@ -12,7 +12,7 @@ impl JsonPathIndicator {
 #[derive(Debug, Clone, PartialEq)]
 pub struct Path {
     pub value: Vec<String>, // [".", ".aaa", "[]", "[0]."]
-    indicators: Vec<JsonPathIndicator>,
+    pub indicators: Vec<JsonPathIndicator>,
 }
 impl Path {
     pub fn new() -> Self {
