@@ -45,6 +45,9 @@ impl JsonPath {
     }
 
     pub fn add_something_item(&mut self) {
+        if self.list_i_type.last() == None {
+            return;
+        }
         let itemtype = self.list_i_type.last().unwrap().clone();
         if itemtype == "list".to_string() {
             self.add_list_item();

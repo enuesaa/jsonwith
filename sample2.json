@@ -2,6 +2,23 @@
   "a",
   "b",
   {
-    "c": "d"
+    "c": "cvalue"
+  },
+  {
+    "d": "dvalue"
+  },
+  900,
+  true,
+  null,
+  {
+    "e": "evalue",
+    "e2": "e2value",
+    "e3": true,
+    "e4": [],
+    "e5": [
+      "e5value1",
+      "e5value2",
+      {"e531": "e531value1"}
+    ]
   }
 ]
