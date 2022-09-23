@@ -17,15 +17,9 @@ impl Serializer {
         for i in json_string.chars() {
             if !scalar.is_initialized() {
                 match i {
-                    '{' => {
-                        path.start_dict();
-                        self.values.push(Value::start_dict(&path));
-                    }
+                    '{' => path.start_dict(),
                     '}' => path.end_dict(),
-                    '[' => {
-                        path.start_list();
-                        self.values.push(Value::start_list(&path));
-                    }
+                    '[' => path.start_list(),
                     ']' => path.end_list(),
                     ',' | ':' | '\n' | ' ' => {}
                     _ => scalar.with_next(&i),
@@ -41,19 +35,19 @@ impl Serializer {
                             scalar = Scalar::new();
                         }
                         '}' => {
-                            self.values.push(Value::scalar(&path, scalar));
-                            scalar = Scalar::new();
+                            self.push_value(&path, scalar);
                             path.end_dict();
+                            scalar = Scalar::new();
                         }
                         ']' => {
                             path.add_list_key_if_in_list_scope();
-                            self.values.push(Value::scalar(&path, scalar));
-                            scalar = Scalar::new();
+                            self.push_value(&path, scalar);
                             path.end_list();
+                            scalar = Scalar::new();
                         }
                         ',' => {
                             path.add_list_key_if_in_list_scope();
-                            self.values.push(Value::scalar(&path, scalar));
+                            self.push_value(&path, scalar);
                             scalar = Scalar::new();
                         }
                         _ => {}
@@ -61,5 +55,9 @@ impl Serializer {
                 }
             }
         }
+    }
+
+    fn push_value(&mut self, path: &Path, scalar: Scalar) {
+        self.values.push(Value::from_scalar(path, scalar));
     }
 }
