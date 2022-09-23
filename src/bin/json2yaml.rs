@@ -15,8 +15,8 @@ fn main() {
     let serializer = Serializer::new(&json_string);
 
     let pathvalues = serializer.pathvalues.clone();
-    for i in pathvalues {
-        println!("{}\t {:?}", i.path, i.value);
+    for mut i in pathvalues {
+        println!("{}\t {:?}", i.path.to_string(), i.value);
     }
 }
 
