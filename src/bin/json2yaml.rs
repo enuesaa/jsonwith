@@ -18,7 +18,8 @@ fn main() {
 
     let values = serializer.values.clone();
     let mut deserializer = Deserializer::new(values);
-    deserializer.print();
+    let yaml_string = deserializer.deserialize();
+    print!("{}", yaml_string);
 }
 
 pub fn read(filename: &str) -> String {
