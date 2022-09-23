@@ -1,12 +1,51 @@
 use crate::json::parts::{Parts, ScalarJudger, Scalar};
 
+pub struct JsonPath {
+    pub value: Vec<String>, // [".", "aaa", ".", "0"]
+}
+impl JsonPath {
+    pub fn new() -> Self {
+        JsonPath { value: Vec::new() }
+    }
+
+    pub fn push(&mut self, value: &mut str) {
+        self.value.push(value.to_string());
+    }
+    
+    pub fn removelast(&mut self) {
+        self.value.pop();
+    }
+
+    pub fn to_string(self) -> String {
+        self.value.join("")
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum JsonParts {
+    StartDict,
+    StartList,
+    String(String),
+    Boolean(String),
+    Null,
+    Number(String),
+    NotDefined,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct JsonPathValue {
+    path: String,
+    value: JsonParts,
+}
+
 #[derive(Clone)]
 pub struct Serializer {
-    pub buff: Vec<Parts>
+    pub buff: Vec<Parts>,
+    pub pathvalues: Vec<JsonPathValue>
 }
 impl Serializer {
     pub fn new(json_string: &str) -> Self {
-        let mut serializer = Serializer {buff: Vec::new()};
+        let mut serializer = Serializer {buff: Vec::new(), pathvalues: Vec::new()};
         serializer.parse(json_string);
         serializer
     }
@@ -34,12 +73,16 @@ impl Serializer {
                 }
             } else {
                 match i {
-                    '{' => self.buff.push(Parts::StartDict),
-                    '}' => self.buff.push(Parts::EndDict),
-                    '[' => self.buff.push(Parts::StartList),
-                    ']' => self.buff.push(Parts::EndList),
-                    ',' => self.buff.push(Parts::Comma),
-                    ':' => self.buff.push(Parts::Colon),
+                    '{' => {
+                        self.pathvalues.push(JsonPathValue{path: "".to_string(), value: JsonParts::StartDict});
+                    },
+                    '}' => {},
+                    '[' => {
+                        self.pathvalues.push(JsonPathValue{path: "".to_string(), value: JsonParts::StartList});
+                    },
+                    ']' => {},
+                    ',' => {},
+                    ':' => {},
                     '\n' => {}
                     ' ' => {}
                     _ => {
