@@ -8,7 +8,8 @@ impl Deserializer {
         Deserializer{values}
     }
 
-    pub fn print(&mut self) {
+    pub fn deserialize(&mut self) -> String {
+        let mut out :String = String::from("");
         let values = self.values.clone();
         for value in values {
             let path = value.path;
@@ -31,7 +32,7 @@ impl Deserializer {
                         if show_key {
                             let mut key = path.value[i].clone();
                             key = String::from(&key[1..]) + ": ";
-                            println!("{}{}", spaces, key);
+                            out += &format!("{}{}\n", spaces, key);
                             spaces += "  ";
                         } else {
                             spaces += "  ";
@@ -56,8 +57,9 @@ impl Deserializer {
                     }
                 } 
             }
-            println!("{}{}", spaces, value.part);
+            out += &format!("{}{}\n", spaces, value.part);
         }
+        out
     }
 
     pub fn print_debug(&mut self) {
