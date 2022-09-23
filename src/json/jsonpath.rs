@@ -1,4 +1,3 @@
-
 #[derive(Debug, Clone, PartialEq)]
 pub struct JsonPath {
     pub value: Vec<String>, // [".", ".aaa", "[]", "[0]."]

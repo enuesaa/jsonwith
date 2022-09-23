@@ -1,5 +1,5 @@
-use crate::json::parts::{Parts, ScalarJudger};
 use crate::json::jsonpath::JsonPath;
+use crate::json::parts::{Parts, ScalarJudger};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum JsonParts {
@@ -46,9 +46,7 @@ impl Serializer {
                             value: JsonParts::StartDict,
                         });
                     }
-                    '}' => {
-                        path.end_dict();
-                    }
+                    '}' => path.end_dict(),
                     '[' => {
                         path.start_list();
                         self.pathvalues.push(JsonPathValue {
@@ -56,16 +54,9 @@ impl Serializer {
                             value: JsonParts::StartList,
                         });
                     }
-                    ']' => {
-                        path.end_list();
-                    }
-                    ',' => {}
-                    ':' => {}
-                    '\n' => {}
-                    ' ' => {}
-                    _ => {
-                        scalar_judger.resolve_next(&i);
-                    }
+                    ']' => path.end_list(),
+                    ',' | ':' | '\n' | ' ' => {}
+                    _ => scalar_judger.resolve_next(&i),
                 };
             } else {
                 if !scalar_judger.resolved {
@@ -103,8 +94,6 @@ impl Serializer {
                             });
                             scalar_judger = ScalarJudger::new();
                         }
-                        '\n' => {}
-                        ' ' => {}
                         _ => {}
                     };
                 }
