@@ -1,4 +1,4 @@
-pub mod jsonpart;
-pub mod jsonpath;
+pub mod part;
+pub mod path;
 pub mod scalar;
 pub mod serializer;

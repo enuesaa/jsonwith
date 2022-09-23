@@ -1,43 +1,53 @@
-use crate::json::jsonpart::JsonPart;
-use crate::json::jsonpath::JsonPath;
+use crate::json::part::Part;
+use crate::json::path::Path;
 use crate::json::scalar::Scalar;
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct JsonValue {
-    pub path: JsonPath,
-    pub value: JsonPart,
+pub struct Value {
+    pub path: Path,
+    pub part: Part,
 }
-impl JsonValue {
-    pub fn new(path: &JsonPath, value: JsonPart) -> Self {
-        JsonValue { path: path.clone(), value }
+impl Value {
+    pub fn new(path: &Path, part: Part) -> Self {
+        Value { path: path.clone(), part }
+    }
+
+    pub fn start_dict(path: &Path) -> Self {
+        Value { path: path.clone(), part: Part::StartDict }
+    }
+
+    pub fn start_list(path: &Path) -> Self {
+        Value { path: path.clone(), part: Part::StartList }
+    }
+
+    pub fn scalar(path: &Path, scalar: Scalar) -> Self {
+        Value { path: path.clone(), part: scalar.part }
     }
 }
 
 #[derive(Clone)]
 pub struct Serializer {
-    pub values: Vec<JsonValue>,
+    pub values: Vec<Value>,
 }
 impl Serializer {
-    pub fn new(json_string: &str) -> Self {
-        let mut serializer = Serializer {values: Vec::new()};
-        serializer.parse(json_string);
-        serializer
+    pub fn new() -> Self {
+        Serializer {values: Vec::new()}
     }
 
-    fn parse(&mut self, json_string: &str) {
-        let mut path = JsonPath::new();
+    pub fn serialize(&mut self, json_string: &str) {
+        let mut path = Path::new();
         let mut scalar = Scalar::new();
         for i in json_string.chars() {
             if !scalar.is_initialized() {
                 match i {
                     '{' => {
                         path.start_dict();
-                        self.values.push(JsonValue::new(&path, JsonPart::StartDict));
+                        self.values.push(Value::start_dict(&path));
                     }
                     '}' => path.end_dict(),
                     '[' => {
                         path.start_list();
-                        self.values.push(JsonValue::new(&path, JsonPart::StartList));
+                        self.values.push(Value::start_list(&path));
                     }
                     ']' => path.end_list(),
                     ',' | ':' | '\n' | ' ' => {}
@@ -54,20 +64,19 @@ impl Serializer {
                             scalar = Scalar::new();
                         }
                         '}' => {
-                            path.add_something_item();
-                            self.values.push(JsonValue::new(&path, JsonPart::String(scalar.get_value())));
+                            self.values.push(Value::scalar(&path, scalar));
                             scalar = Scalar::new();
                             path.end_dict();
                         }
                         ']' => {
-                            path.add_something_item();
-                            self.values.push(JsonValue::new(&path, JsonPart::String(scalar.get_value())));
+                            path.add_list_key_if_in_list_scope();
+                            self.values.push(Value::scalar(&path, scalar));
                             scalar = Scalar::new();
                             path.end_list();
                         }
                         ',' => {
-                            path.add_something_item();
-                            self.values.push(JsonValue::new(&path, JsonPart::String(scalar.get_value())));
+                            path.add_list_key_if_in_list_scope();
+                            self.values.push(Value::scalar(&path, scalar));
                             scalar = Scalar::new();
                         }
                         _ => {}

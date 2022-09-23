@@ -1,10 +1,10 @@
 #[derive(Debug, Clone, PartialEq)]
-pub enum JsonPart {
+pub enum Part {
     StartDict,
     StartList,
     String(String),
-    Boolean(String),
+    Boolean(bool),
     Null,
-    Number(String),
+    Number(usize),
     NotDefined,
 }

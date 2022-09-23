@@ -10,17 +10,17 @@ impl JsonPathIndicator {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub struct JsonPath {
+pub struct Path {
     pub value: Vec<String>, // [".", ".aaa", "[]", "[0]."]
     indicators: Vec<JsonPathIndicator>,
 }
-impl JsonPath {
+impl Path {
     pub fn new() -> Self {
-        JsonPath {value: Vec::new(), indicators: Vec::new()}
+        Path {value: Vec::new(), indicators: Vec::new()}
     }
 
     pub fn start_dict(&mut self) {
-        self.add_something_item();
+        self.add_list_key_if_in_list_scope();
         self.indicators.push(JsonPathIndicator{indicate: String::from("dict"), count: 0});
         self.value.push(".".to_string());
     }
@@ -44,21 +44,16 @@ impl JsonPath {
         self.value.push(String::from("[]"));
     }
 
-    pub fn add_something_item(&mut self) {
-        let last = self.indicators.last();
-        if last != None && last.unwrap().indicate == String::from("list") {
-            self.add_list_item();
+    pub fn add_list_key_if_in_list_scope(&mut self) {
+        if let Some(last) = self.indicators.last_mut() {
+            if last.indicate == String::from("list") {
+                if let Some(last_value) = self.value.last_mut() {
+                    *last_value = String::from("[") + &last.count.to_string() + "]";
+                }
+                last.add_count();
+            }
         }
         // dict の場合は add_dict_key() で既にキーが追加されている
-    }
-
-    pub fn add_list_item(&mut self) {
-        if let Some(last) = self.indicators.last_mut() {
-            if let Some(last_value) = self.value.last_mut() {
-                *last_value = String::from("[") + &last.count.to_string() + "]";
-            }
-            last.add_count();
-        }
     }
 
     pub fn end_list(&mut self) {

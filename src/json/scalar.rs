@@ -1,48 +1,55 @@
-use crate::json::jsonpart::JsonPart;
+use crate::json::part::Part;
 
 #[derive(Debug, Clone)]
 pub struct Scalar {
     chars: Vec<char>,
-    part: JsonPart,
+    pub part: Part,
 }
 impl Scalar {
     pub fn new() -> Self {
-        Scalar {chars: Vec::new(), part: JsonPart::NotDefined}
+        Scalar {chars: Vec::new(), part: Part::NotDefined}
     }
 
     pub fn with_next(&mut self, char: &char) {
         self.part = self.judge_next(char);
-        if self.part == JsonPart::NotDefined {
+        if self.part == Part::NotDefined {
             self.chars.push(char.clone());
         }
     }
 
-    fn judge_next(&mut self, char: &char) -> JsonPart {
+    fn judge_next(&mut self, char: &char) -> Part {
         let val: String = self.chars.clone().into_iter().collect();
         let mut chars_next = self.chars.clone();
         chars_next.push(*char);
         let val_next: String = chars_next.into_iter().collect();
 
         if val.chars().count() > 2 && val.starts_with('\"') && val.ends_with('\"') {
-            return JsonPart::String(val);
+            return Part::String(self.remove_quotaion(val));
         }
         if val == *"true" || val == *"false" {
-            return JsonPart::Boolean(val);
+            return Part::Boolean(self.remove_quotaion(val).parse().unwrap());
         }
         if val == *"null" {
-            return JsonPart::Null;
+            return Part::Null;
         }
         if val.chars().count() > 1
             && val.chars().all(char::is_numeric)
             && !val_next.chars().all(char::is_numeric)
         {
-            return JsonPart::Number(val);
+            return Part::Number(val.parse().unwrap());
         }
-        JsonPart::NotDefined
+        Part::NotDefined
     }
 
     pub fn get_value(&mut self) -> String {
-        self.chars.clone().into_iter().collect()
+        self.remove_quotaion(self.chars.clone().into_iter().collect())
+    }
+
+    pub fn remove_quotaion(&mut self, mut val: String) -> String {
+        if val.chars().count() > 2 && val.starts_with('\"') && val.ends_with('\"') {
+            val = String::from(&val[1..val.len()-1]);
+        }
+        val
     }
 
     pub fn is_initialized(&mut self) -> bool {
@@ -50,6 +57,6 @@ impl Scalar {
     }
 
     pub fn is_resolved(&mut self) -> bool {
-        self.part != JsonPart::NotDefined
+        self.part != Part::NotDefined
     }
 }
