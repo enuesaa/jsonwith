@@ -15,6 +15,7 @@ impl JsonPath {
     }
 
     pub fn start_dict(&mut self) {
+        self.add_something_item();
         self.list_i_vec.push(0);
         self.list_i_type.push("dict".to_string());
         self.value.push(".".to_string());
@@ -62,10 +63,7 @@ impl JsonPath {
     }
 
     pub fn end_list(&mut self) {
-        // let last = self.list_i_vec.last().unwrap().clone();
-        // if last > 0 {
-            self.value.pop();
-        // }
+        self.value.pop();
         self.list_i_vec.pop();
         self.list_i_type.pop();
     }
@@ -88,8 +86,8 @@ pub enum JsonParts {
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct JsonPathValue {
-    path: String,
-    value: JsonParts,
+    pub path: String,
+    pub value: JsonParts,
 }
 
 #[derive(Clone)]

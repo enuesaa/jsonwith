@@ -16,7 +16,7 @@ fn main() {
 
     let pathvalues = serializer.pathvalues.clone();
     for i in pathvalues {
-        println!("{:?}", i);
+        println!("{}\t {:?}", i.path, i.value);
     }
 }
 
