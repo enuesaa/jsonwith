@@ -1,16 +1,6 @@
+use crate::json::jsonparts::JsonParts;
 use crate::json::jsonpath::JsonPath;
-use crate::json::parts::{Parts, ScalarJudger};
-
-#[derive(Debug, Clone, PartialEq)]
-pub enum JsonParts {
-    StartDict,
-    StartList,
-    String(String),
-    Boolean(String),
-    Null,
-    Number(String),
-    NotDefined,
-}
+use crate::json::scalar::Scalar;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct JsonPathValue {
@@ -20,24 +10,20 @@ pub struct JsonPathValue {
 
 #[derive(Clone)]
 pub struct Serializer {
-    pub buff: Vec<Parts>,
     pub pathvalues: Vec<JsonPathValue>,
 }
 impl Serializer {
     pub fn new(json_string: &str) -> Self {
-        let mut serializer = Serializer {
-            buff: Vec::new(),
-            pathvalues: Vec::new(),
-        };
+        let mut serializer = Serializer {pathvalues: Vec::new()};
         serializer.parse(json_string);
         serializer
     }
 
     fn parse(&mut self, json_string: &str) {
         let mut path = JsonPath::new();
-        let mut scalar_judger = ScalarJudger::new();
+        let mut scalar = Scalar::new();
         for i in json_string.chars() {
-            if scalar_judger.initial {
+            if !scalar.is_initialized() {
                 match i {
                     '{' => {
                         path.start_dict();
@@ -56,43 +42,43 @@ impl Serializer {
                     }
                     ']' => path.end_list(),
                     ',' | ':' | '\n' | ' ' => {}
-                    _ => scalar_judger.resolve_next(&i),
+                    _ => scalar.with_next(&i),
                 };
             } else {
-                if !scalar_judger.resolved {
-                    scalar_judger.resolve_next(&i);
+                if !scalar.is_resolved() {
+                    scalar.with_next(&i);
                 }
-                if scalar_judger.resolved {
+                if scalar.is_resolved() {
                     match i {
                         ':' => {
-                            path.add_dict_key(scalar_judger.get_value());
-                            scalar_judger = ScalarJudger::new();
+                            path.add_dict_key(scalar.get_value());
+                            scalar = Scalar::new();
                         }
                         '}' => {
                             path.add_something_item();
                             self.pathvalues.push(JsonPathValue {
                                 path: path.clone(),
-                                value: JsonParts::String(scalar_judger.get_value()),
+                                value: JsonParts::String(scalar.get_value()),
                             });
-                            scalar_judger = ScalarJudger::new();
+                            scalar = Scalar::new();
                             path.end_dict();
                         }
                         ']' => {
                             path.add_something_item();
                             self.pathvalues.push(JsonPathValue {
                                 path: path.clone(),
-                                value: JsonParts::String(scalar_judger.get_value()),
+                                value: JsonParts::String(scalar.get_value()),
                             });
-                            scalar_judger = ScalarJudger::new();
+                            scalar = Scalar::new();
                             path.end_list();
                         }
                         ',' => {
                             path.add_something_item();
                             self.pathvalues.push(JsonPathValue {
                                 path: path.clone(),
-                                value: JsonParts::String(scalar_judger.get_value()),
+                                value: JsonParts::String(scalar.get_value()),
                             });
-                            scalar_judger = ScalarJudger::new();
+                            scalar = Scalar::new();
                         }
                         _ => {}
                     };

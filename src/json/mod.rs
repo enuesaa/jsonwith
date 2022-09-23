@@ -1,5 +1,4 @@
-pub mod deserializer;
+pub mod jsonparts;
 pub mod jsonpath;
-pub mod model;
-pub mod parts;
+pub mod scalar;
 pub mod serializer;
