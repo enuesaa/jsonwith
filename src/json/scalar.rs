@@ -13,7 +13,7 @@ impl Scalar {
     pub fn with_next(&mut self, char: &char) {
         self.part = self.judge_next(char);
         if self.part == Part::NotDefined {
-            self.chars.push(char.clone());
+            self.chars.push(*char);
         }
     }
 
@@ -53,7 +53,7 @@ impl Scalar {
     }
 
     pub fn is_initialized(&mut self) -> bool {
-        self.chars.iter().count() > 0
+        !self.chars.is_empty()
     }
 
     pub fn is_resolved(&mut self) -> bool {

@@ -16,7 +16,7 @@ impl Deserializer {
             let indicators_len = indicators.len();
             let mut spaces = String::from("");
             for (i, indicator) in indicators.iter().enumerate() {
-                if indicator.indicate == String::from("dict") {
+                if indicator.indicate == *"dict" {
                     if i < indicators_len - 1 {
                         let mut k = i;
                         let mut show_key = true;
@@ -31,7 +31,7 @@ impl Deserializer {
                         if show_key {
                             let mut key = path.value[i].clone();
                             key = String::from(&key[1..]) + ": ";
-                            print!("{}{}\n", spaces, key);
+                            println!("{}{}", spaces, key);
                             spaces += "  ";
                         } else {
                             spaces += "  ";
@@ -42,7 +42,7 @@ impl Deserializer {
                         spaces += &key;
                     }
                 }
-                if indicator.indicate == String::from("list") {
+                if indicator.indicate == *"list" {
                     // print!("- ");
                     if i < indicators_len - 1 {
                         let next = indicators[i+1].clone();

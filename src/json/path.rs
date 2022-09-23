@@ -46,7 +46,7 @@ impl Path {
 
     pub fn add_list_key_if_in_list_scope(&mut self) {
         if let Some(last) = self.indicators.last_mut() {
-            if last.indicate == String::from("list") {
+            if last.indicate == *"list" {
                 if let Some(last_value) = self.value.last_mut() {
                     *last_value = String::from("[") + &last.count.to_string() + "]";
                 }
