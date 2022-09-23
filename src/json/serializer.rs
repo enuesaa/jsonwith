@@ -131,11 +131,6 @@ impl Serializer {
                     ' ' => {}
                     _ => {
                         scalar_judger.resolve_next(&i);
-                        // if scalar_judger.resolved {
-                            // value, key
-                            // self.buff.push(Parts::Scalar(Scalar{scalar_type: scalar_judger.clone().scalar_type, value: scalar_judger.clone().get_value()}));
-                            // scalar_judger = ScalarJudger::new();
-                        // }
                     }
                 };
             } else {
