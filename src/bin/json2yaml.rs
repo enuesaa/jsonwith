@@ -1,8 +1,7 @@
 use clap::Parser;
 
-use jsonwith_formatter::json::serializer::Serializer;
-use jsonwith_formatter::yaml::deserializer::Deserializer;
 use std::fs;
+use jsonwith_formatter::json2yaml;
 
 #[derive(Parser)]
 #[clap(disable_help_flag = true)]
@@ -13,12 +12,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
     let json_string = read(&args.path);
-    let mut serializer = Serializer::new();
-    serializer.serialize(&json_string);
-
-    let values = serializer.values.clone();
-    let mut deserializer = Deserializer::new(values);
-    let yaml_string = deserializer.deserialize();
+    let yaml_string = json2yaml(&json_string);
     print!("{}", yaml_string);
 }
 

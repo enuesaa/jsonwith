@@ -7,7 +7,7 @@ use crate::json::serializer::Serializer;
 use crate::yaml::deserializer::Deserializer;
 
 #[wasm_bindgen]
-pub fn greet(value: &str) -> String {
+pub fn json2yaml(value: &str) -> String {
   let mut serializer = Serializer::new();
   serializer.serialize(&value);
 
