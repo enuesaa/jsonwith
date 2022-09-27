@@ -1,4 +1,5 @@
 use crate::json::value::Value;
+use crate::json::part::Part;
 
 pub struct Deserializer {}
 impl Deserializer {
@@ -9,7 +10,7 @@ impl Deserializer {
     /**
      * @todo refactor
      * - dict/arrayが始まったときにキーを表示する
-     * 
+     * - dict/arrayが空だっとときに {} を表示する
      */
     pub fn deserialize(&mut self, values: Vec<Value>) -> String {
         let mut out :String = String::from("");
@@ -18,6 +19,8 @@ impl Deserializer {
             let indicators = path.indicators.clone();
             let indicators_len = indicators.len();
             let mut spaces = String::from("");
+            // show key if value.part == Part::StartDict && not root object
+            // append [] or {} if value is empty
             for (i, indicator) in indicators.iter().enumerate() {
                 if indicator.indicate == *"dict" {
                     if i < indicators_len - 1 {
@@ -63,6 +66,51 @@ impl Deserializer {
         }
         out
     }
+
+    // pub fn deserialize(&mut self, values: Vec<Value>) -> String {
+    //     let mut out :String = String::from("");
+    //     let mut spaces: usize = 0;
+    //     for value in values {
+    //         let path = value.path.clone();
+    //         let part = value.part.clone();
+    //         // println!("{:?}", value);
+
+    //         if let Some(indicator) = path.indicators.last() {
+    //             if indicator.indicate == *"dict" {
+    //                 if part == Part::StartDict {
+    //                     // not root
+    //                     if path.indicators.len() != 1 {
+    //                         let mut key = path.value.get(path.value.len() - 2).unwrap().clone();
+    //                         key = String::from(&key[1..]);
+    //                         out += &format!("{}{}: \n", " ".repeat(spaces), key);
+    //                         spaces += 2;
+    //                     }
+    //                 } else {
+    //                     let mut key = path.value.last().unwrap().clone();
+    //                     key = String::from(&key[1..]);
+    //                     out += &format!("{}{}: {}\n", " ".repeat(spaces), key, part);
+    //                 }
+    //                 // if part == Part::EndDict {
+    //                 //     spaces -= 2;
+    //                 // }
+    //             }
+    //             // @todo 配列の中にオブジェクトがあるときを考慮する
+    //             if indicator.indicate == *"list" {
+    //                 if part == Part::StartList {
+    //                     // not root
+    //                     if path.indicators.len() != 1 {
+    //                         let mut key = path.value.get(path.value.len() - 2).unwrap().clone();
+    //                         key = String::from(&key[1..]);
+    //                         out += &format!("{}{}: \n", " ".repeat(spaces), key);
+    //                     }
+    //                 } else {
+    //                     out += &format!("{}- {}\n", " ".repeat(spaces), part);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     out
+    // }
 
     pub fn print_debug(&mut self, values: Vec<Value>) {
         for mut value in values {
