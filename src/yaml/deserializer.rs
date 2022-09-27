@@ -1,16 +1,13 @@
 use crate::json::value::Value;
 
-pub struct Deserializer {
-    pub values: Vec<Value>,
-}
+pub struct Deserializer {}
 impl Deserializer {
-    pub fn new(values: Vec<Value>) -> Self {
-        Deserializer{values}
+    pub fn new() -> Self {
+        Deserializer{}
     }
 
-    pub fn deserialize(&mut self) -> String {
+    pub fn deserialize(&mut self, values: Vec<Value>) -> String {
         let mut out :String = String::from("");
-        let values = self.values.clone();
         for value in values {
             let path = value.path;
             let indicators = path.indicators.clone();
@@ -62,8 +59,7 @@ impl Deserializer {
         out
     }
 
-    pub fn print_debug(&mut self) {
-        let values = self.values.clone();
+    pub fn print_debug(&mut self, values: Vec<Value>) {
         for mut value in values {
             println!("{}\t {:?}", value.path.to_string(), value.part);
         }

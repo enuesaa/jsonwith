@@ -11,7 +11,7 @@ impl Serializer {
         Serializer {values: Vec::new()}
     }
 
-    pub fn serialize(&mut self, json_string: &str) {
+    pub fn serialize(&mut self, json_string: &str) -> Vec<Value> {
         let mut path = Path::new();
         let mut scalar = Scalar::new();
         for i in json_string.chars() {
@@ -61,6 +61,7 @@ impl Serializer {
                 }
             }
         }
+        self.values.clone()
     }
 
     fn push_value(&mut self, path: &Path, scalar: Scalar) {
