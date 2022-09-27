@@ -6,6 +6,11 @@ impl Deserializer {
         Deserializer{}
     }
 
+    /**
+     * @todo refactor
+     * - dict/arrayが始まったときにキーを表示する
+     * 
+     */
     pub fn deserialize(&mut self, values: Vec<Value>) -> String {
         let mut out :String = String::from("");
         for value in values {
