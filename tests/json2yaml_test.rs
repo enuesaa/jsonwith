@@ -23,8 +23,7 @@ fn json2yaml_sample1() {
 }
 "#;
 
-  let out = json2yaml(json_string);
-  assert_eq!(out, String::from(r#"a: a-value
+  let expect = String::from(r#"a: a-value
 b: 100
 c: 
   ckey1: ckey1-value
@@ -34,7 +33,8 @@ e:
   - e1key1: e1key1-value
     e1key2: e1key2-value
   - e2key1: e2key1-value
-"#));
+"#);
+  assert_eq!(json2yaml(json_string), expect);
 }
 
 
@@ -49,13 +49,14 @@ fn json2yaml_sample2() {
 ]
 "#;
 
-  let out = json2yaml(json_string);
-  assert_eq!(out, String::from(r#"- a
+  let expect = String::from(r#"- a
 - b
 - c: cv
   d: dv
   e: 
     e2: e2v
 - d: f
-"#));
+"#);
+
+  assert_eq!(json2yaml(json_string), expect);
 }
