@@ -1,7 +1,7 @@
 use jsonwith_formatter::json2yaml;
 
 #[test]
-fn convert_json_to_yaml() {
+fn json2yaml_sample1() {
   let json_string = r#"
 {
   "a": "a-value",
@@ -34,5 +34,28 @@ e:
   - e1key1: e1key1-value
     e1key2: e1key2-value
   - e2key1: e2key1-value
+"#));
+}
+
+
+#[test]
+fn json2yaml_sample2() {
+  let json_string = r#"
+[
+  "a",
+  "b",
+  {"c": "cv", "d": "dv", "e": {"e2": "e2v"}},
+  {"d": "f"}
+]
+"#;
+
+  let out = json2yaml(json_string);
+  assert_eq!(out, String::from(r#"- a
+- b
+- c: cv
+  d: dv
+  e: 
+    e2: e2v
+- d: f
 "#));
 }
