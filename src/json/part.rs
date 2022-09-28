@@ -3,7 +3,9 @@ use std::fmt;
 #[derive(Debug, Clone, PartialEq)]
 pub enum Part {
     StartDict,
+    EndDict,
     StartList,
+    EndList,
     String(String),
     Boolean(bool),
     Null,

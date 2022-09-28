@@ -2,6 +2,7 @@ use wasm_bindgen::prelude::*;
 
 pub mod json;
 pub mod yaml;
+pub mod util;
 
 use crate::json::serializer::Serializer as JsonSerializer;
 use crate::yaml::deserializer::Deserializer as YamlDeserializer;

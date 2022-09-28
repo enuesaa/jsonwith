@@ -53,7 +53,6 @@ impl Path {
                 last.add_count();
             }
         }
-        // dict の場合は add_dict_key() で既にキーが追加されている
     }
 
     pub fn end_list(&mut self) {

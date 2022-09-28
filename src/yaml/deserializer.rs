@@ -1,62 +1,79 @@
+use crate::json::path::Path;
 use crate::json::value::Value;
+use crate::json::part::Part;
 
-pub struct Deserializer {}
+pub struct Deserializer {
+    pub yaml_string: String,
+    spaces: usize,
+}
 impl Deserializer {
     pub fn new() -> Self {
-        Deserializer{}
+        Deserializer{yaml_string: String::from(""), spaces: 0}
     }
 
     pub fn deserialize(&mut self, values: Vec<Value>) -> String {
-        let mut out :String = String::from("");
         for value in values {
-            let path = value.path;
-            let indicators = path.indicators.clone();
-            let indicators_len = indicators.len();
-            let mut spaces = String::from("");
-            for (i, indicator) in indicators.iter().enumerate() {
-                if indicator.indicate == *"dict" {
-                    if i < indicators_len - 1 {
-                        let mut k = i;
-                        let mut show_key = true;
-                        while k < indicators_len - 1 {
-                            let next = indicators[k+1].clone();
-                            if next.count > 1 {
-                                show_key = false;
-                                break;
-                            }
-                            k += 1;
-                        }
-                        if show_key {
-                            let mut key = path.value[i].clone();
-                            key = String::from(&key[1..]) + ": ";
-                            out += &format!("{}{}\n", spaces, key);
-                            spaces += "  ";
-                        } else {
-                            spaces += "  ";
-                        }
-                    } else {
-                        let mut key = path.value.last().unwrap().clone();
-                        key = String::from(&key[1..]) + ": ";
-                        spaces += &key;
-                    }
-                }
-                if indicator.indicate == *"list" {
-                    // print!("- ");
-                    if i < indicators_len - 1 {
-                        let next = indicators[i+1].clone();
-                        if next.count == 1 {
-                            spaces += "- ";
-                        } else {
-                            spaces += "  ";
-                        }
-                    } else {
-                        spaces += "- ";
-                    }
-                } 
-            }
-            out += &format!("{}{}\n", spaces, value.part);
+            // println!("{:?}", value);
+            self.deserialize_part(value.path.clone(), value.part.clone());
         }
-        out
+        self.yaml_string.clone()
+    }
+
+    fn deserialize_part(&mut self, path: Path, part: Part) {
+        let is_root = path.indicators.len() == 1;
+        match part {
+            Part::StartDict => {self.resolve_start_dict(path, is_root)},
+            Part::EndDict => {self.resolve_end_dict(is_root)},
+            Part::StartList => {self.resolve_start_list(path, is_root)},
+            Part::EndList => {self.resolve_end_list()},
+            _ => {
+                if let Some(indicator) = path.indicators.last() {
+                    self.resolve_key(&path, 1);
+                    if indicator.indicate == *"dict" {
+                        self.yaml_string += &format!("{}\n", part);
+                    } else if indicator.indicate == *"list" {
+                        self.yaml_string += &format!("{}\n", part);
+                    } 
+                }
+            }
+        }
+    }
+
+    fn resolve_start_dict(&mut self, path: Path, is_root: bool) {
+        if !is_root {
+            self.resolve_key(&path, 2);
+            self.spaces += 2;
+        }
+    }
+
+    fn resolve_end_dict(&mut self, is_root: bool) { 
+        if !is_root {
+            self.spaces -= 2;
+        }
+    }
+
+    fn resolve_start_list(&mut self, path: Path, is_root: bool) {
+        if !is_root {
+            self.resolve_key(&path, 2);
+        }
+    }
+
+    fn resolve_end_list(&mut self) {}
+
+    fn resolve_key(&mut self, path: &Path, off: usize) {
+        let index = path.indicators.len() - off;
+        let indicator = path.indicators[index].clone();
+        if indicator.indicate == *"dict" {
+            let key = path.value[index].clone();
+            let need_spaces = self.spaces - self.yaml_string.split("\n").last().unwrap_or("").as_bytes().len();
+            self.yaml_string += &format!("{}{}: ", " ".repeat(need_spaces), &key[1..]);
+            // return line if resolving parent key
+            if off != 1 {
+                self.yaml_string += "\n";
+            }
+        } else if indicator.indicate == *"list" {
+            self.yaml_string += &format!("{}- ", " ".repeat(self.spaces));
+        }
     }
 
     pub fn print_debug(&mut self, values: Vec<Value>) {
