@@ -60,3 +60,29 @@ fn json2yaml_sample2() {
 
   assert_eq!(json2yaml(json_string), expect);
 }
+
+
+#[test]
+fn json2yaml_empty_dict() {
+  let json_string = r#"
+{"a": {}}
+"#;
+
+  let expect = String::from(r#"a: {}
+"#);
+
+  assert_eq!(json2yaml(json_string), expect);
+}
+
+
+#[test]
+fn json2yaml_empty_list() {
+  let json_string = r#"
+{"a": []}
+"#;
+
+  let expect = String::from(r#"a: []
+"#);
+
+  assert_eq!(json2yaml(json_string), expect);
+}
