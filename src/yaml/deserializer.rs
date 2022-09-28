@@ -38,6 +38,9 @@ impl Deserializer {
             let indicator = &path.get_previous_indicator();
             let key = path.value[path.value.len() - 2].clone();
             self.resolve_key(indicator, key);
+            if indicator.indicate == *"dict" {
+                self.yaml_string += "\n";
+            }
             self.spaces += 2;
         }
     }
@@ -72,7 +75,8 @@ impl Deserializer {
 
     fn resolve_key(&mut self, indicator: &JsonPathIndicator, key: String) {
         if indicator.indicate == *"dict" {
-            self.yaml_string += &format!("{}{}: ", " ".repeat(self.spaces), &key[1..]);
+            let need_spaces = self.spaces - self.yaml_string.split("\n").last().unwrap_or("").as_bytes().len();
+            self.yaml_string += &format!("{}{}: ", " ".repeat(need_spaces), &key[1..]);
         } else if indicator.indicate == *"list" {
             self.yaml_string += &format!("{}- ", " ".repeat(self.spaces));
         }
