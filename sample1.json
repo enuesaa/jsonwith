@@ -5,7 +5,7 @@
     "ckey1": "ckey1-value",
     "ckey2": "ckey2-value"
   },
-  "d": true,
+  "d": {},
   "e": [
     {
       "e1key1": "e1key1-value",

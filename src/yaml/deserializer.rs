@@ -48,6 +48,7 @@ impl Deserializer {
     fn resolve_end_dict(&mut self, mut path: Path) { 
         let indicator = &path.get_last_indicator();
         if indicator.count == 0 {
+            self.yaml_string.pop();
             self.yaml_string += "{}\n";
         }
         if !path.is_root() {
@@ -69,7 +70,8 @@ impl Deserializer {
     fn resolve_end_list(&mut self, mut path: Path) {
         let indicator = &path.get_last_indicator();
         if indicator.count == 0 {
-            self.yaml_string += "{}\n";
+            self.yaml_string.pop();
+            self.yaml_string += "[]\n";
         }
     }
 
