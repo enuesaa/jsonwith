@@ -63,4 +63,16 @@ impl Path {
     pub fn to_string(&mut self) -> String {
         self.value.clone().join("")
     }
+
+    pub fn is_root(&mut self) -> bool {
+        self.indicators.len() == 1
+    }
+
+    pub fn get_last_indicator(&mut self) -> JsonPathIndicator {
+        self.indicators.last().unwrap().clone()
+    }
+    
+    pub fn get_previous_indicator(&mut self) -> JsonPathIndicator {
+        self.indicators[self.indicators.len() - 2].clone()
+    }
 }

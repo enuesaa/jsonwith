@@ -19,11 +19,10 @@ impl Deserializer {
     }
 
     fn deserialize_part(&mut self, path: Path, part: Part) {
-        let is_root = path.indicators.len() == 1;
         match part {
-            Part::StartDict => {self.resolve_start_dict(path, is_root)},
-            Part::EndDict => {self.resolve_end_dict(path, is_root)},
-            Part::StartList => {self.resolve_start_list(path, is_root)},
+            Part::StartDict => {self.resolve_start_dict(path)},
+            Part::EndDict => {self.resolve_end_dict(path)},
+            Part::StartList => {self.resolve_start_list(path)},
             Part::EndList => {self.resolve_end_list(path)},
             _ => {
                 if let Some(indicator) = path.indicators.last() {
@@ -39,9 +38,9 @@ impl Deserializer {
         }
     }
 
-    fn resolve_start_dict(&mut self, path: Path, is_root: bool) {
-        if !is_root {
-            let indicator = &path.indicators[path.indicators.len() - 2].clone();
+    fn resolve_start_dict(&mut self, mut path: Path) {
+        if !path.is_root() {
+            let indicator = &path.get_previous_indicator();
             let key = path.value[path.value.len() - 2].clone();
             self.resolve_key(indicator, key);
             if indicator.indicate == *"dict" {
@@ -51,19 +50,19 @@ impl Deserializer {
         }
     }
 
-    fn resolve_end_dict(&mut self, path: Path, is_root: bool) { 
-        let indicator = &path.indicators[path.indicators.len() - 1].clone();
+    fn resolve_end_dict(&mut self, mut path: Path) { 
+        let indicator = &path.get_last_indicator();
         if indicator.count == 0 {
             self.yaml_string += "{}\n";
         }
-        if !is_root {
+        if !path.is_root() {
             self.spaces -= 2;
         }
     }
 
-    fn resolve_start_list(&mut self, path: Path, is_root: bool) {
-        if !is_root {
-            let indicator = &path.indicators[path.indicators.len() - 2].clone();
+    fn resolve_start_list(&mut self, mut path: Path) {
+        if !path.is_root() {
+            let indicator = &path.get_previous_indicator();
             let key = path.value[path.value.len() - 2].clone();
             self.resolve_key(indicator, key);
             if indicator.indicate == *"dict" {
@@ -72,8 +71,8 @@ impl Deserializer {
         }
     }
 
-    fn resolve_end_list(&mut self, path: Path) {
-        let indicator = &path.indicators[path.indicators.len() - 1].clone();
+    fn resolve_end_list(&mut self, mut path: Path) {
+        let indicator = &path.get_last_indicator();
         if indicator.count == 0 {
             self.yaml_string += "{}\n";
         }
