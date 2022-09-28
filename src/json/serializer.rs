@@ -19,14 +19,20 @@ impl Serializer {
                 match i {
                     '{' => {
                         path.start_dict();
-                        // self.values.push(Value::start_dict(&path));
+                        self.values.push(Value::start_dict(&path));
                     }
-                    '}' => path.end_dict(),
+                    '}' => {
+                        self.values.push(Value::end_dict(&path));
+                        path.end_dict();
+                    }
                     '[' => {
                         path.start_list();
-                        // self.values.push(Value::start_list(&path));
+                        self.values.push(Value::start_list(&path));
                     }
-                    ']' => path.end_list(),
+                    ']' => {
+                        self.values.push(Value::end_list(&path));
+                        path.end_list();
+                    }
                     ',' | ':' | '\n' | ' ' => {}
                     _ => scalar.with_next(&i),
                 };
@@ -42,12 +48,14 @@ impl Serializer {
                         }
                         '}' => {
                             self.push_value(&path, scalar);
+                            self.values.push(Value::end_dict(&path));
                             path.end_dict();
                             scalar = Scalar::new();
                         }
                         ']' => {
                             path.add_list_key_if_in_list_scope();
                             self.push_value(&path, scalar);
+                            self.values.push(Value::end_list(&path));
                             path.end_list();
                             scalar = Scalar::new();
                         }

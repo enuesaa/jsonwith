@@ -15,8 +15,16 @@ impl Value {
     pub fn start_dict(path: &Path) -> Self {
         Value { path: path.clone(), part: Part::StartDict }
     }
+
+    pub fn end_dict(path: &Path) -> Self {
+        Value { path: path.clone(), part: Part::EndDict }
+    }
     
     pub fn start_list(path: &Path) -> Self {
         Value { path: path.clone(), part: Part::StartList }
+    }
+
+    pub fn end_list(path: &Path) -> Self {
+        Value { path: path.clone(), part: Part::EndList }
     }
 }

@@ -30,9 +30,9 @@ c:
   ckey2: ckey2-value
 d: true
 e: 
-  - e1key1: e1key1-value
-    e1key2: e1key2-value
-  - e2key1: e2key1-value
+- e1key1: e1key1-value
+  e1key2: e1key2-value
+- e2key1: e2key1-value
 "#);
   assert_eq!(json2yaml(json_string), expect);
 }
