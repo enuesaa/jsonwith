@@ -13,29 +13,28 @@ impl Deserializer {
 
     pub fn deserialize(&mut self, values: Vec<Value>) -> String {
         for value in values {
-            self.deserialize_part(value.path.clone(), value.part.clone());
+            let path = value.path.clone();
+            let part = value.part.clone();
+            match part {
+                Part::StartDict => {self.resolve_start_dict(path)},
+                Part::EndDict => {self.resolve_end_dict(path)},
+                Part::StartList => {self.resolve_start_list(path)},
+                Part::EndList => {self.resolve_end_list(path)},
+                _ => {self.resolve_others(path, part)}
+            }
         }
         self.yaml_string.clone()
     }
 
-    fn deserialize_part(&mut self, path: Path, part: Part) {
-        match part {
-            Part::StartDict => {self.resolve_start_dict(path)},
-            Part::EndDict => {self.resolve_end_dict(path)},
-            Part::StartList => {self.resolve_start_list(path)},
-            Part::EndList => {self.resolve_end_list(path)},
-            _ => {
-                if let Some(indicator) = path.indicators.last() {
-                    let key = path.value[path.value.len() - 1].clone();
-                    self.resolve_key(indicator, key);
-                    if indicator.indicate == *"dict" {
-                        self.yaml_string += &format!("{}\n", part);
-                    } else if indicator.indicate == *"list" {
-                        self.yaml_string += &format!("{}\n", part);
-                    } 
-                }
-            }
-        }
+    fn resolve_others(&mut self, mut path: Path, part: Part) {
+        let indicator = &path.get_last_indicator();
+        let key = path.value[path.value.len() - 1].clone();
+        self.resolve_key(indicator, key);
+        if indicator.indicate == *"dict" {
+            self.yaml_string += &format!("{}\n", part);
+        } else if indicator.indicate == *"list" {
+            self.yaml_string += &format!("{}\n", part);
+        } 
     }
 
     fn resolve_start_dict(&mut self, mut path: Path) {
