@@ -16,12 +16,18 @@ pub struct Path {
 }
 impl Path {
     pub fn new() -> Self {
-        Path {value: Vec::new(), indicators: Vec::new()}
+        Path {
+            value: Vec::new(),
+            indicators: Vec::new(),
+        }
     }
 
     pub fn start_dict(&mut self) {
         self.add_list_key_if_in_list_scope();
-        self.indicators.push(JsonPathIndicator{indicate: String::from("dict"), count: 0});
+        self.indicators.push(JsonPathIndicator {
+            indicate: String::from("dict"),
+            count: 0,
+        });
         self.value.push(".".to_string());
     }
 
@@ -40,7 +46,10 @@ impl Path {
     }
 
     pub fn start_list(&mut self) {
-        self.indicators.push(JsonPathIndicator{indicate: String::from("list"), count: 0});
+        self.indicators.push(JsonPathIndicator {
+            indicate: String::from("list"),
+            count: 0,
+        });
         self.value.push(String::from("[]"));
     }
 
@@ -71,7 +80,7 @@ impl Path {
     pub fn get_last_indicator(&mut self) -> JsonPathIndicator {
         self.indicators.last().unwrap().clone()
     }
-    
+
     pub fn get_previous_indicator(&mut self) -> JsonPathIndicator {
         self.indicators[self.indicators.len() - 2].clone()
     }

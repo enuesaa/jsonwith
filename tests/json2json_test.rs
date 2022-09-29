@@ -2,7 +2,7 @@ use jsonwith_formatter::json2json;
 
 #[test]
 fn json2json_sample1() {
-  let json_string = r#"{
+    let json_string = r#"{
   "a": "a-value",
   "b": 100,
   "c": {
@@ -21,13 +21,12 @@ fn json2json_sample1() {
   ]
 }
 "#;
-  assert_eq!(json2json(json_string), String::from(json_string));
+    assert_eq!(json2json(json_string), String::from(json_string));
 }
-
 
 #[test]
 fn json2json_sample2() {
-  let json_string = r#"[
+    let json_string = r#"[
   "a",
   "b",
   {
@@ -43,34 +42,36 @@ fn json2json_sample2() {
 ]
 "#;
 
-  assert_eq!(json2json(json_string), String::from(json_string));
+    assert_eq!(json2json(json_string), String::from(json_string));
 }
-
 
 #[test]
 fn json2json_empty_dict() {
-  let json_string = r#"
+    let json_string = r#"
 {"a": {}}
 "#;
-  let expect =  String::from(r#"{
+    let expect = String::from(
+        r#"{
   "a": {}
 }
-"#);
+"#,
+    );
 
-  assert_eq!(json2json(json_string), expect);
+    assert_eq!(json2json(json_string), expect);
 }
-
 
 #[test]
 fn json2json_empty_list() {
-  let json_string = r#"
+    let json_string = r#"
 {"a": []}
 "#;
 
-  let expect = String::from(r#"{
+    let expect = String::from(
+        r#"{
   "a": []
 }
-"#);
+"#,
+    );
 
-  assert_eq!(json2json(json_string), expect);
+    assert_eq!(json2json(json_string), expect);
 }

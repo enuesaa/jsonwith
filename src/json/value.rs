@@ -9,22 +9,37 @@ pub struct Value {
 }
 impl Value {
     pub fn from_scalar(path: &Path, scalar: Scalar) -> Self {
-        Value { path: path.clone(), part: scalar.part }
+        Value {
+            path: path.clone(),
+            part: scalar.part,
+        }
     }
 
     pub fn start_dict(path: &Path) -> Self {
-        Value { path: path.clone(), part: Part::StartDict }
+        Value {
+            path: path.clone(),
+            part: Part::StartDict,
+        }
     }
 
     pub fn end_dict(path: &Path) -> Self {
-        Value { path: path.clone(), part: Part::EndDict }
+        Value {
+            path: path.clone(),
+            part: Part::EndDict,
+        }
     }
-    
+
     pub fn start_list(path: &Path) -> Self {
-        Value { path: path.clone(), part: Part::StartList }
+        Value {
+            path: path.clone(),
+            part: Part::StartList,
+        }
     }
 
     pub fn end_list(path: &Path) -> Self {
-        Value { path: path.clone(), part: Part::EndList }
+        Value {
+            path: path.clone(),
+            part: Part::EndList,
+        }
     }
 }

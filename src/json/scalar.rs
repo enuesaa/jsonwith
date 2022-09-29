@@ -7,7 +7,10 @@ pub struct Scalar {
 }
 impl Scalar {
     pub fn new() -> Self {
-        Scalar {chars: Vec::new(), part: Part::NotDefined}
+        Scalar {
+            chars: Vec::new(),
+            part: Part::NotDefined,
+        }
     }
 
     pub fn with_next(&mut self, char: &char) {
@@ -47,7 +50,7 @@ impl Scalar {
 
     pub fn remove_quotaion(&mut self, mut val: String) -> String {
         if val.chars().count() > 2 && val.starts_with('\"') && val.ends_with('\"') {
-            val = String::from(&val[1..val.len()-1]);
+            val = String::from(&val[1..val.len() - 1]);
         }
         val
     }

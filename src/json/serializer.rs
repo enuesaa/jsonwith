@@ -1,6 +1,6 @@
-use crate::json::value::Value;
 use crate::json::path::Path;
 use crate::json::scalar::Scalar;
+use crate::json::value::Value;
 
 #[derive(Clone)]
 pub struct Serializer {
@@ -8,7 +8,7 @@ pub struct Serializer {
 }
 impl Serializer {
     pub fn new() -> Self {
-        Serializer {values: Vec::new()}
+        Serializer { values: Vec::new() }
     }
 
     pub fn serialize(&mut self, json_string: &str) -> Vec<Value> {
