@@ -90,9 +90,9 @@ impl Line {
 
 impl fmt::Display for Line {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
+        writeln!(
             f,
-            "{}{}{}{}{}{}{}{}{}\n",
+            "{}{}{}{}{}{}{}{}{}",
             " ".repeat(self.spaces),
             self.key,
             if self.need_colon { ": " } else { "" },

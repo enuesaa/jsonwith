@@ -81,7 +81,7 @@ impl Deserializer {
     fn resolve_key_(&mut self, indicator: &JsonPathIndicator, key: String) -> Line {
         let mut line: Line = Line::new();
         if self.lines.len() > 1 && self.lines.last_mut().unwrap().is_hyphen_only() {
-            line = self.lines.pop().unwrap().clone();
+            line = self.lines.pop().unwrap();
         }
         if indicator.indicate == *"dict" {
             line.set_spaces(if line.need_hyphen {

@@ -68,20 +68,20 @@ impl Line {
     }
 
     pub fn is_hyphen_only(&mut self) -> bool {
-        self.need_hyphen == true
-            && self.key == String::from("")
-            && self.need_colon == false
-            && self.value == String::from("")
-            && self.need_empty_dict_blancket == false
-            && self.need_empty_list_blancket == false
+        self.need_hyphen
+            && self.key == *""
+            && !self.need_colon
+            && self.value == *""
+            && !self.need_empty_dict_blancket
+            && !self.need_empty_list_blancket
     }
 }
 
 impl fmt::Display for Line {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
+        writeln!(
             f,
-            "{}{}{}{}{}{}{}\n",
+            "{}{}{}{}{}{}{}",
             " ".repeat(self.spaces),
             if self.need_hyphen { "- " } else { "" },
             self.key,
