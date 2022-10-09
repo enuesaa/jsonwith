@@ -91,3 +91,20 @@ fn json2yaml_empty_list() {
 
     assert_eq!(json2yaml(json_string), expect);
 }
+
+#[test]
+fn json2yaml_number_list() {
+  let json_string = r#"
+{"a": [0, 1, 2]}
+"#;
+
+  let expect = String::from(
+      r#"a:
+- 0
+- 1
+- 2
+"#,
+  );
+
+  assert_eq!(json2yaml(json_string), expect);
+}
