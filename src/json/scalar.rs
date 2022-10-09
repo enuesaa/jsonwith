@@ -35,7 +35,7 @@ impl Scalar {
         if val == *"null" {
             return Part::Null;
         }
-        if val.chars().count() > 1
+        if val.chars().count() > 0
             && val.chars().all(char::is_numeric)
             && !val_next.chars().all(char::is_numeric)
         {

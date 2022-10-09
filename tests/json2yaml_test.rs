@@ -99,7 +99,7 @@ fn json2yaml_number_list() {
 "#;
 
   let expect = String::from(
-      r#"a:
+      r#"a: 
 - 0
 - 1
 - 2
