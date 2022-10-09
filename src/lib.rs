@@ -18,6 +18,7 @@ pub fn json2yaml(value: &str) -> String {
     deserializer.deserialize(values)
 }
 
+#[wasm_bindgen]
 pub fn json2json(value: &str) -> String {
     let mut serializer = JsonSerializer::new();
     let values = serializer.serialize(value);
