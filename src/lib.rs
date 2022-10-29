@@ -20,10 +20,11 @@ pub fn json2yaml(value: &str, indent: usize) -> String {
 }
 
 #[wasm_bindgen]
-pub fn json2json(value: &str) -> String {
+pub fn json2json(value: &str, indent: usize) -> String {
     let mut serializer = JsonSerializer::new();
     let values = serializer.serialize(value);
 
     let mut deserializer = JsonDeserializer::new();
+    deserializer.indent = indent;
     deserializer.deserialize(values)
 }

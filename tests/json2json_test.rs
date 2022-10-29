@@ -21,7 +21,7 @@ fn json2json_sample1() {
   ]
 }
 "#;
-    assert_eq!(json2json(json_string), String::from(json_string));
+    assert_eq!(json2json(json_string, 2), String::from(json_string));
 }
 
 #[test]
@@ -42,7 +42,7 @@ fn json2json_sample2() {
 ]
 "#;
 
-    assert_eq!(json2json(json_string), String::from(json_string));
+    assert_eq!(json2json(json_string, 2), String::from(json_string));
 }
 
 #[test]
@@ -57,7 +57,7 @@ fn json2json_empty_dict() {
 "#,
     );
 
-    assert_eq!(json2json(json_string), expect);
+    assert_eq!(json2json(json_string, 2), expect);
 }
 
 #[test]
@@ -73,5 +73,5 @@ fn json2json_empty_list() {
 "#,
     );
 
-    assert_eq!(json2json(json_string), expect);
+    assert_eq!(json2json(json_string, 2), expect);
 }

@@ -25,7 +25,7 @@ fn main() {
     }
     if args.format == "json" {
         let json_string = read(&args.input);
-        let formatted = json2json(&json_string);
+        let formatted = json2json(&json_string, args.indent);
         print!("{}", formatted);
     }
 }

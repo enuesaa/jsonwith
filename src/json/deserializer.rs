@@ -5,12 +5,14 @@ use crate::json::value::Value;
 
 pub struct Deserializer {
     pub lines: Vec<Line>,
+    pub indent: usize,
     spaces: usize,
 }
 impl Deserializer {
     pub fn new() -> Self {
         Deserializer {
             lines: Vec::new(),
+            indent: 2,
             spaces: 0,
         }
     }
@@ -54,11 +56,11 @@ impl Deserializer {
             line.enable_start_dict_blancket();
             self.lines.push(line);
         }
-        self.spaces += 2;
+        self.spaces += self.indent;
     }
 
     fn resolve_end_dict_(&mut self, mut path: Path) {
-        self.spaces -= 2;
+        self.spaces -= self.indent;
         let indicator = &path.get_last_indicator();
         if indicator.count == 0 {
             if let Some(line) = self.lines.last_mut() {
@@ -97,11 +99,11 @@ impl Deserializer {
             line.enable_start_list_blancket();
             self.lines.push(line);
         }
-        self.spaces += 2;
+        self.spaces += self.indent;
     }
 
     fn resolve_end_list_(&mut self, mut path: Path) {
-        self.spaces -= 2;
+        self.spaces -= self.indent;
         let indicator = &path.get_last_indicator();
         if indicator.count == 0 {
             if let Some(line) = self.lines.last_mut() {
