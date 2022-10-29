@@ -5,12 +5,14 @@ use crate::yaml::line::Line;
 
 pub struct Deserializer {
     pub lines: Vec<Line>,
+    pub indent: usize,
     spaces: usize,
 }
 impl Deserializer {
     pub fn new() -> Self {
         Deserializer {
             lines: Vec::new(),
+            indent: 2,
             spaces: 0,
         }
     }
@@ -44,7 +46,7 @@ impl Deserializer {
             let key = path.value[path.value.len() - 2].clone();
             let line = self.resolve_key_(indicator, key);
             self.lines.push(line);
-            self.spaces += 2;
+            self.spaces += self.indent;
         }
     }
 
@@ -56,7 +58,7 @@ impl Deserializer {
             }
         }
         if !path.is_root() {
-            self.spaces -= 2;
+            self.spaces -= self.indent;
         }
     }
 

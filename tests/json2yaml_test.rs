@@ -36,7 +36,7 @@ e:
 - e2key1: e2key1-value
 "#,
     );
-    assert_eq!(json2yaml(json_string), expect);
+    assert_eq!(json2yaml(json_string, 2), expect);
 }
 
 #[test]
@@ -61,7 +61,7 @@ fn json2yaml_sample2() {
 "#,
     );
 
-    assert_eq!(json2yaml(json_string), expect);
+    assert_eq!(json2yaml(json_string, 2), expect);
 }
 
 #[test]
@@ -75,7 +75,7 @@ fn json2yaml_empty_dict() {
 "#,
     );
 
-    assert_eq!(json2yaml(json_string), expect);
+    assert_eq!(json2yaml(json_string, 2), expect);
 }
 
 #[test]
@@ -89,7 +89,7 @@ fn json2yaml_empty_list() {
 "#,
     );
 
-    assert_eq!(json2yaml(json_string), expect);
+    assert_eq!(json2yaml(json_string, 2), expect);
 }
 
 #[test]
@@ -106,5 +106,5 @@ fn json2yaml_number_list() {
 "#,
   );
 
-  assert_eq!(json2yaml(json_string), expect);
+  assert_eq!(json2yaml(json_string, 2), expect);
 }

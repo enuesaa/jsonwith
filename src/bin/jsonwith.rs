@@ -11,13 +11,16 @@ struct Args {
 
     #[clap(short = 'i', long = "input")]
     input: String,
+
+    #[clap(long = "indent", default_value = "2")]
+    indent: usize,
 }
 
 fn main() {
     let args = Args::parse();
     if args.format == "yaml" {
         let json_string = read(&args.input);
-        let yaml_string = json2yaml(&json_string);
+        let yaml_string = json2yaml(&json_string, args.indent);
         print!("{}", yaml_string);
     }
     if args.format == "json" {

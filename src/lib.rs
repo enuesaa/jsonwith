@@ -10,11 +10,12 @@ use crate::yaml::deserializer::Deserializer as YamlDeserializer;
 
 /* @see https://github.com/rustwasm/wasm-bindgen/issues/2882 */
 #[wasm_bindgen]
-pub fn json2yaml(value: &str) -> String {
+pub fn json2yaml(value: &str, indent: usize) -> String {
     let mut serializer = JsonSerializer::new();
     let values = serializer.serialize(value);
 
     let mut deserializer = YamlDeserializer::new();
+    deserializer.indent = indent;
     deserializer.deserialize(values)
 }
 
