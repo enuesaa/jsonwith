@@ -1,10 +1,10 @@
 **DEVELOPING**
 
-# rust-json2yaml-practice
+# jsonwith-formatter
 
 ## Installation
 ~~~sh
-$ cargo install --git https://github.com/enuesaa/rust-json2yaml-practice
+$ cargo install --git https://github.com/enuesaa/jsonwith-formatter
 $ which jsonwith
 ~~~
 
