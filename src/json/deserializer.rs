@@ -22,20 +22,20 @@ impl Deserializer {
             let path = value.path.clone();
             let part = value.part.clone();
             match part {
-                Part::StartDict => self.resolve_start_dict_(path),
-                Part::EndDict => self.resolve_end_dict_(path),
-                Part::StartList => self.resolve_start_list_(path),
-                Part::EndList => self.resolve_end_list_(path),
-                _ => self.resolve_others_(path, part),
+                Part::StartDict => self.resolve_start_dict(path),
+                Part::EndDict => self.resolve_end_dict(path),
+                Part::StartList => self.resolve_start_list(path),
+                Part::EndList => self.resolve_end_list(path),
+                _ => self.resolve_others(path, part),
             }
         }
         self.lines.iter().map(|v| v.to_string()).collect()
     }
 
-    fn resolve_others_(&mut self, mut path: Path, part: Part) {
+    fn resolve_others(&mut self, mut path: Path, part: Part) {
         let indicator = &path.get_last_indicator();
         let key = path.value[path.value.len() - 1].clone();
-        let mut line = self.resolve_key_(indicator, key);
+        let mut line = self.resolve_key(indicator, key);
         match part {
             Part::String(a) => line.set_value(format!("\"{}\"", a)),
             _ => line.set_value(part.to_string()),
@@ -44,11 +44,11 @@ impl Deserializer {
         self.lines.push(line);
     }
 
-    fn resolve_start_dict_(&mut self, mut path: Path) {
+    fn resolve_start_dict(&mut self, mut path: Path) {
         if !path.is_root() {
             let indicator = &path.get_previous_indicator();
             let key = path.value[path.value.len() - 2].clone();
-            let mut line = self.resolve_key_(indicator, key);
+            let mut line = self.resolve_key(indicator, key);
             line.enable_start_dict_blancket();
             self.lines.push(line);
         } else {
@@ -59,7 +59,7 @@ impl Deserializer {
         self.spaces += self.indent;
     }
 
-    fn resolve_end_dict_(&mut self, mut path: Path) {
+    fn resolve_end_dict(&mut self, mut path: Path) {
         self.spaces -= self.indent;
         let indicator = &path.get_last_indicator();
         if indicator.count == 0 {
@@ -87,11 +87,11 @@ impl Deserializer {
         }
     }
 
-    fn resolve_start_list_(&mut self, mut path: Path) {
+    fn resolve_start_list(&mut self, mut path: Path) {
         if !path.is_root() {
             let indicator = &path.get_previous_indicator();
             let key = path.value[path.value.len() - 2].clone();
-            let mut line = self.resolve_key_(indicator, key);
+            let mut line = self.resolve_key(indicator, key);
             line.enable_start_list_blancket();
             self.lines.push(line);
         } else {
@@ -102,7 +102,7 @@ impl Deserializer {
         self.spaces += self.indent;
     }
 
-    fn resolve_end_list_(&mut self, mut path: Path) {
+    fn resolve_end_list(&mut self, mut path: Path) {
         self.spaces -= self.indent;
         let indicator = &path.get_last_indicator();
         if indicator.count == 0 {
@@ -130,7 +130,7 @@ impl Deserializer {
         }
     }
 
-    fn resolve_key_(&mut self, indicator: &JsonPathIndicator, key: String) -> Line {
+    fn resolve_key(&mut self, indicator: &JsonPathIndicator, key: String) -> Line {
         let mut line: Line = Line::new();
         if indicator.indicate == *"dict" {
             line.set_spaces(self.spaces);
