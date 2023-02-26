@@ -1,4 +1,4 @@
-**DEVELOPING**
+**Work in progress...**
 
 # jsonwith-formatter
 
