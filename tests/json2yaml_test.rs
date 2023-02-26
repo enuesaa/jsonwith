@@ -32,17 +32,7 @@ fn json2yaml_empty_list() {
 
 #[test]
 fn json2yaml_number_list() {
-  let json_string = r#"
-{"a": [0, 1, 2]}
-"#;
-
-  let expect = String::from(
-      r#"a: 
-- 0
-- 1
-- 2
-"#,
-  );
-
-  assert_eq!(json2yaml(json_string, 2), expect);
+    let numberlistjson = read("./tests/assets/numberlist.json");
+    let numberlistyaml = read("./tests/assets/numberlist.yaml");
+    assert_eq!(json2yaml(&numberlistjson, 2), numberlistyaml);
 }
