@@ -1,77 +1,27 @@
 use jsonwith_formatter::json2json;
+use jsonwith_formatter::util::read;
 
 #[test]
 fn json2json_sample1() {
-    let json_string = r#"{
-  "a": "a-value",
-  "b": 100,
-  "c": {
-    "ckey1": "ckey1-value",
-    "ckey2": "ckey2-value"
-  },
-  "d": true,
-  "e": [
-    {
-      "e1key1": "e1key1-value",
-      "e1key2": "e1key2-value"
-    },
-    {
-      "e2key1": "e2key1-value"
-    }
-  ]
-}
-"#;
-    assert_eq!(json2json(json_string, 2), String::from(json_string));
+    let sample1 = read("./tests/assets/sample1.json");
+    // todo fix last line existence. 
+    assert_eq!(json2json(&sample1, 4), sample1);
 }
 
 #[test]
 fn json2json_sample2() {
-    let json_string = r#"[
-  "a",
-  "b",
-  {
-    "c": "cv",
-    "d": "dv",
-    "e": {
-      "e2": "e2v"
-    }
-  },
-  {
-    "d": "f"
-  }
-]
-"#;
-
-    assert_eq!(json2json(json_string, 2), String::from(json_string));
+    let sample2 = read("./tests/assets/sample2.json");
+    assert_eq!(json2json(&sample2, 4), sample2);
 }
 
 #[test]
 fn json2json_empty_dict() {
-    let json_string = r#"
-{"a": {}}
-"#;
-    let expect = String::from(
-        r#"{
-  "a": {}
-}
-"#,
-    );
-
-    assert_eq!(json2json(json_string, 2), expect);
+    let emptydict = read("./tests/assets/emptydict.json");
+    assert_eq!(json2json(&emptydict, 4), emptydict);
 }
 
 #[test]
 fn json2json_empty_list() {
-    let json_string = r#"
-{"a": []}
-"#;
-
-    let expect = String::from(
-        r#"{
-  "a": []
-}
-"#,
-    );
-
-    assert_eq!(json2json(json_string, 2), expect);
+    let emptylist = read("./tests/assets/emptylist.json");
+    assert_eq!(json2json(&emptylist, 4), emptylist);
 }

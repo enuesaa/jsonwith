@@ -1,0 +1,10 @@
+a: aaa
+b: 100
+c: 
+  ckey1: ccc1
+  ckey2: ccc2
+d: true
+e: 
+- e1key1: eee1
+  e1key2: eee2
+- e2key1: eee3

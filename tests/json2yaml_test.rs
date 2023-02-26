@@ -1,95 +1,33 @@
 use jsonwith_formatter::json2yaml;
+use jsonwith_formatter::util::read;
 
 #[test]
 fn json2yaml_sample1() {
-    let json_string = r#"
-{
-  "a": "a-value",
-  "b": 100,
-  "c": {
-    "ckey1": "ckey1-value",
-    "ckey2": "ckey2-value"
-  },
-  "d": true,
-  "e": [
-    {
-      "e1key1": "e1key1-value",
-      "e1key2": "e1key2-value"
-    },
-    {
-      "e2key1": "e2key1-value"
-    }
-  ]
-}
-"#;
-
-    let expect = String::from(
-        r#"a: a-value
-b: 100
-c: 
-  ckey1: ckey1-value
-  ckey2: ckey2-value
-d: true
-e: 
-- e1key1: e1key1-value
-  e1key2: e1key2-value
-- e2key1: e2key1-value
-"#,
-    );
-    assert_eq!(json2yaml(json_string, 2), expect);
+    let sample1json = read("./tests/assets/sample1.json");
+    let sample1yaml = read("./tests/assets/sample1.yaml");
+    // todo fix last line existence. 
+    assert_eq!(json2yaml(&sample1json, 2), sample1yaml);
 }
 
 #[test]
 fn json2yaml_sample2() {
-    let json_string = r#"
-[
-  "a",
-  "b",
-  {"c": "cv", "d": "dv", "e": {"e2": "e2v"}},
-  {"d": "f"}
-]
-"#;
-
-    let expect = String::from(
-        r#"- a
-- b
-- c: cv
-  d: dv
-  e: 
-    e2: e2v
-- d: f
-"#,
-    );
-
-    assert_eq!(json2yaml(json_string, 2), expect);
+    let sample2json = read("./tests/assets/sample2.json");
+    let sample2yaml = read("./tests/assets/sample2.yaml");
+    assert_eq!(json2yaml(&sample2json, 2), sample2yaml);
 }
 
 #[test]
 fn json2yaml_empty_dict() {
-    let json_string = r#"
-{"a": {}}
-"#;
-
-    let expect = String::from(
-        r#"a: {}
-"#,
-    );
-
-    assert_eq!(json2yaml(json_string, 2), expect);
+    let emptydictjson = read("./tests/assets/emptydict.json");
+    let emptydictyaml = read("./tests/assets/emptydict.yaml");
+    assert_eq!(json2yaml(&emptydictjson, 2), emptydictyaml);
 }
 
 #[test]
 fn json2yaml_empty_list() {
-    let json_string = r#"
-{"a": []}
-"#;
-
-    let expect = String::from(
-        r#"a: []
-"#,
-    );
-
-    assert_eq!(json2yaml(json_string, 2), expect);
+    let emptylistjson = read("./tests/assets/emptylist.json");
+    let emptylistyaml = read("./tests/assets/emptylist.yaml");
+    assert_eq!(json2yaml(&emptylistjson, 2), emptylistyaml);
 }
 
 #[test]
