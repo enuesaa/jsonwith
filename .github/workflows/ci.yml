@@ -1,4 +1,4 @@
-name: test
+name: ci
 
 on:
   push:
@@ -10,9 +10,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - uses: actions-rs/cargo@v1
-        with:
-          command: version
       - uses: actions-rs/cargo@v1
         with:
           command: build
