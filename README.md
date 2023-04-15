@@ -1,6 +1,6 @@
 **Work in progress...**
 
-# jsonwith-formatter
+# jsonwith
 
 ## Installation
 ~~~sh
