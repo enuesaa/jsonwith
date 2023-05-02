@@ -1,10 +1,9 @@
-**Work in progress...**
-
+**Work in progress..**
 # jsonwith
 
 ## Installation
 ~~~sh
-$ cargo install --git https://github.com/enuesaa/jsonwith-formatter
+$ cargo install --git https://github.com/enuesaa/jsonwith
 $ which jsonwith
 ~~~
 
