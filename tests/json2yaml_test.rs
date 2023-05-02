@@ -1,5 +1,12 @@
 use jsonwith::json2yaml;
-use jsonwith::util::read;
+use std::fs;
+
+fn read(filename: &str) -> String {
+    match fs::read_to_string(filename) {
+        Err(reason) => panic!("failed to open file {}: {}", filename, reason),
+        Ok(file) => file,
+    }
+}
 
 #[test]
 fn json2yaml_sample1() {

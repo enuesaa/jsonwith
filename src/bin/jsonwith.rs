@@ -1,6 +1,8 @@
+use std::fs;
 use clap::Parser;
+use anyhow::anyhow;
+use anyhow::Result;
 
-use jsonwith::util::read;
 use jsonwith::{json2json, json2yaml};
 
 #[derive(Debug, Parser)]
@@ -16,16 +18,29 @@ struct Args {
     indent: usize,
 }
 
-fn main() {
+fn main() -> Result<()> {
     let args = Args::parse();
-    if args.format == "yaml" {
-        let json_string = read(&args.input);
-        let yaml_string = json2yaml(&json_string, args.indent);
-        print!("{}", yaml_string);
-    }
-    if args.format == "json" {
-        let json_string = read(&args.input);
-        let formatted = json2json(&json_string, args.indent);
-        print!("{}", formatted);
-    }
+    let format = args.format;
+    let filename = args.input;
+
+    if format == "yaml" {
+        if let Ok(json_str) = fs::read_to_string(&filename) {
+            let yaml_str = json2yaml(&json_str, args.indent);
+            println!("{}", yaml_str);
+            return Ok(());
+        } else {
+            return Err(anyhow!("Failed to open file."));
+        };
+    };
+    if format == "json" {
+        if let Ok(json_str) = fs::read_to_string(&filename) {
+            let formatted = json2json(&json_str, args.indent);
+            println!("{}", formatted);
+            return Ok(());
+        } else {
+            return Err(anyhow!("Failed to open file."));
+        };
+    };
+
+    Err(anyhow!("Argument invalid."))
 }
