@@ -1,10 +1,10 @@
 [package]
-name = "jsonwith_formatter"
-description = "work in progeress... "
+name = "jsonwith"
+description = "work in progeress.. "
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
-repository = "https://github.com/enuesaa/jsonwith-formatter"
+repository = "https://github.com/enuesaa/jsonwith"
 
 [dependencies]
 clap = { version = "3.2.20", features = ["derive"] }

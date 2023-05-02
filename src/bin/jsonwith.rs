@@ -1,7 +1,7 @@
 use clap::Parser;
 
-use jsonwith_formatter::util::read;
-use jsonwith_formatter::{json2json, json2yaml};
+use jsonwith::util::read;
+use jsonwith::{json2json, json2yaml};
 
 #[derive(Debug, Parser)]
 #[clap(disable_help_flag = true)]

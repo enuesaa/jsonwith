@@ -96,7 +96,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "jsonwith_formatter"
+name = "jsonwith"
 version = "0.1.0"
 dependencies = [
  "clap",

@@ -1,5 +1,5 @@
-use jsonwith_formatter::json2json;
-use jsonwith_formatter::util::read;
+use jsonwith::json2json;
+use jsonwith::util::read;
 
 #[test]
 fn json2json_sample1() {
