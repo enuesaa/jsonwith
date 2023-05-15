@@ -1,5 +1,6 @@
 pub mod json;
 pub mod yaml;
+pub mod core;
 
 use crate::json::deserializer::Deserializer as JsonDeserializer;
 use crate::json::serializer::Serializer as JsonSerializer;
