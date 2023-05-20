@@ -20,7 +20,3 @@ impl Kv {
         self.value.clone()
     }
 }
-
-pub struct KvCollection {
-    pub items: Vec<Kv>,
-}
