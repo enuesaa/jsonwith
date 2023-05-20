@@ -1,3 +1,4 @@
 pub mod kv;
 pub mod tokens;
-pub mod collection;
+pub mod kvs;
+pub mod path;

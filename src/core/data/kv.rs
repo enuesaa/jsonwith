@@ -2,18 +2,18 @@ use crate::core::data::tokens::Tokens;
 
 #[derive(Clone)]
 pub struct Kv {
-    key: String,
+    path: String,
     value: Tokens,
 }
 
 impl Kv {
     // immutable
     pub fn new(key: &str, value: Tokens) -> Self {
-        Kv { key: key.to_string(), value }
+        Kv { path: key.to_string(), value }
     }
 
     pub fn key(&self) -> String {
-        self.key.clone()
+        self.path.clone()
     }
 
     pub fn value(&self) -> Tokens {
