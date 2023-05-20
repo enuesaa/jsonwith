@@ -1,3 +1,5 @@
+
+#[derive(Clone)]
 pub enum Tokens {
     MkArray,
     MkDict,

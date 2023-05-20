@@ -15,6 +15,10 @@ pub fn json2yaml(value: &str, indent: usize) -> String {
     deserializer.deserialize(values)
 }
 
+pub fn json2yamlv2(value: &str, indent: usize) -> String {
+    todo!()
+}
+
 pub fn json2json(value: &str, indent: usize) -> String {
     let mut serializer = JsonSerializer::new();
     let values = serializer.serialize(value);
@@ -22,4 +26,8 @@ pub fn json2json(value: &str, indent: usize) -> String {
     let mut deserializer = JsonDeserializer::new();
     deserializer.indent = indent;
     deserializer.deserialize(values)
+}
+
+pub fn json2jsonv2(value: &str, indent: usize) -> String {
+    todo!()
 }
