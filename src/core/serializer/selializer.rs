@@ -32,10 +32,14 @@ impl Serializer {
                 match i {
                     '{' => {
                         self.kvs.push(Kv::new("key", Tokens::MkDict))
+
+                        // carry.deep()
                     },
                     '[' => {
                         self.kvs.push(Kv::new("key", Tokens::MkArray))
                     },
+
+                    // '"' => { carry.set_key() }
                     _ => {}
                 };
             }
