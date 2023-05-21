@@ -1,4 +1,5 @@
 
+#[derive(Clone, Debug)]
 pub struct Path {
     route: Vec<String>,
 }

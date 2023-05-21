@@ -7,6 +7,7 @@ enum ParseStatus {
     ParsingValue,
 }
 
+// 何を serializer に任せるか境界線が曖昧
 pub struct Carry {
     status: ParseStatus,
     path: Path,
@@ -53,12 +54,17 @@ impl Carry {
 
     pub fn should_escape(&self) -> bool {
         if let Some(last) = self.buf.chars().last() {
+            // todo last から2番目が\でないかチェックする
             return last == '\\'
         }
         false
     }
 
-    pub fn resolve_as_key(&mut self) {
+    pub fn should_end_with_quotation(&self) -> bool {
+        self.buf.starts_with("\"")
+    }
+
+    fn resolve_as_key(&mut self) {
         let buf = self.buf.clone();
         self.path.pop();
         self.path.push(&buf);
@@ -68,8 +74,39 @@ impl Carry {
         self.status = ParseStatus::ParsingSpace;
     }
 
+    fn resolve_as_value(&mut self) {
+        // ここで値を返した方がいいか
+        self.buf = String::from("");
+        self.next_is_key = true;
+
+        self.status = ParseStatus::ParsingSpace;
+    }
+
+    pub fn resolve(&mut self) {
+        if self.in_key() {
+            self.resolve_as_key();
+        } else if self.in_value() {
+            self.resolve_as_value();
+        }
+    }
+
     pub fn start_dict(&self) {}
-    pub fn end_dict(&self) {}
+
+    pub fn end_dict(&mut self) {
+        self.path.pop();
+    }
+
     pub fn start_array(&self) {}
-    pub fn end_array(&self) {}
+
+    pub fn end_array(&mut self) {
+        self.path.pop();
+    }
+
+    pub fn get_path(&self) -> Path {
+        self.path.clone()
+    }
+
+    pub fn get_buf(&self) -> String {
+        self.buf.clone()
+    }
 }

@@ -32,14 +32,14 @@ impl Serializer {
                 match i {
                     '{' => {
                         carry.start_dict();
-                        self.kvs.push(Kv::new("key", Tokens::MkDict))
+                        self.kvs.push(Kv::new(carry.get_path(), Tokens::MkDict))
                     },
                     '}' => {
                         carry.end_dict();
                     },
                     '[' => {
                         carry.start_array();
-                        self.kvs.push(Kv::new("key", Tokens::MkArray))
+                        self.kvs.push(Kv::new(carry.get_path(), Tokens::MkArray))
                     },
                     ']' => {
                         carry.end_array();
@@ -52,8 +52,11 @@ impl Serializer {
                             carry.push(i);
                         }
                     },
-                    // t, f, n, 0~9
-                    _ => {}
+                    't'|'f'|'n'|'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' => {
+                        carry.start_parsing_value();
+                        carry.push(i);
+                    },
+                    _ => {},
                 };
 
             } else if carry.in_key() {
@@ -62,20 +65,51 @@ impl Serializer {
                         if carry.should_escape() {
                             carry.push(i);
                         } else {
-                            carry.resolve_as_key();
-                        }
+                            carry.resolve();
+                        };
                     },
                     _ => {
                         carry.push(i);
                     },
                 }
+
             } else if carry.in_value() {
+                match i {
+                    '"' => {
+                        if carry.should_end_with_quotation() {
+                            if carry.should_escape() {
+                                carry.push(i);
+                            } else {
+                                carry.push(i);
+                                let value = carry.get_buf();
+                                // todo judge type
+                                self.kvs.push(Kv::new(carry.get_path(), Tokens::String(value)));
+                                carry.resolve();
+                            }
+                        } else {
+                            carry.push(i);
+                        }
+                    },
+                    ',' => {
+                        if carry.should_end_with_quotation() {
+                            carry.push(i);
+                        } else {
+                            let value = carry.get_buf();
+                            // todo judge type
+                            self.kvs.push(Kv::new(carry.get_path(), Tokens::String(value)));
+                            carry.resolve();
+                        }
+                    },
+                    _ => {
+                        carry.push(i);
+                    }
+                }
 
             } else {
                 println!("unknown.")
             }
-        }
+        };
 
-        todo!()
+        self.kvs.clone()
     }
 }

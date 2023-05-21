@@ -1,18 +1,19 @@
 use crate::core::data::tokens::Tokens;
+use crate::core::data::path::Path;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Kv {
-    path: String,
+    path: Path,
     value: Tokens,
 }
 
 impl Kv {
     // immutable
-    pub fn new(key: &str, value: Tokens) -> Self {
-        Kv { path: key.to_string(), value }
+    pub fn new(path: Path, value: Tokens) -> Self {
+        Kv { path, value }
     }
 
-    pub fn key(&self) -> String {
+    pub fn path(&self) -> Path {
         self.path.clone()
     }
 
