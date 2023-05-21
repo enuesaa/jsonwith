@@ -31,22 +31,51 @@ impl Serializer {
             if carry.in_space() {
                 match i {
                     '{' => {
+                        carry.start_dict();
                         self.kvs.push(Kv::new("key", Tokens::MkDict))
-
-                        // carry.deep()
+                    },
+                    '}' => {
+                        carry.end_dict();
                     },
                     '[' => {
+                        carry.start_array();
                         self.kvs.push(Kv::new("key", Tokens::MkArray))
                     },
-
-                    // '"' => { carry.set_key() }
+                    ']' => {
+                        carry.end_array();
+                    },
+                    '"' => {
+                        if carry.should_start_parsing_key() {
+                            carry.start_parsing_key();
+                        } else {
+                            carry.start_parsing_value();
+                            carry.push(i);
+                        }
+                    },
+                    // t, f, n, 0~9
                     _ => {}
                 };
+
+            } else if carry.in_key() {
+                match i {
+                    '"' => {
+                        if carry.should_escape() {
+                            carry.push(i);
+                        } else {
+                            carry.resolve_as_key();
+                        }
+                    },
+                    _ => {
+                        carry.push(i);
+                    },
+                }
+            } else if carry.in_value() {
+
+            } else {
+                println!("unknown.")
             }
         }
 
         todo!()
-
-        // 1文字ずつ読み取って..
     }
 }
