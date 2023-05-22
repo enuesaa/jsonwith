@@ -3,8 +3,6 @@ use crate::core::data::kv::Kv;
 use crate::core::data::tokens::Tokens;
 use crate::core::serializer::carry::Carry;
 
-// todo: create serializer trait
-
 pub struct Serializer {
     indent: usize,
     kvs: Kvs,
@@ -22,7 +20,6 @@ impl Serializer {
         self.indent = indent;
     }
 
-    // perform json2yaml... for development...
     pub fn serialize(&mut self, text: &str) -> Kvs {
 
         let mut carry = Carry::new();
@@ -50,7 +47,7 @@ impl Serializer {
                         } else {
                             carry.start_parsing_value();
                             carry.push(i);
-                        }
+                        };
                     },
                     't'|'f'|'n'|'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' => {
                         carry.start_parsing_value();

@@ -1,4 +1,5 @@
 use std::fmt;
+use std::fmt::Debug;
 use crate::core::data::kv::Kv;
 
 #[derive(Clone, Debug)]
@@ -18,6 +19,12 @@ impl Kvs {
 
 impl fmt::Display for Kvs {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        todo!()
+        let mut ret = String::from("");
+        for kv in self.items.iter() {
+            let path = kv.path();
+            let value = kv.value();
+            ret += &format!("{}: {:?}\n", path, value);
+        };
+        write!(f, "{}", ret)
     }
 }
