@@ -26,10 +26,14 @@ impl Serializer {
         for i in text.chars() {
             if context.in_space() {
                 match i {
-                    '{' => context.declare_dict_started(),
-                    '}' => context.declare_dict_ended(),
-                    '[' => context.declare_array_started(),
-                    ']' => context.declare_array_ended(),
+                    '{' => {
+                        self.kvs.push(Kv::new(context.get_path(), Tokens::MkDict));
+                    },
+                    '}' => {},
+                    '[' => {
+                        self.kvs.push(Kv::new(context.get_path(), Tokens::MkArray));
+                    },
+                    ']' => {},
                     '"' => {
                         if context.parent_is_dict() {
                             context.declare_in_key();
@@ -52,60 +56,41 @@ impl Serializer {
                     },
                     _ => {},
                 };
-            } else {
-                context.push(i);
-            };
+            }
+            context.push(i);
 
-            self.flush(&mut context);
+            if context.in_null_value() {
+                if context.get_buf() == "null".to_string() {
+                    self.kvs.push(Kv::new(context.get_path(), Tokens::Null));
+                    context.declare_in_space();
+                }
+            }
+            if context.in_bool_value() {
+                if context.get_buf() == "true".to_string() {
+                    self.kvs.push(Kv::new(context.get_path(), Tokens::Bool(true)));
+                    context.declare_in_space();
+                }
+                if context.get_buf() == "false".to_string() {
+                    self.kvs.push(Kv::new(context.get_path(), Tokens::Bool(false)));
+                    context.declare_in_space();
+                }
+            }
+            // number
+            if context.in_string_value() {
+                if context.get_buf().ends_with('"') {
+                    self.kvs.push(Kv::new(context.get_path(), Tokens::String(context.get_buf())));
+                    context.declare_in_space();
+                }
+            }
+            if context.in_key() {
+                if context.get_buf().ends_with('"') {
+                    context.path.push(&context.get_buf());
+                    context.declare_in_space();
+                }
+            }
         };
 
         self.kvs.clone()
-    }
-
-    fn flush(&mut self, context: &mut Context) {
-        if context.dict_started() {
-            self.kvs.push(Kv::new(context.get_path(), Tokens::MkDict));
-            context.declare_in_space();
-        }
-        if context.array_started() {
-            self.kvs.push(Kv::new(context.get_path(), Tokens::MkArray));
-            context.declare_in_space();
-        }
-        if context.dict_ended() {
-            context.declare_in_space();
-        }
-        if context.array_ended() {
-            context.declare_in_space();
-        }
-        if context.in_null_value() {
-            if context.get_buf() == "null".to_string() {
-                self.kvs.push(Kv::new(context.get_path(), Tokens::Null));
-                context.declare_in_space();
-            }
-        }
-        if context.in_bool_value() {
-            if context.get_buf() == "true".to_string() {
-                self.kvs.push(Kv::new(context.get_path(), Tokens::Bool(true)));
-                context.declare_in_space();
-            }
-            if context.get_buf() == "false".to_string() {
-                self.kvs.push(Kv::new(context.get_path(), Tokens::Bool(false)));
-                context.declare_in_space();
-            }
-        }
-        // number
-        if context.in_string_value() {
-            if context.get_buf().ends_with('"') {
-                self.kvs.push(Kv::new(context.get_path(), Tokens::String(context.get_buf())));
-                context.declare_in_space();
-            }
-        }
-        if context.in_key() {
-            if context.get_buf().ends_with('"') {
-                context.path.push(&context.get_buf());
-                context.declare_in_space();
-            }
-        }
     }
 
     // pub fn found_quotation(&mut self) {

@@ -8,10 +8,6 @@ enum Status {
     InNumberValue,
     InStringValue,
     InBoolValue,
-    DictStarted,
-    DictEnded,
-    ArrayStarted,
-    ArrayEnded,
 }
 
 pub struct Context {
@@ -52,22 +48,6 @@ impl Context {
         self.status == Status::InBoolValue
     }
 
-    pub fn dict_started(&self) -> bool {
-        self.status == Status::DictStarted
-    }
-
-    pub fn dict_ended(&self) -> bool {
-        self.status == Status::DictEnded
-    }
-
-    pub fn array_started(&self) -> bool {
-        self.status == Status::ArrayStarted
-    }
-
-    pub fn array_ended(&self) -> bool {
-        self.status == Status::ArrayEnded
-    }
-
     pub fn declare_in_space(&mut self) {
         self.status = Status::InSpace;
         self.buf = String::from("");
@@ -91,22 +71,6 @@ impl Context {
     
     pub fn declare_in_bool_value(&mut self) {
         self.status = Status::InBoolValue;
-    }
-    
-    pub fn declare_dict_started(&mut self) {
-        self.status = Status::DictStarted;
-    }
-
-    pub fn declare_dict_ended(&mut self) {
-        self.status = Status::DictEnded;
-    }
-
-    pub fn declare_array_started(&mut self) {
-        self.status = Status::ArrayStarted;
-    }
-    
-    pub fn declare_array_ended(&mut self) {
-        self.status = Status::ArrayEnded;
     }
 
     pub fn parent_is_dict(&self) -> bool {
