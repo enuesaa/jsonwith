@@ -29,14 +29,14 @@ impl Serializer {
                 match i {
                     '{' => {
                         carry.start_dict();
-                        self.kvs.push(Kv::new(carry.get_path(), Tokens::MkDict))
+                        self.kvs.push(Kv::mkdict(carry.get_path()))
                     },
                     '}' => {
                         carry.end_dict();
                     },
                     '[' => {
                         carry.start_array();
-                        self.kvs.push(Kv::new(carry.get_path(), Tokens::MkArray))
+                        self.kvs.push(Kv::mkarray(carry.get_path()))
                     },
                     ']' => {
                         carry.end_array();

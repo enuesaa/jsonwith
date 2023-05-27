@@ -18,8 +18,8 @@ impl Kvs {
 
     pub fn render(&self) {
         for kv in self.items.iter() {
-            let path = kv.path();
-            let value = kv.value();
+            let path = kv.get_path();
+            let value = kv.get_value();
             print!("{}: {:?}\n", path, value);
         };
     }
@@ -29,8 +29,8 @@ impl fmt::Display for Kvs {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut ret = String::from("");
         for kv in self.items.iter() {
-            let path = kv.path();
-            let value = kv.value();
+            let path = kv.get_path();
+            let value = kv.get_value();
             ret += &format!("{}: {:?}\n", path, value);
         };
         write!(f, "{}", ret)
