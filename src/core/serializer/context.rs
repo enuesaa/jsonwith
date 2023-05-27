@@ -1,4 +1,7 @@
+use crate::core::data::kvs::Kvs;
 use crate::core::data::path::Path;
+use crate::core::data::kv::Kv;
+use crate::core::data::tokens::Tokens;
 
 #[derive(PartialEq)]
 enum ParseStatus {
@@ -7,16 +10,17 @@ enum ParseStatus {
     ParsingValue,
 }
 
-// 何を serializer に任せるか境界線が曖昧
-pub struct Carry {
+pub struct Context {
+    kvs: Kvs,
     status: ParseStatus,
     path: Path,
     next_is_key: bool,
     buf: String,
 }
-impl Carry {
+impl Context {
     pub fn new() -> Self {
-        Carry {
+        Context {
+            kvs: Kvs::new(),
             status: ParseStatus::ParsingSpace,
             path: Path::new(),
             next_is_key: true,
@@ -36,20 +40,20 @@ impl Carry {
         self.status == ParseStatus::ParsingValue
     }
 
-    pub fn start_parsing_key(&mut self) {
+    pub fn declare_key(&mut self) {
         self.status = ParseStatus::ParsingKey;
     }
 
-    pub fn should_start_parsing_key(&self) -> bool {
-        self.next_is_key
-    }
-
-    pub fn start_parsing_value(&mut self) {
+    pub fn declare_value(&mut self) {
         self.status = ParseStatus::ParsingValue;
     }
 
-    pub fn push(&mut self, c: char) {
-        self.buf = self.buf.clone() + &c.to_string();
+    pub fn declare_space(&mut self) {
+        self.status = ParseStatus::ParsingSpace;
+    }
+
+    pub fn should_declare_key(&self) -> bool {
+        self.next_is_key
     }
 
     pub fn should_escape(&self) -> bool {
@@ -62,6 +66,10 @@ impl Carry {
 
     pub fn should_end_with_quotation(&self) -> bool {
         self.buf.starts_with("\"")
+    }
+
+    pub fn push(&mut self, c: char) {
+        self.buf = self.buf.clone() + &c.to_string();
     }
 
     fn resolve_as_key(&mut self) {
@@ -90,16 +98,31 @@ impl Carry {
         }
     }
 
-    pub fn start_dict(&self) {}
+    pub fn start_dict(&mut self) {
+        self.kvs.push(Kv::new(self.get_path(), Tokens::MkDict))
+    }
 
     pub fn end_dict(&mut self) {
         self.path.pop();
     }
 
-    pub fn start_array(&self) {}
+    pub fn start_array(&mut self) {
+        self.kvs.push(Kv::new(self.get_path(), Tokens::MkArray))
+    }
 
     pub fn end_array(&mut self) {
         self.path.pop();
+    }
+
+    pub fn found_quotation(&mut self) {
+        if self.in_space() {
+            if self.should_declare_key() {
+                self.declare_key();
+            } else {
+                self.declare_value();
+                self.push('"');
+            };
+        };
     }
 
     pub fn get_path(&self) -> Path {

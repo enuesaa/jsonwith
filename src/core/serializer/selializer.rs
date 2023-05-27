@@ -1,7 +1,7 @@
 use crate::core::data::kvs::Kvs;
 use crate::core::data::kv::Kv;
 use crate::core::data::tokens::Tokens;
-use crate::core::serializer::carry::Carry;
+use crate::core::serializer::context::Context;
 
 pub struct Serializer {
     indent: usize,
@@ -22,83 +22,65 @@ impl Serializer {
 
     pub fn serialize(&mut self, text: &str) -> Kvs {
 
-        let mut carry = Carry::new();
-
+        let mut context = Context::new();
         for i in text.chars() {
-            if carry.in_space() {
+            if context.in_space() {
                 match i {
-                    '{' => {
-                        carry.start_dict();
-                        self.kvs.push(Kv::mkdict(carry.get_path()))
-                    },
-                    '}' => {
-                        carry.end_dict();
-                    },
-                    '[' => {
-                        carry.start_array();
-                        self.kvs.push(Kv::mkarray(carry.get_path()))
-                    },
-                    ']' => {
-                        carry.end_array();
-                    },
-                    '"' => {
-                        if carry.should_start_parsing_key() {
-                            carry.start_parsing_key();
-                        } else {
-                            carry.start_parsing_value();
-                            carry.push(i);
-                        };
-                    },
+                    '{' => context.start_dict(),
+                    '}' => context.end_dict(),
+                    '[' => context.start_array(),
+                    ']' => context.end_array(),
+                    '"' => context.found_quotation(),
                     't'|'f'|'n'|'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' => {
-                        carry.start_parsing_value();
-                        carry.push(i);
+                        context.declare_value();
+                        context.push(i);
                     },
                     _ => {},
                 };
 
-            } else if carry.in_key() {
+            } else if context.in_key() {
                 match i {
                     '"' => {
-                        if carry.should_escape() {
-                            carry.push(i);
+                        if context.should_escape() {
+                            context.push(i);
                         } else {
-                            carry.resolve();
+                            context.resolve();
                         };
                     },
                     _ => {
-                        carry.push(i);
+                        context.push(i);
                     },
                 }
 
-            } else if carry.in_value() {
+            } else if context.in_value() {
                 match i {
                     '"' => {
-                        if carry.should_end_with_quotation() {
-                            if carry.should_escape() {
-                                carry.push(i);
+                        if context.should_end_with_quotation() {
+                            if context.should_escape() {
+                                context.push(i);
                             } else {
-                                carry.push(i);
-                                let value = carry.get_buf();
+                                context.push(i);
+                                let value = context.get_buf();
                                 // todo judge type
-                                self.kvs.push(Kv::new(carry.get_path(), Tokens::String(value)));
-                                carry.resolve();
+                                self.kvs.push(Kv::new(context.get_path(), Tokens::String(value)));
+                                context.resolve();
                             }
                         } else {
-                            carry.push(i);
+                            context.push(i);
                         }
                     },
                     ',' => {
-                        if carry.should_end_with_quotation() {
-                            carry.push(i);
+                        if context.should_end_with_quotation() {
+                            context.push(i);
                         } else {
-                            let value = carry.get_buf();
+                            let value = context.get_buf();
                             // todo judge type
-                            self.kvs.push(Kv::new(carry.get_path(), Tokens::String(value)));
-                            carry.resolve();
+                            self.kvs.push(Kv::new(context.get_path(), Tokens::String(value)));
+                            context.resolve();
                         }
                     },
                     _ => {
-                        carry.push(i);
+                        context.push(i);
                     }
                 }
 
