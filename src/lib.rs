@@ -21,7 +21,7 @@ pub fn json2yamlv2(value: &str, indent: usize) -> String {
     let mut serializer = Serializerv2::new();
     serializer.set_indent(indent);
     let kvs = serializer.serialize(value);
-    println!("{}", kvs);
+    kvs.render();
     "".to_string()
 }
 

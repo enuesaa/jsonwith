@@ -15,6 +15,14 @@ impl Kvs {
     pub fn push(&mut self, kv: Kv) {
         self.items.push(kv)
     }
+
+    pub fn render(&self) {
+        for kv in self.items.iter() {
+            let path = kv.path();
+            let value = kv.value();
+            print!("{}: {:?}\n", path, value);
+        };
+    }
 }
 
 impl fmt::Display for Kvs {

@@ -3,7 +3,7 @@ use clap::Parser;
 use anyhow::anyhow;
 use anyhow::Result;
 
-use jsonwith::{json2json, json2yaml};
+use jsonwith::{json2json, json2yaml, json2yamlv2};
 
 #[derive(Debug, Parser)]
 #[clap(disable_help_flag = true)]
@@ -41,6 +41,12 @@ fn main() -> Result<()> {
             return Err(anyhow!("Failed to open file."));
         };
     };
+
+    if format == "v2" {
+        if let Ok(json_str) = fs::read_to_string("./tests/assets/minimum.json") {
+            json2yamlv2(&json_str, 1);
+        }
+    }
 
     Err(anyhow!("Argument invalid."))
 }
