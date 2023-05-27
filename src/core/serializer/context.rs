@@ -1,128 +1,129 @@
-use crate::core::data::kvs::Kvs;
 use crate::core::data::path::Path;
-use crate::core::data::kv::Kv;
-use crate::core::data::tokens::Tokens;
 
 #[derive(PartialEq)]
-enum ParseStatus {
-    ParsingSpace,
-    ParsingKey,
-    ParsingValue,
+enum Status {
+    InSpace,
+    InKey,
+    InNullValue,
+    InNumberValue,
+    InStringValue,
+    InBoolValue,
+    DictStarted,
+    DictEnded,
+    ArrayStarted,
+    ArrayEnded,
 }
 
 pub struct Context {
-    kvs: Kvs,
-    status: ParseStatus,
-    path: Path,
-    next_is_key: bool,
+    status: Status,
+    pub path: Path,
     buf: String,
 }
 impl Context {
     pub fn new() -> Self {
         Context {
-            kvs: Kvs::new(),
-            status: ParseStatus::ParsingSpace,
+            status: Status::InSpace,
             path: Path::new(),
-            next_is_key: true,
             buf: String::from(""),
         }
     }
 
     pub fn in_space(&self) -> bool {
-        self.status == ParseStatus::ParsingSpace
+        self.status == Status::InSpace
     }
 
     pub fn in_key(&self) -> bool {
-        self.status == ParseStatus::ParsingKey
+        self.status == Status::InKey
     }
 
-    pub fn in_value(&self) -> bool {
-        self.status == ParseStatus::ParsingValue
+    pub fn in_null_value(&self) -> bool {
+        self.status == Status::InNullValue
     }
 
-    pub fn declare_key(&mut self) {
-        self.status = ParseStatus::ParsingKey;
+    pub fn in_number_value(&self) -> bool {
+        self.status == Status::InNumberValue
     }
 
-    pub fn declare_value(&mut self) {
-        self.status = ParseStatus::ParsingValue;
+    pub fn in_string_value(&self) -> bool {
+        self.status == Status::InStringValue
     }
 
-    pub fn declare_space(&mut self) {
-        self.status = ParseStatus::ParsingSpace;
+    pub fn in_bool_value(&self) -> bool {
+        self.status == Status::InBoolValue
     }
 
-    pub fn should_declare_key(&self) -> bool {
-        self.next_is_key
+    pub fn dict_started(&self) -> bool {
+        self.status == Status::DictStarted
     }
 
-    pub fn should_escape(&self) -> bool {
-        if let Some(last) = self.buf.chars().last() {
-            // todo last から2番目が\でないかチェックする
-            return last == '\\'
-        }
-        false
+    pub fn dict_ended(&self) -> bool {
+        self.status == Status::DictEnded
     }
 
-    pub fn should_end_with_quotation(&self) -> bool {
-        self.buf.starts_with("\"")
+    pub fn array_started(&self) -> bool {
+        self.status == Status::ArrayStarted
     }
+
+    pub fn array_ended(&self) -> bool {
+        self.status == Status::ArrayEnded
+    }
+
+    pub fn declare_in_space(&mut self) {
+        self.status = Status::InSpace;
+        self.buf = String::from("");
+    }
+
+    pub fn declare_in_key(&mut self) {
+        self.status = Status::InKey;
+    }
+    
+    pub fn declare_in_null_value(&mut self) {
+        self.status = Status::InNullValue;
+    }
+    
+    pub fn declare_in_number_value(&mut self) {
+        self.status = Status::InNumberValue;
+    }
+    
+    pub fn declare_in_string_value(&mut self) {
+        self.status = Status::InStringValue;
+    }
+    
+    pub fn declare_in_bool_value(&mut self) {
+        self.status = Status::InBoolValue;
+    }
+    
+    pub fn declare_dict_started(&mut self) {
+        self.status = Status::DictStarted;
+    }
+
+    pub fn declare_dict_ended(&mut self) {
+        self.status = Status::DictEnded;
+    }
+
+    pub fn declare_array_started(&mut self) {
+        self.status = Status::ArrayStarted;
+    }
+    
+    pub fn declare_array_ended(&mut self) {
+        self.status = Status::ArrayEnded;
+    }
+
+    pub fn parent_is_dict(&self) -> bool {
+        // check by path
+        return false;
+    }
+
+    // pub fn should_escape(&self) -> bool {
+    //     if let Some(last) = self.buf.chars().last() {
+    //         // todo last から2番目が\でないかチェックする
+    //         return last == '\\'
+    //     }
+    //     false
+    // }
 
     pub fn push(&mut self, c: char) {
         self.buf = self.buf.clone() + &c.to_string();
-    }
-
-    fn resolve_as_key(&mut self) {
-        let buf = self.buf.clone();
-        self.path.pop();
-        self.path.push(&buf);
-        self.buf = String::from("");
-        self.next_is_key = false;
-
-        self.status = ParseStatus::ParsingSpace;
-    }
-
-    fn resolve_as_value(&mut self) {
-        // ここで値を返した方がいいか
-        self.buf = String::from("");
-        self.next_is_key = true;
-
-        self.status = ParseStatus::ParsingSpace;
-    }
-
-    pub fn resolve(&mut self) {
-        if self.in_key() {
-            self.resolve_as_key();
-        } else if self.in_value() {
-            self.resolve_as_value();
-        }
-    }
-
-    pub fn start_dict(&mut self) {
-        self.kvs.push(Kv::new(self.get_path(), Tokens::MkDict))
-    }
-
-    pub fn end_dict(&mut self) {
-        self.path.pop();
-    }
-
-    pub fn start_array(&mut self) {
-        self.kvs.push(Kv::new(self.get_path(), Tokens::MkArray))
-    }
-
-    pub fn end_array(&mut self) {
-        self.path.pop();
-    }
-
-    pub fn found_quotation(&mut self) {
-        if self.in_space() {
-            if self.should_declare_key() {
-                self.declare_key();
-            } else {
-                self.declare_value();
-                self.push('"');
-            };
-        };
     }
 
     pub fn get_path(&self) -> Path {

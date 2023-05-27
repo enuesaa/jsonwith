@@ -26,69 +26,101 @@ impl Serializer {
         for i in text.chars() {
             if context.in_space() {
                 match i {
-                    '{' => context.start_dict(),
-                    '}' => context.end_dict(),
-                    '[' => context.start_array(),
-                    ']' => context.end_array(),
-                    '"' => context.found_quotation(),
-                    't'|'f'|'n'|'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' => {
-                        context.declare_value();
+                    '{' => context.declare_dict_started(),
+                    '}' => context.declare_dict_ended(),
+                    '[' => context.declare_array_started(),
+                    ']' => context.declare_array_ended(),
+                    '"' => {
+                        if context.parent_is_dict() {
+                            context.declare_in_key();
+                        } else {
+                            context.declare_in_string_value();
+                        }
+                        context.push(i);
+                    },
+                    'n' => {
+                        context.declare_in_null_value();
+                        context.push(i);
+                    },
+                    't'|'f' => {
+                        context.declare_in_bool_value();
+                        context.push(i);
+                    },
+                    '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' => {
+                        context.declare_in_number_value();
                         context.push(i);
                     },
                     _ => {},
                 };
-
-            } else if context.in_key() {
-                match i {
-                    '"' => {
-                        if context.should_escape() {
-                            context.push(i);
-                        } else {
-                            context.resolve();
-                        };
-                    },
-                    _ => {
-                        context.push(i);
-                    },
-                }
-
-            } else if context.in_value() {
-                match i {
-                    '"' => {
-                        if context.should_end_with_quotation() {
-                            if context.should_escape() {
-                                context.push(i);
-                            } else {
-                                context.push(i);
-                                let value = context.get_buf();
-                                // todo judge type
-                                self.kvs.push(Kv::new(context.get_path(), Tokens::String(value)));
-                                context.resolve();
-                            }
-                        } else {
-                            context.push(i);
-                        }
-                    },
-                    ',' => {
-                        if context.should_end_with_quotation() {
-                            context.push(i);
-                        } else {
-                            let value = context.get_buf();
-                            // todo judge type
-                            self.kvs.push(Kv::new(context.get_path(), Tokens::String(value)));
-                            context.resolve();
-                        }
-                    },
-                    _ => {
-                        context.push(i);
-                    }
-                }
-
             } else {
-                println!("unknown.")
-            }
+                context.push(i);
+            };
+
+            self.flush(&mut context);
         };
 
         self.kvs.clone()
     }
+
+    fn flush(&mut self, context: &mut Context) {
+        if context.dict_started() {
+            self.kvs.push(Kv::new(context.get_path(), Tokens::MkDict));
+            context.declare_in_space();
+        }
+        if context.array_started() {
+            self.kvs.push(Kv::new(context.get_path(), Tokens::MkArray));
+            context.declare_in_space();
+        }
+        if context.dict_ended() {
+            context.declare_in_space();
+        }
+        if context.array_ended() {
+            context.declare_in_space();
+        }
+        if context.in_null_value() {
+            if context.get_buf() == "null".to_string() {
+                self.kvs.push(Kv::new(context.get_path(), Tokens::Null));
+                context.declare_in_space();
+            }
+        }
+        if context.in_bool_value() {
+            if context.get_buf() == "true".to_string() {
+                self.kvs.push(Kv::new(context.get_path(), Tokens::Bool(true)));
+                context.declare_in_space();
+            }
+            if context.get_buf() == "false".to_string() {
+                self.kvs.push(Kv::new(context.get_path(), Tokens::Bool(false)));
+                context.declare_in_space();
+            }
+        }
+        // number
+        if context.in_string_value() {
+            if context.get_buf().ends_with('"') {
+                self.kvs.push(Kv::new(context.get_path(), Tokens::String(context.get_buf())));
+                context.declare_in_space();
+            }
+        }
+        if context.in_key() {
+            if context.get_buf().ends_with('"') {
+                context.path.push(&context.get_buf());
+                context.declare_in_space();
+            }
+        }
+    }
+
+    // pub fn found_quotation(&mut self) {
+    //     if self.in_space() {
+    //         if self.should_declare_key() {
+    //             self.declare_key();
+    //         } else {
+    //             self.declare_value();
+    //             self.push('"');
+    //         };
+    //     };
+    // }
+
+    // pub fn found_value(&mut self, c: char) {
+    //     self.declare_value();
+    //     self.buf = self.buf.clone() + &c.to_string();
+    // }
 }
