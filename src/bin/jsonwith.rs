@@ -44,7 +44,7 @@ fn main() -> Result<()> {
 
     if format == "v2" {
         if let Ok(json_str) = fs::read_to_string("./tests/assets/minimum.json") {
-            json2yamlv2(&json_str, 1);
+            json2yamlv2(&json_str);
         }
     }
 

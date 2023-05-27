@@ -17,12 +17,8 @@ pub fn json2yaml(value: &str, indent: usize) -> String {
     deserializer.deserialize(values)
 }
 
-pub fn json2yamlv2(value: &str, indent: usize) -> String {
-    let mut serializer = Serializerv2::new();
-    serializer.set_indent(indent);
-    let kvs = serializer.serialize(value);
-    kvs.render();
-    "".to_string()
+pub fn json2yamlv2(value: &str) {
+    Serializerv2::new().serialize(value).render();
 }
 
 pub fn json2json(value: &str, indent: usize) -> String {
