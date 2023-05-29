@@ -1,7 +1,7 @@
 use crate::core::data::path::Path;
 
-#[derive(PartialEq)]
-enum Status {
+#[derive(PartialEq, Clone, Debug)]
+pub enum Status {
     InSpace,
     InKey,
     InNullValue,
@@ -14,6 +14,8 @@ pub struct Context {
     status: Status,
     pub path: Path,
     buf: String,
+    is_array: bool,
+    waiting_value: bool,
 }
 impl Context {
     pub fn new() -> Self {
@@ -21,7 +23,13 @@ impl Context {
             status: Status::InSpace,
             path: Path::new(),
             buf: String::from(""),
+            is_array: false,
+            waiting_value: false,
         }
+    }
+
+    pub fn get_status(&self) -> Status {
+        self.status.clone()
     }
 
     pub fn in_space(&self) -> bool {
@@ -51,6 +59,7 @@ impl Context {
     pub fn declare_in_space(&mut self) {
         self.status = Status::InSpace;
         self.buf = String::from("");
+        self.waiting_value = false;
     }
 
     pub fn declare_in_key(&mut self) {
@@ -83,29 +92,26 @@ impl Context {
     }
 
     pub fn start_array(&mut self) {
-        // Path に index をどこで追加するか
-        self.path.push_index("0"); // 副作用な気がする
+        self.waiting_value = true;
     }
 
     pub fn end_array(&mut self) {
-
+        self.waiting_value = false;
     }
 
-    pub fn parent_is_dict(&self) -> bool {
-        // check by path
-        return false;
+    pub fn is_waiting_value(&self) -> bool {
+        self.waiting_value
     }
-
-    // pub fn should_escape(&self) -> bool {
-    //     if let Some(last) = self.buf.chars().last() {
-    //         // todo last から2番目が\でないかチェックする
-    //         return last == '\\'
-    //     }
-    //     false
-    // }
 
     pub fn push(&mut self, c: char) {
         self.buf = self.buf.clone() + &c.to_string();
+    }
+
+    pub fn resolve_as_path(&mut self) {
+        self.path.push(&self.buf);
+        self.buf = "".to_string();
+        self.waiting_value = true;
+        self.status = Status::InSpace;
     }
 
     pub fn get_path(&self) -> Path {

@@ -24,38 +24,40 @@ impl Serializer {
 
         let mut context = Context::new();
         for i in text.chars() {
+            println!("{:?} {}", context.get_status(), i);
             if context.in_space() {
                 self.serialize_space(&mut context, i);
-            }
-            context.push(i);
-
-            if context.in_null_value() {
+            } else if context.in_null_value() {
+                context.push(i);
                 if context.get_buf() == "null".to_string() {
-                    self.kvs.push(Kv { path: context.get_path(), value: Tokens::Null });
+                    self.push_kv(&mut context, Tokens::Null);
                     context.declare_in_space();
                 }
-            }
-            if context.in_bool_value() {
+            } else if context.in_bool_value() {
+                context.push(i);
                 if context.get_buf() == "true".to_string() {
-                    self.kvs.push(Kv { path: context.get_path(), value: Tokens::Bool(true) });
+                    self.push_kv(&mut context, Tokens::Bool(true));
                     context.declare_in_space();
                 }
                 if context.get_buf() == "false".to_string() {
-                    self.kvs.push(Kv { path: context.get_path(), value: Tokens::Bool(false) });
+                    self.push_kv(&mut context, Tokens::Bool(false));
                     context.declare_in_space();
                 }
-            }
             // number
-            if context.in_string_value() {
-                if context.get_buf().ends_with('"') {
-                    self.kvs.push(Kv { path: context.get_path(), value: Tokens::String(context.get_buf()) });
+            } else if context.in_string_value() {
+                if i == '"' && !context.get_buf().ends_with('\\') { 
+                    let value = context.get_buf();
+                    self.push_kv(&mut context, Tokens::String(value));
                     context.declare_in_space();
+                } else {
+                    context.push(i);
                 }
-            }
-            if context.in_key() {
-                if context.get_buf().ends_with('"') {
-                    context.path.push(&context.get_buf());
-                    context.declare_in_space();
+            } else if context.in_key() {
+                if i == '"' && !context.get_buf().ends_with('\\') {
+                    context.resolve_as_path();
+                    // context.declare_in_space();
+                } else {
+                    context.push(i);
                 }
             }
         };
@@ -66,7 +68,7 @@ impl Serializer {
     fn serialize_space(&mut self, context: &mut Context, c: char) {
         match c {
             '{' => {
-                context.start_dict(); // key をどうやって渡すか
+                context.start_dict();
                 self.push_kv(context, Tokens::MkDict);
             },
             '}' => {
@@ -75,14 +77,15 @@ impl Serializer {
             '[' => {
                 self.push_kv(context, Tokens::MkArray);
             },
-            ']' => {},
+            ']' => {
+                context.end_array();
+            },
             '"' => {
-                if context.parent_is_dict() {
-                    context.declare_in_key();
-                } else {
+                if context.is_waiting_value() {
                     context.declare_in_string_value();
-                }
-                context.push(c);
+                } else {
+                    context.declare_in_key();
+                };
             },
             'n' => {
                 context.declare_in_null_value();
