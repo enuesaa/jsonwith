@@ -73,12 +73,22 @@ impl Context {
         self.status = Status::InBoolValue;
     }
 
+
     pub fn start_dict(&mut self) {
         // parent_is_dict
     }
 
     pub fn end_dict(&mut self) {
         self.pop_path();
+    }
+
+    pub fn start_array(&mut self) {
+        // Path に index をどこで追加するか
+        self.path.push_index("0"); // 副作用な気がする
+    }
+
+    pub fn end_array(&mut self) {
+
     }
 
     pub fn parent_is_dict(&self) -> bool {

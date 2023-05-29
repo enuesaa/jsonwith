@@ -3,11 +3,17 @@ use std::fmt;
 // json path like 
 // $.a
 // $.a.b
-// $.a.0.b // differs from json path
+// $.a[0].b
+
+#[derive(Clone, Debug)]
+struct PathItem {
+    value: String,
+    index: bool, // this represents array index.
+}
 
 #[derive(Clone, Debug)]
 pub struct Path {
-    route: Vec<String>,
+    route: Vec<PathItem>,
 }
 impl Path {
     pub fn new() -> Self {
@@ -17,7 +23,18 @@ impl Path {
     }
 
     pub fn push(&mut self, nest: &str) {
-        self.route.push(nest.to_string());
+        self.route.push(PathItem { value: nest.to_string(), index: false });
+    }
+
+    pub fn push_index(&mut self, nest: &str) {
+        self.route.push(PathItem { value: nest.to_string(), index: true });
+    }
+
+    pub fn is_index(&self) -> bool {
+        if let Some(last) = self.route.last() {
+            return last.index
+        }
+        false
     }
 
     pub fn pop(&mut self) {
@@ -33,7 +50,9 @@ impl From<&str> for Path {
         }
 
         let trimed = dotted.trim_start_matches("$.");
-        let route: Vec<String> = trimed.split(".").map(|s| s.to_string()).collect();
+        let route: Vec<PathItem> = trimed.split(".").map(|s| s.to_string()).into_iter().map(|v| {
+            PathItem { value: v, index: false }
+        }).collect();
         Path { route }
     }
 }
@@ -50,6 +69,7 @@ impl fmt::Display for Path {
         if self.route.len() == 0 {
             return write!(f, "$");
         };
-        write!(f, "$.{}", self.route.join("."))
+        let values: Vec<String> = self.route.iter().map(|i| i.value.clone()).collect();
+        write!(f, "$.{}", values.join("."))
     }
 }
