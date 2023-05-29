@@ -73,6 +73,14 @@ impl Context {
         self.status = Status::InBoolValue;
     }
 
+    pub fn start_dict(&mut self) {
+        // parent_is_dict
+    }
+
+    pub fn end_dict(&mut self) {
+        self.pop_path();
+    }
+
     pub fn parent_is_dict(&self) -> bool {
         // check by path
         return false;
@@ -96,5 +104,13 @@ impl Context {
 
     pub fn get_buf(&self) -> String {
         self.buf.clone()
+    }
+
+    pub fn push_path(&mut self, nest: &str) {
+        self.path.push(nest);
+    }
+
+    pub fn pop_path(&mut self) {
+        self.path.pop();
     }
 }
