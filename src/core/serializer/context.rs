@@ -14,7 +14,6 @@ pub struct Context {
     status: Status,
     pub path: Path,
     buf: String,
-    is_array: bool,
     waiting_value: bool,
 }
 impl Context {
@@ -23,7 +22,6 @@ impl Context {
             status: Status::InSpace,
             path: Path::new(),
             buf: String::from(""),
-            is_array: false,
             waiting_value: false,
         }
     }
