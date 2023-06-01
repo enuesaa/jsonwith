@@ -15,7 +15,7 @@ impl Serializer {
         }
     }
 
-    // append serialize options like this.
+    // configure options like this.
     pub fn set_indent(&mut self, indent: usize) {
         self.indent = indent;
     }
@@ -54,6 +54,7 @@ impl Serializer {
                 }
             } else if context.in_key() {
                 if i == '"' && !context.get_buf().ends_with('\\') {
+                    context.pop_path();
                     context.resolve_as_path();
                     // context.declare_in_space();
                 } else {
