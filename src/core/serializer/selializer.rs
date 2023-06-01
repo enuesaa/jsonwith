@@ -7,13 +7,11 @@ use super::context::Status;
 
 pub struct Serializer {
     indent: usize,
-    kvs: Kvs,
 }
 impl Serializer {
     pub fn new() -> Self {
         Serializer {
             indent: 2,
-            kvs: Kvs::new(),
         }
     }
 
@@ -35,7 +33,7 @@ impl Serializer {
             };
         };
 
-        self.kvs.clone()
+        context.kvs.clone()
     }
 
     fn serialize_space(&mut self, context: &mut Context, c: char) {
@@ -117,7 +115,7 @@ impl Serializer {
         }
     }
 
-    fn push_kv(&mut self, context: &Context, value: Tokens) {
-        self.kvs.push(Kv { path: context.get_path(), value });
+    fn push_kv(&mut self, context: &mut Context, value: Tokens) {
+        context.kvs.push(Kv { path: context.get_path(), value });
     }
 }

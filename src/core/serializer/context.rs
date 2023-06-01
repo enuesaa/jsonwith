@@ -1,4 +1,4 @@
-use crate::core::data::path::Path;
+use crate::core::data::{path::Path, kvs::Kvs};
 
 #[derive(PartialEq, Clone, Debug)]
 pub enum Status {
@@ -11,6 +11,7 @@ pub enum Status {
 }
 
 pub struct Context {
+    pub kvs: Kvs,
     status: Status,
     pub path: Path,
     buf: String,
@@ -20,6 +21,7 @@ pub struct Context {
 impl Context {
     pub fn new() -> Self {
         Context {
+            kvs: Kvs::new(),
             status: Status::InSpace,
             path: Path::new(),
             buf: String::from(""),
