@@ -15,6 +15,7 @@ pub struct Context {
     pub path: Path,
     buf: String,
     waiting_value: bool,
+    // index
 }
 impl Context {
     pub fn new() -> Self {
