@@ -78,6 +78,7 @@ impl Serializer {
     fn serialize_null_value(&mut self, context: &mut Context, c: char) {
         context.push(c);
         if context.get_buf() == "null".to_string() {
+            context.resolve_path_if_in_array();
             self.push_kv(context, Tokens::Null);
             context.declare_in_space();
         }
@@ -86,17 +87,20 @@ impl Serializer {
     fn serialize_bool_value(&mut self, context: &mut Context, c: char) {
         context.push(c);
         if context.get_buf() == "true".to_string() {
+            context.resolve_path_if_in_array();
             self.push_kv(context, Tokens::Bool(true));
             context.declare_in_space();
         }
         if context.get_buf() == "false".to_string() {
+            context.resolve_path_if_in_array();
             self.push_kv(context, Tokens::Bool(false));
             context.declare_in_space();
         }
     }
 
     fn serialize_string_value(&mut self, context: &mut Context, c: char) {
-        if c == '"' && !context.get_buf().ends_with('\\') { 
+        if c == '"' && !context.get_buf().ends_with('\\') {
+            context.resolve_path_if_in_array();
             let value = context.get_buf();
             self.push_kv(context, Tokens::String(value));
             context.declare_in_space();

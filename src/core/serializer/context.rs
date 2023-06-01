@@ -16,7 +16,8 @@ pub struct Context {
     pub path: Path,
     buf: String,
     waiting_value: bool,
-    // index
+    parent_is_array: bool,
+    index: usize,
 }
 impl Context {
     pub fn new() -> Self {
@@ -26,35 +27,13 @@ impl Context {
             path: Path::new(),
             buf: String::from(""),
             waiting_value: false,
+            parent_is_array: false,
+            index: 0,
         }
     }
 
     pub fn get_status(&self) -> Status {
         self.status.clone()
-    }
-
-    pub fn in_space(&self) -> bool {
-        self.status == Status::InSpace
-    }
-
-    pub fn in_key(&self) -> bool {
-        self.status == Status::InKey
-    }
-
-    pub fn in_null_value(&self) -> bool {
-        self.status == Status::InNullValue
-    }
-
-    pub fn in_number_value(&self) -> bool {
-        self.status == Status::InNumberValue
-    }
-
-    pub fn in_string_value(&self) -> bool {
-        self.status == Status::InStringValue
-    }
-
-    pub fn in_bool_value(&self) -> bool {
-        self.status == Status::InBoolValue
     }
 
     pub fn declare_in_space(&mut self) {
@@ -83,7 +62,6 @@ impl Context {
         self.status = Status::InBoolValue;
     }
 
-
     pub fn start_dict(&mut self) {
         // parent_is_dict
     }
@@ -93,11 +71,14 @@ impl Context {
     }
 
     pub fn start_array(&mut self) {
+        self.parent_is_array = true;
         self.waiting_value = true;
     }
 
     pub fn end_array(&mut self) {
+        self.parent_is_array = false;
         self.waiting_value = false;
+        self.index = 0;
     }
 
     pub fn is_waiting_value(&self) -> bool {
@@ -113,6 +94,15 @@ impl Context {
         self.buf = "".to_string();
         self.waiting_value = true;
         self.status = Status::InSpace;
+    }
+
+    pub fn resolve_path_if_in_array(&mut self) {
+        if self.parent_is_array {
+            if self.index > 0 {
+                self.pop_path();
+            }
+            self.push_path(&self.index.to_string());
+        }
     }
 
     pub fn get_path(&self) -> Path {
