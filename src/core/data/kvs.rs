@@ -4,7 +4,7 @@ use crate::core::data::kv::Kv;
 
 #[derive(Clone, Debug)]
 pub struct Kvs {
-    items: Vec<Kv>,
+    pub items: Vec<Kv>,
 }
 
 impl Kvs {

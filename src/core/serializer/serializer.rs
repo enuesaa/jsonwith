@@ -21,7 +21,7 @@ impl Serializer {
     pub fn serialize(&mut self, text: &str) -> Kvs {
         let mut context = Context::new();
         for c in text.chars() {
-            match context.get_status() {
+            match context.status {
                 Status::InSpace => self.parse_space(&mut context, c),
                 Status::InNullValue => self.parse_null_value(&mut context, c),
                 Status::InBoolValue => self.parse_bool_value(&mut context, c),
