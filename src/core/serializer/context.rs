@@ -1,4 +1,7 @@
-use crate::core::data::{path::Path, kvs::Kvs};
+use crate::core::data::kv::Kv;
+use crate::core::data::path::Path;
+use crate::core::data::kvs::Kvs;
+use crate::core::data::tokens::Tokens;
 
 #[derive(PartialEq, Clone, Debug)]
 pub enum Status {
@@ -38,7 +41,6 @@ impl Context {
 
     pub fn declare_in_space(&mut self) {
         self.status = Status::InSpace;
-        self.buf = String::from("");
         self.waiting_value = false;
     }
 
@@ -63,7 +65,8 @@ impl Context {
     }
 
     pub fn start_dict(&mut self) {
-        // parent_is_dict
+        let path = self.get_path();
+        self.kvs.push(Kv { path, value: Tokens::MkDict });
     }
 
     pub fn end_dict(&mut self) {
@@ -73,6 +76,8 @@ impl Context {
     pub fn start_array(&mut self) {
         self.parent_is_array = true;
         self.waiting_value = true;
+        let path = self.get_path();
+        self.kvs.push(Kv { path, value: Tokens::MkArray });
     }
 
     pub fn end_array(&mut self) {
@@ -85,7 +90,7 @@ impl Context {
         self.waiting_value
     }
 
-    pub fn push(&mut self, c: char) {
+    pub fn push_buf(&mut self, c: char) {
         self.buf = self.buf.clone() + &c.to_string();
     }
 
@@ -96,13 +101,17 @@ impl Context {
         self.status = Status::InSpace;
     }
 
-    pub fn resolve_path_if_in_array(&mut self) {
+    pub fn resolve_value(&mut self, value: Tokens) {
+        // フラグをとりたいなあ
         if self.parent_is_array {
             if self.index > 0 {
                 self.pop_path();
             }
             self.push_path(&self.index.to_string());
-        }
+        };
+        let path = self.get_path();
+        self.kvs.push(Kv { path, value });
+        self.buf = String::from("");
     }
 
     pub fn get_path(&self) -> Path {

@@ -1,2 +1,2 @@
-pub mod selializer;
+pub mod serializer;
 pub mod context;
