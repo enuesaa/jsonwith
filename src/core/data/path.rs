@@ -8,7 +8,8 @@ use std::fmt;
 #[derive(Clone, Debug)]
 struct PathItem {
     value: String,
-    index: bool, // this represents array index.
+     // If value is usize, it represents array index. If value is none, it represents value is not array.
+    index: Option<usize>,
 }
 
 #[derive(Clone, Debug)]
@@ -23,16 +24,22 @@ impl Path {
     }
 
     pub fn push(&mut self, nest: &str) {
-        self.route.push(PathItem { value: nest.to_string(), index: false });
+        self.route.push(PathItem { value: nest.to_string(), index: None });
     }
 
-    pub fn push_index(&mut self, nest: &str) {
-        self.route.push(PathItem { value: nest.to_string(), index: true });
+    pub fn increment(&mut self) {
+        if let Some(last) = self.route.last_mut() {
+            if let Some(index) = last.index {
+                last.index = Some(index + 1)
+            } else {
+                last.index = Some(0);
+            };
+        }
     }
 
-    pub fn is_index(&self) -> bool {
+    pub fn is_array(&self) -> bool {
         if let Some(last) = self.route.last() {
-            return last.index
+            return last.index.is_some()
         }
         false
     }
@@ -51,7 +58,7 @@ impl From<&str> for Path {
 
         let trimed = dotted.trim_start_matches("$.");
         let route: Vec<PathItem> = trimed.split(".").map(|s| s.to_string()).into_iter().map(|v| {
-            PathItem { value: v, index: false }
+            PathItem { value: v, index: None }
         }).collect();
         Path { route }
     }
@@ -69,7 +76,13 @@ impl fmt::Display for Path {
         if self.route.len() == 0 {
             return write!(f, "$");
         };
-        let values: Vec<String> = self.route.iter().map(|i| i.value.clone()).collect();
+        let values: Vec<String> = self.route.iter().map(|i| {
+            if let Some(index) = i.index {
+                return i.value.clone() + &format!("[{}]", index);
+            };
+            return i.value.clone();
+        }).collect();
+
         write!(f, "$.{}", values.join("."))
     }
 }

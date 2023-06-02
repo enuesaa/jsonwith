@@ -33,5 +33,22 @@ mod tests {
         path.pop();
         assert_eq!(path.to_string(), "$.a");
     }
-}
 
+    #[test]
+    fn create_array() {
+        let mut path = Path::from("$.a.bb");
+        path.increment();
+        assert_eq!(path.to_string(), "$.a.bb[0]");
+    }
+
+    #[test]
+    fn create_nested_array() {
+        let mut path = Path::from("$.a.bb");
+        path.increment();
+        path.increment();
+        path.increment();
+        path.push("cc");
+        path.increment();
+        assert_eq!(path.to_string(), "$.a.bb[2].cc[0]");
+    }
+}
