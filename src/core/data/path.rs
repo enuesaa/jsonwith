@@ -5,14 +5,14 @@ use std::fmt;
 // $.a.b
 // $.a[0].b
 #[derive(Clone, Debug, PartialEq)]
-enum PathItem {
+pub enum PathItem {
     Key(String),
     Index(usize),
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Path {
-    route: Vec<PathItem>,
+    pub route: Vec<PathItem>,
 }
 impl Path {
     pub fn new() -> Self {

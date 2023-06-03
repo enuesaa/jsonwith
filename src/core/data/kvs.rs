@@ -2,7 +2,7 @@ use std::fmt;
 use std::fmt::Debug;
 use crate::core::data::kv::Kv;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Kvs {
     pub items: Vec<Kv>,
 }
