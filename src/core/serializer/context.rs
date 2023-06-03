@@ -65,7 +65,7 @@ impl Context {
     pub fn start_array(&mut self) {
         let path = self.get_path();
         self.kvs.push(Kv { path, value: Tokens::MkArray });
-        self.path.increment();
+        self.path.nest_array();
     }
 
     pub fn end_array(&self) {}

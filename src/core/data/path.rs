@@ -27,14 +27,16 @@ impl Path {
         self.route.push(PathItem { value: nest.to_string(), index: None });
     }
 
+    pub fn nest_array(&mut self) {
+        self.route.push(PathItem { value: "".to_string(), index: Some(0) });
+    }
+
     pub fn increment(&mut self) {
         if let Some(last) = self.route.last_mut() {
             if let Some(index) = last.index {
                 last.index = Some(index + 1)
-            } else {
-                last.index = Some(0);
             };
-        }
+        };
     }
 
     pub fn is_array(&self) -> bool {
@@ -78,11 +80,11 @@ impl fmt::Display for Path {
         };
         let values: Vec<String> = self.route.iter().map(|i| {
             if let Some(index) = i.index {
-                return i.value.clone() + &format!("[{}]", index);
+                return format!("[{}]", index);
             };
-            return i.value.clone();
+            format!(".{}", i.value.clone())
         }).collect();
 
-        write!(f, "$.{}", values.join("."))
+        write!(f, "${}", values.join(""))
     }
 }
