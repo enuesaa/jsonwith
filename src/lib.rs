@@ -6,7 +6,7 @@ use crate::json::deserializer::Deserializer as JsonDeserializer;
 use crate::json::serializer::Serializer as JsonSerializer;
 use crate::yaml::deserializer::Deserializer as YamlDeserializer;
 
-use crate::core::serializer::serializer::Serializer as Serializerv2;
+use crate::core::deserializer::deserializer::Deserializer as Deserializerv2;
 
 pub fn json2yaml(value: &str, indent: usize) -> String {
     let mut serializer = JsonSerializer::new();
@@ -18,7 +18,9 @@ pub fn json2yaml(value: &str, indent: usize) -> String {
 }
 
 pub fn json2yamlv2(value: &str) {
-    Serializerv2::new().serialize(value).render();
+    Deserializerv2::new().deserialize(value).render();
+
+    // deserialize
 }
 
 pub fn json2json(value: &str, indent: usize) -> String {
