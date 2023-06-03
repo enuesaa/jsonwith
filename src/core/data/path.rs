@@ -50,16 +50,28 @@ impl Path {
 }
 
 impl From<&str> for Path {
-    // from dotted like `$.a.0.b`
+    // from dotted like `$.a[0].b`
     fn from(dotted: &str) -> Self {
         if !dotted.starts_with("$") {
             return Path { route: vec![] }
         }
 
-        let trimed = dotted.trim_start_matches("$.");
-        let route: Vec<PathItem> = trimed.split(".").map(|s| s.to_string())
-            .into_iter().map(|k| PathItem::Key(k))
-            .collect();
+        // convert `$.a[0].b` to `a.[0].b`
+        let prefmt = dotted.trim_start_matches("$.").replace("[", ".[");
+        let route: Vec<PathItem> = prefmt.split(".").map(|s| {
+            let value = s.to_string();
+            if s.starts_with("[") && s.ends_with("]") {
+                let i = s
+                    .trim_start_matches("[")
+                    .trim_end_matches("]")
+                    .parse::<usize>()
+                    .unwrap();
+                PathItem::Index(i)
+            } else {
+                PathItem::Key(value)
+            }
+        }).collect();
+
         Path { route }
     }
 }

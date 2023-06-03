@@ -52,4 +52,10 @@ mod tests {
         path.increment();
         assert_eq!(path.to_string(), "$.a.bb[2].cc[1]");
     }
+
+    #[test]
+    fn from_array() {
+        let path = Path::from("$.a[1].b");
+        assert_eq!(path.to_string(), "$.a[1].b");
+    }
 }
