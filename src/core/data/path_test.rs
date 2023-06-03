@@ -23,7 +23,7 @@ mod tests {
     #[test]
     fn push_route() {
         let mut path = Path::from("$.a");
-        path.push("bb");
+        path.push_key("bb");
         assert_eq!(path.to_string(), "$.a.bb");
     }
 
@@ -37,18 +37,19 @@ mod tests {
     #[test]
     fn create_array() {
         let mut path = Path::from("$.a.bb");
-        path.increment();
+        path.push_index();
         assert_eq!(path.to_string(), "$.a.bb[0]");
     }
 
     #[test]
     fn create_nested_array() {
         let mut path = Path::from("$.a.bb");
+        path.push_index();
         path.increment();
         path.increment();
+        path.push_key("cc");
+        path.push_index();
         path.increment();
-        path.push("cc");
-        path.increment();
-        assert_eq!(path.to_string(), "$.a.bb[2].cc[0]");
+        assert_eq!(path.to_string(), "$.a.bb[2].cc[1]");
     }
 }

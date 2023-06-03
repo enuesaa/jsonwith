@@ -65,7 +65,7 @@ impl Context {
     pub fn start_array(&mut self) {
         let path = self.get_path();
         self.kvs.push(Kv { path, value: Tokens::MkArray });
-        self.path.nest_array();
+        self.path.push_index();
     }
 
     pub fn end_array(&self) {}
@@ -82,7 +82,7 @@ impl Context {
     }
 
     pub fn resolve_as_path(&mut self) {
-        self.path.push(&self.buf);
+        self.path.push_key(&self.buf);
         self.buf = "".to_string();
         self.status = Status::InSpace;
     }
@@ -105,7 +105,7 @@ impl Context {
     }
 
     pub fn push_path(&mut self, nest: &str) {
-        self.path.push(nest);
+        self.path.push_key(nest);
     }
 
     pub fn pop_path_if_in_dict(&mut self) {

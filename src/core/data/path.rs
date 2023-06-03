@@ -4,12 +4,10 @@ use std::fmt;
 // $.a
 // $.a.b
 // $.a[0].b
-
-#[derive(Clone, Debug)]
-struct PathItem {
-    value: String,
-     // If value is usize, it represents array index. If value is none, it represents value is not array.
-    index: Option<usize>,
+#[derive(Clone, Debug, PartialEq)]
+enum PathItem {
+    Key(String),
+    Index(usize),
 }
 
 #[derive(Clone, Debug)]
@@ -18,31 +16,31 @@ pub struct Path {
 }
 impl Path {
     pub fn new() -> Self {
-        Path {
-            route: vec![],
-        }
+        Path { route: vec![] }
     }
 
-    pub fn push(&mut self, nest: &str) {
-        self.route.push(PathItem { value: nest.to_string(), index: None });
+    pub fn push_key(&mut self, key: &str) {
+        self.route.push(PathItem::Key(key.to_string()));
     }
 
-    pub fn nest_array(&mut self) {
-        self.route.push(PathItem { value: "".to_string(), index: Some(0) });
+    pub fn push_index(&mut self) {
+        self.route.push(PathItem::Index(0));
     }
 
     pub fn increment(&mut self) {
         if let Some(last) = self.route.last_mut() {
-            if let Some(index) = last.index {
-                last.index = Some(index + 1)
+            if let PathItem::Index(i) = last {
+                *last = PathItem::Index(*i + 1);
             };
         };
     }
 
     pub fn is_array(&self) -> bool {
         if let Some(last) = self.route.last() {
-            return last.index.is_some()
-        }
+            if let PathItem::Index(_) = last {
+                return true;
+            };
+        };
         false
     }
 
@@ -59,10 +57,26 @@ impl From<&str> for Path {
         }
 
         let trimed = dotted.trim_start_matches("$.");
-        let route: Vec<PathItem> = trimed.split(".").map(|s| s.to_string()).into_iter().map(|v| {
-            PathItem { value: v, index: None }
-        }).collect();
+        let route: Vec<PathItem> = trimed.split(".").map(|s| s.to_string())
+            .into_iter().map(|k| PathItem::Key(k))
+            .collect();
         Path { route }
+    }
+}
+
+impl fmt::Display for Path {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        if self.route.len() == 0 {
+            return write!(f, "$");
+        };
+        let values: Vec<String> = self.route.iter().map(|i| {
+            match i {
+                PathItem::Index(i) => format!("[{}]", i),
+                PathItem::Key(k) => format!(".{}", k.clone()),
+            }
+        }).collect();
+
+        write!(f, "${}", values.join(""))
     }
 }
 
@@ -72,19 +86,3 @@ impl From<&str> for Path {
 //         "$".to_string() + &self.route.join(".")
 //     }
 // }
-
-impl fmt::Display for Path {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if self.route.len() == 0 {
-            return write!(f, "$");
-        };
-        let values: Vec<String> = self.route.iter().map(|i| {
-            if let Some(index) = i.index {
-                return format!("[{}]", index);
-            };
-            format!(".{}", i.value.clone())
-        }).collect();
-
-        write!(f, "${}", values.join(""))
-    }
-}
