@@ -92,7 +92,7 @@ impl Serializer {
 
     fn parse_key(&mut self, context: &mut Context, c: char) {
         if c == '"' && !context.get_buf().ends_with('\\') {
-            context.pop_path();
+            context.pop_path_if_in_dict();
             context.resolve_as_path();
         } else {
             context.push_buf(c);

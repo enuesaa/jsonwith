@@ -59,7 +59,7 @@ impl Context {
     }
 
     pub fn end_dict(&mut self) {
-        self.pop_path();
+        self.pop_path_if_in_dict();
     }
 
     pub fn start_array(&mut self) {
@@ -108,7 +108,9 @@ impl Context {
         self.path.push(nest);
     }
 
-    pub fn pop_path(&mut self) {
-        self.path.pop();
+    pub fn pop_path_if_in_dict(&mut self) {
+        if !self.path.is_array() {
+            self.path.pop();
+        };
     }
 }
