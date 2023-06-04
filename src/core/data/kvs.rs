@@ -4,6 +4,7 @@ use crate::core::data::kv::Kv;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Kvs {
+    // todo make private.
     pub items: Vec<Kv>,
 }
 
@@ -22,6 +23,10 @@ impl Kvs {
             let value = kv.get_value();
             print!("{}: {:?}\n", path, value);
         };
+    }
+
+    pub fn list(&self) -> Vec<Kv> {
+        self.items.clone()
     }
 }
 

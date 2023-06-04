@@ -1,3 +1,5 @@
+use crate::core::data::kvs::Kvs;
+
 // json serializer for now.
 pub struct Serializer {
     indent: usize,
@@ -12,7 +14,11 @@ impl Serializer {
         self.indent = indent;
     }
 
-    pub fn serialize(&mut self, _text: &str) -> String {
-        todo!()
+    pub fn serialize(&mut self, kvs: Kvs) -> String {
+        for kv in kvs.list() {
+            println!("{:?}", kv);
+        };
+
+        String::from("")
     }
 }
