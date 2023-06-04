@@ -14,8 +14,8 @@ mod tests {
 
         assert_eq!(actual, Kvs {
             items: vec![
-                Kv { path: Path { route: vec![], }, value: Tokens::MkDict },
-                Kv { path: Path { route: vec![ PathItem::Key("a".to_string()) ], }, value: Tokens::String("aaa".to_string()) },
+                Kv { path: Path::from(""), value: Tokens::MkDict },
+                Kv { path: Path::from("$.a"), value: Tokens::String("aaa".to_string()) },
             ],
         });
     }
@@ -28,7 +28,7 @@ mod tests {
 
         assert_eq!(actual, Kvs {
             items: vec![
-                Kv { path: Path { route: vec![], }, value: Tokens::MkArray },
+                Kv { path: Path::from(""), value: Tokens::MkArray },
                 Kv { path: Path { route: vec![ PathItem::Index(0) ], }, value: Tokens::String("aaa".to_string()) },
             ],
         });
@@ -42,7 +42,7 @@ mod tests {
 
         assert_eq!(actual, Kvs {
             items: vec![
-                Kv { path: Path { route: vec![], }, value: Tokens::String("aaa".to_string()) },
+                Kv { path: Path::from(""), value: Tokens::String("aaa".to_string()) },
             ],
         });
     }
@@ -56,10 +56,10 @@ mod tests {
 
         assert_eq!(actual, Kvs {
             items: vec![
-                Kv { path: Path { route: vec![], }, value: Tokens::MkDict },
-                Kv { path: Path { route: vec![ PathItem::Key("a".to_string()) ], }, value: Tokens::String("aaa".to_string()) },
-                Kv { path: Path { route: vec![ PathItem::Key("b".to_string()) ], }, value: Tokens::MkDict },
-                Kv { path: Path { route: vec![ PathItem::Key("b".to_string()), PathItem::Key("c".to_string()) ], }, value: Tokens::String("ddd".to_string()) },
+                Kv { path: Path::from(""), value: Tokens::MkDict },
+                Kv { path: Path::from("$.a"), value: Tokens::String("aaa".to_string()) },
+                Kv { path: Path::from("$.b"), value: Tokens::MkDict },
+                Kv { path: Path::from("$.b.c"), value: Tokens::String("ddd".to_string()) },
             ],
         });
     }

@@ -3,46 +3,58 @@ mod tests {
     use crate::core::data::path::Path;
 
     #[test]
-    fn root_path() {
+    fn test_new() {
         let path = Path::new();
         assert_eq!(path.to_string(), "$");
     }
 
     #[test]
-    fn from_dotted_string() {
+    fn test_root() {
+        let path = Path::from("$");
+        assert_eq!(path.to_string(), "$");
+    }
+
+    #[test]
+    fn test_root_array() {
+        let path = Path::from("$[1]");
+        assert_eq!(path.to_string(), "$[1]");
+    }
+
+    #[test]
+    fn test_from_dotted_string() {
         let path = Path::from("$.a.b.c");
         assert_eq!(path.to_string(), "$.a.b.c");
     }
 
     #[test]
-    fn from_dotted_string_but_invalid_path() {
+    fn test_from_dotted_string_but_invalid_path() {
         let path = Path::from("");
         assert_eq!(path.to_string(), "$");
     }
 
     #[test]
-    fn push_route() {
+    fn test_push_route() {
         let mut path = Path::from("$.a");
         path.push_key("bb");
         assert_eq!(path.to_string(), "$.a.bb");
     }
 
     #[test]
-    fn pop_route() {
+    fn test_pop_route() {
         let mut path = Path::from("$.a.bb");
         path.pop();
         assert_eq!(path.to_string(), "$.a");
     }
 
     #[test]
-    fn create_array() {
+    fn test_create_array() {
         let mut path = Path::from("$.a.bb");
         path.push_index();
         assert_eq!(path.to_string(), "$.a.bb[0]");
     }
 
     #[test]
-    fn create_nested_array() {
+    fn test_create_nested_array() {
         let mut path = Path::from("$.a.bb");
         path.push_index();
         path.increment();
@@ -54,7 +66,7 @@ mod tests {
     }
 
     #[test]
-    fn from_array() {
+    fn test_from_array() {
         let path = Path::from("$.a[1].b");
         assert_eq!(path.to_string(), "$.a[1].b");
     }
