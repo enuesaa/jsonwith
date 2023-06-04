@@ -54,11 +54,14 @@ impl From<&str> for Path {
     fn from(dotted: &str) -> Self {
         if !dotted.starts_with("$") {
             return Path { route: vec![] }
-        }
+        };
+        if dotted == "$" {
+            return Path { route: vec![] };
+        };
 
-        // convert `$.a[0].b` to `a.[0].b`
-        let prefmt = dotted.trim_start_matches("$.").replace("[", ".[");
-        let route: Vec<PathItem> = prefmt.split(".").map(|s| {
+        // convert `$.a[0].b` to `.a.[0].b`
+        let prefmt = dotted.trim_start_matches("$").replace("[", ".[");
+        let route: Vec<PathItem> = prefmt.split(".").skip(1).map(|s| {
             let value = s.to_string();
             if s.starts_with("[") && s.ends_with("]") {
                 let i = s
