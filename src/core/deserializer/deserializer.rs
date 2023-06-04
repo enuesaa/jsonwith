@@ -89,7 +89,7 @@ impl Deserializer {
         }
     }
 
-    fn parse_number_value(&self, context: &mut Context, c: char) {
+    fn parse_number_value(&self, _context: &mut Context, _c: char) {
         todo!()
     }
 

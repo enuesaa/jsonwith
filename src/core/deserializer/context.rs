@@ -74,7 +74,7 @@ impl Context {
         if let Some(last) = self.kvs.items.last() {
             return last.path.to_string() != self.path.to_string()
         };
-        false
+        true
     }
 
     pub fn push_buf(&mut self, c: char) {

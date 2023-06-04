@@ -12,7 +12,7 @@ impl Serializer {
         self.indent = indent;
     }
 
-    pub fn serialize(&mut self, text: &str) -> String {
+    pub fn serialize(&mut self, _text: &str) -> String {
         todo!()
     }
 }
