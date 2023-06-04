@@ -59,7 +59,7 @@ impl Context {
     }
 
     pub fn end_dict(&mut self) {
-        self.pop_path_if_in_dict();
+        self.path.pop();
     }
 
     pub fn start_array(&mut self) {
@@ -68,7 +68,9 @@ impl Context {
         self.path.push_index();
     }
 
-    pub fn end_array(&self) {}
+    pub fn end_array(&mut self) {
+        self.path.pop();
+    }
 
     pub fn is_waiting_value(&self) -> bool {
         if let Some(last) = self.kvs.items.last() {
@@ -82,6 +84,12 @@ impl Context {
     }
 
     pub fn resolve_as_path(&mut self) {
+        if let Some(last) = self.kvs.items.last() {
+            if last.value != Tokens::MkArray && last.value != Tokens::MkDict {
+                self.path.pop();
+            };
+        };
+
         self.path.push_key(&self.buf);
         self.buf = "".to_string();
         self.status = Status::InSpace;
@@ -102,15 +110,5 @@ impl Context {
 
     pub fn get_buf(&self) -> String {
         self.buf.clone()
-    }
-
-    pub fn push_path(&mut self, nest: &str) {
-        self.path.push_key(nest);
-    }
-
-    pub fn pop_path_if_in_dict(&mut self) {
-        if !self.path.is_array() {
-            self.path.pop();
-        };
     }
 }
