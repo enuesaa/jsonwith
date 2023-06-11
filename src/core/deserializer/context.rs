@@ -53,15 +53,6 @@ impl Context {
         self.status = Status::InBoolValue;
     }
 
-    pub fn start_dict(&mut self) {
-        let path = self.get_path();
-        self.kvs.push(Kv { path, value: Tokens::MkDict });
-    }
-
-    pub fn end_dict(&mut self) {
-        self.path.pop();
-    }
-
     pub fn start_array(&mut self) {
         let path = self.get_path();
         self.kvs.push(Kv { path, value: Tokens::MkArray });
@@ -70,6 +61,19 @@ impl Context {
 
     pub fn end_array(&mut self) {
         self.path.pop();
+        let path = self.get_path();
+        self.kvs.push(Kv { path, value: Tokens::EndArray });
+    }
+
+    pub fn start_dict(&mut self) {
+        let path = self.get_path();
+        self.kvs.push(Kv { path, value: Tokens::MkDict });
+    }
+
+    pub fn end_dict(&mut self) {
+        self.path.pop();
+        let path = self.get_path();
+        self.kvs.push(Kv { path, value: Tokens::EndDict });
     }
 
     pub fn get_path(&self) -> Path {
