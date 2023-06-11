@@ -47,6 +47,13 @@ impl Path {
     pub fn pop(&mut self) {
         self.route.pop();
     }
+
+    pub fn get_last(&self) -> PathItem {
+        if let Some(last) = self.route.last() {
+            return last.clone();
+        };
+        PathItem::Key("".to_string())
+    }
 }
 
 impl From<&str> for Path {

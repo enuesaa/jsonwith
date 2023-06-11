@@ -72,15 +72,23 @@ impl Context {
         self.path.pop();
     }
 
+    pub fn get_path(&self) -> Path {
+        self.path.clone()
+    }
+
+    pub fn get_buf(&self) -> String {
+        self.buf.clone()
+    }
+
+    pub fn push_buf(&mut self, c: char) {
+        self.buf = self.buf.clone() + &c.to_string();
+    }
+
     pub fn is_waiting_value(&self) -> bool {
         if let Some(last) = self.kvs.items.last() {
             return last.path.to_string() != self.path.to_string()
         };
         true
-    }
-
-    pub fn push_buf(&mut self, c: char) {
-        self.buf = self.buf.clone() + &c.to_string();
     }
 
     pub fn resolve_as_path(&mut self) {
@@ -102,13 +110,5 @@ impl Context {
         if self.path.is_array() {
             self.path.increment();
         };
-    }
-
-    pub fn get_path(&self) -> Path {
-        self.path.clone()
-    }
-
-    pub fn get_buf(&self) -> String {
-        self.buf.clone()
     }
 }

@@ -3,7 +3,6 @@ use crate::core::data::tokens::Tokens;
 use crate::core::deserializer::context::Context;
 use crate::core::deserializer::context::Status;
 
-// json deserializer for now.
 pub struct Deserializer {
     indent: usize,
 }
@@ -11,7 +10,7 @@ impl Deserializer {
     pub fn new() -> Self {
         Deserializer { indent: 2 }
     }
-    
+
     // configure options like this.
     pub fn set_indent(&mut self, indent: usize) {
         self.indent = indent;
