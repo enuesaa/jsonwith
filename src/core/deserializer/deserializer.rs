@@ -17,8 +17,8 @@ impl Deserializer {
     }
 
     pub fn deserialize(&mut self, text: &str) -> Kvs {
-        let text = format!("{} ", text);
         let mut context = Context::new();
+        let text = format!("{} ", text); // to trigger last process in parse_number_value.
         for c in text.chars() {
             match context.status {
                 Status::InSpace => self.parse_space(&mut context, c),
