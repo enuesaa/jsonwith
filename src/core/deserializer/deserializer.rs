@@ -88,8 +88,19 @@ impl Deserializer {
         }
     }
 
-    fn parse_number_value(&self, _context: &mut Context, _c: char) {
-        todo!()
+    fn parse_number_value(&mut self, context: &mut Context, c: char) {
+        match c {
+            '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' => {
+                context.push_buf(c);
+            },
+            _ => {
+                let value: usize = context.get_buf().parse().unwrap();
+                context.resolve_value(Tokens::Number(value));
+                context.declare_in_space();
+
+                self.parse_space(context, c);
+            },
+        };
     }
 
     fn parse_key(&mut self, context: &mut Context, c: char) {
