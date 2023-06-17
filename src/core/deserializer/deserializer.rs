@@ -17,6 +17,7 @@ impl Deserializer {
     }
 
     pub fn deserialize(&mut self, text: &str) -> Kvs {
+        let text = format!("{} ", text);
         let mut context = Context::new();
         for c in text.chars() {
             match context.status {

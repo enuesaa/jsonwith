@@ -16,6 +16,7 @@ mod tests {
             items: vec![
                 Kv { path: Path::from("$"), value: Tokens::MkDict },
                 Kv { path: Path::from("$.a"), value: Tokens::String("aaa".to_string()) },
+                Kv { path: Path::from("$"), value: Tokens::EndDict },
             ],
         });
     }
@@ -30,6 +31,7 @@ mod tests {
             items: vec![
                 Kv { path: Path::from("$"), value: Tokens::MkArray },
                 Kv { path: Path::from("$[0]"), value: Tokens::String("aaa".to_string()) },
+                Kv { path: Path::from("$"), value: Tokens::EndArray },
             ],
         });
     }
@@ -52,6 +54,7 @@ mod tests {
         let text = "107";
         let mut deserializer = Deserializer::new();
         let actual = deserializer.deserialize(text);
+        println!("{:?}", actual);
 
         assert_eq!(actual, Kvs {
             items: vec![
@@ -62,7 +65,7 @@ mod tests {
 
     #[test]
     fn test_nested_dict() {
-        let text = "{\"a\": \"aaa\", \"b\": {\"c\": \"ddd\"}}";
+        let text = "{\"a\": \"aaa\", \"b\": {\"c\": \"ddd\"}, \"e\": 108}";
         let mut deserializer = Deserializer::new();
         let actual = deserializer.deserialize(text);
 
@@ -72,6 +75,9 @@ mod tests {
                 Kv { path: Path::from("$.a"), value: Tokens::String("aaa".to_string()) },
                 Kv { path: Path::from("$.b"), value: Tokens::MkDict },
                 Kv { path: Path::from("$.b.c"), value: Tokens::String("ddd".to_string()) },
+                Kv { path: Path::from("$.b"), value: Tokens::EndDict },
+                Kv { path: Path::from("$.e"), value: Tokens::Number(108) },
+                Kv { path: Path::from("$"), value: Tokens::EndDict },
             ],
         });
     }
