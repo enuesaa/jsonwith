@@ -1,5 +1,7 @@
 use std::fmt;
 
+use crate::core::data::path::{Path, PathItem};
+
 #[derive(Clone)]
 pub struct Line {
     indent: usize,
@@ -31,20 +33,31 @@ impl Line {
         self.indent = indent;
     }
 
-    pub fn set_key(&mut self, key: String) {
-        self.key = key;
+    pub fn set_key(&mut self, path: &Path) {
+        if let Some(PathItem::Key(key)) = path.get_last() {
+            self.key = format!("\"{}\"", key);
+            self.need_colon();
+        };
     }
 
-    pub fn need_colon(&mut self) {
+    fn need_colon(&mut self) {
         self.colon = true;
     }
 
-    pub fn set_value(&mut self, value: String) {
-        self.value = value;
+    pub fn set_value(&mut self, value: &str) {
+        self.value = value.to_string();
+    }
+
+    pub fn set_string_value(&mut self, value: &str) {
+        self.value = format!("\"{}\"", value);
     }
 
     pub fn need_comma(&mut self) {
         self.comma = true;
+    }
+
+    pub fn unneed_comma(&mut self) {
+        self.comma = false;
     }
 
     pub fn need_dict_start_bracket(&mut self) {

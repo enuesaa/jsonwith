@@ -48,11 +48,11 @@ impl Path {
         self.route.pop();
     }
 
-    pub fn get_last(&self) -> PathItem {
+    pub fn get_last(&self) -> Option<PathItem> {
         if let Some(last) = self.route.last() {
-            return last.clone();
+            return Some(last.clone());
         };
-        PathItem::Key("".to_string())
+        None
     }
 }
 
