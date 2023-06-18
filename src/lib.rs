@@ -20,7 +20,7 @@ pub fn json2yaml(value: &str, indent: usize) -> String {
 
 pub fn json2yamlv2(value: &str) {
     let kvs = Deserializerv2::new().deserialize(value);
-    let raw = Serializerv2::new().serialize(kvs);
+    let raw = Serializerv2::new().serialize_withline(kvs);
     println!("{}", raw);
 }
 

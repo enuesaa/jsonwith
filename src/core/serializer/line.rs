@@ -15,7 +15,7 @@ pub struct Line {
 impl Line {
     pub fn new() -> Self {
         Self {
-            indent: 2,
+            indent: 0,
             key: String::from(""),
             colon: false,
             value: String::from(""),

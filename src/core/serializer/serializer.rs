@@ -1,6 +1,7 @@
 use crate::core::data::kvs::Kvs;
 use crate::core::data::path::PathItem;
 use crate::core::data::tokens::Tokens;
+use crate::core::serializer::line::Line;
 
 pub struct Serializer {
     indent: usize,
@@ -13,6 +14,64 @@ impl Serializer {
     // configure options like this.
     pub fn set_indent(&mut self, indent: usize) {
         self.indent = indent;
+    }
+
+    pub fn serialize_withline(&mut self, kvs: Kvs) -> String {
+        let mut ret = String::from("");
+
+        let mut spaces = 0;
+        for kv in kvs.list() {
+            let path = kv.get_path();
+            let value = kv.get_value();
+            let mut line = Line::new();
+            line.set_indent(spaces);
+
+            match value {
+                Tokens::MkArray => {
+                    line.need_array_start_bracket();
+                    spaces += 2;
+                },
+                Tokens::EndArray => {
+                    line.need_array_end_bracket();
+                    spaces -= 2;
+                },
+                Tokens::MkDict => {
+                    line.need_dict_start_bracket();
+                    spaces += 2;
+                },
+                Tokens::EndDict => {
+                    line.need_dict_end_bracket();
+                    spaces -= 2;
+                },
+                Tokens::String(value) => {
+                    match path.get_last() {
+                        PathItem::Key(key) => {
+                            line.set_key(key);
+                            line.need_colon();
+                        },
+                        _ => {},
+                    };
+
+                    line.set_value(format!("\"{}\"", value));
+                },
+                Tokens::Number(value) => {
+                    line.set_value(value.to_string());
+                },
+                Tokens::Bool(value) => {
+                    if value {
+                        line.set_value(String::from("true"));
+                    } else {
+                        line.set_value(String::from("false"));
+                    };
+                },
+                Tokens::Null => {
+                    line.set_value(String::from("null"));
+                },
+            };
+            ret += &line.to_string();
+        };
+
+        ret
     }
 
     pub fn serialize(&mut self, kvs: Kvs) -> String {
