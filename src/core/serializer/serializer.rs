@@ -26,32 +26,42 @@ impl Serializer {
             let mut line = Line::new();
             line.set_indent(spaces);
 
+            if value != Tokens::EndArray && value != Tokens::EndDict {
+                match path.get_last() {
+                    PathItem::Key(key) => {
+                        if key != "" {
+                            line.set_key(format!("\"{}\"", key));
+                            line.need_colon();   
+                        };
+                    },
+                    _ => {},
+                };
+            };
+            // 本当は次の value を見ないといけない
+            if value != Tokens::MkArray && value != Tokens::MkDict {
+                line.need_comma();
+            };
+
             match value {
                 Tokens::MkArray => {
                     line.need_array_start_bracket();
                     spaces += 2;
                 },
                 Tokens::EndArray => {
-                    line.need_array_end_bracket();
                     spaces -= 2;
+                    line.set_indent(spaces);
+                    line.need_array_end_bracket();
                 },
                 Tokens::MkDict => {
                     line.need_dict_start_bracket();
                     spaces += 2;
                 },
                 Tokens::EndDict => {
-                    line.need_dict_end_bracket();
                     spaces -= 2;
+                    line.set_indent(spaces);
+                    line.need_dict_end_bracket();
                 },
                 Tokens::String(value) => {
-                    match path.get_last() {
-                        PathItem::Key(key) => {
-                            line.set_key(key);
-                            line.need_colon();
-                        },
-                        _ => {},
-                    };
-
                     line.set_value(format!("\"{}\"", value));
                 },
                 Tokens::Number(value) => {
