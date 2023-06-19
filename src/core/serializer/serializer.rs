@@ -15,7 +15,7 @@ impl Serializer {
         self.indent = indent;
     }
 
-    pub fn serialize_withline(&mut self, kvs: Kvs) -> String {
+    pub fn serialize(&mut self, kvs: Kvs) -> String {
         let mut lines: Vec<Line> = Vec::new();
 
         let mut spaces = 0;

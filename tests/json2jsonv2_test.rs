@@ -1,5 +1,5 @@
 use std::fs;
-use jsonwith::json2json;
+use jsonwith::json2jsonv2;
 
 fn read(filename: &str) -> String {
     match fs::read_to_string(filename) {
@@ -9,26 +9,25 @@ fn read(filename: &str) -> String {
 }
 
 #[test]
-fn json2json_sample1() {
+fn json2jsonv2_sample1() {
     let sample1 = read("./tests/assets/sample1.json");
-    // todo fix last line existence. 
-    assert_eq!(json2json(&sample1, 2), sample1);
+    assert_eq!(json2jsonv2(&sample1), sample1);
 }
 
 #[test]
-fn json2json_sample2() {
+fn json2jsonv2_sample2() {
     let sample2 = read("./tests/assets/sample2.json");
-    assert_eq!(json2json(&sample2, 2), sample2);
+    assert_eq!(json2jsonv2(&sample2), sample2);
 }
 
 #[test]
-fn json2json_empty_dict() {
+fn json2jsonv2_empty_dict() {
     let emptydict = read("./tests/assets/emptydict.json");
-    assert_eq!(json2json(&emptydict, 2), emptydict);
+    assert_eq!(json2jsonv2(&emptydict), emptydict); // should {\n  \"a\": {}\n}\n
 }
 
 #[test]
-fn json2json_empty_list() {
+fn json2jsonv2_empty_list() {
     let emptylist = read("./tests/assets/emptylist.json");
-    assert_eq!(json2json(&emptylist, 2), emptylist);
+    assert_eq!(json2jsonv2(&emptylist), emptylist); // should {\n  \"a\": []\n}\n
 }

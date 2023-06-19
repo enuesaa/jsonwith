@@ -9,7 +9,7 @@ mod tests {
     #[test]
     fn test_root_dict() {
         let mut serializer = Serializer::new();
-        let actual = serializer.serialize_withline(Kvs {
+        let actual = serializer.serialize(Kvs {
             items: vec![
                 Kv { path: Path::from("$"), value: Tokens::MkDict },
                 Kv { path: Path::from("$.a"), value: Tokens::String("aaa".to_string()) },
@@ -23,7 +23,7 @@ mod tests {
     #[test]
     fn test_root_array() {
         let mut serializer = Serializer::new();
-        let actual = serializer.serialize_withline(Kvs {
+        let actual = serializer.serialize(Kvs {
             items: vec![
                 Kv { path: Path::from("$"), value: Tokens::MkArray },
                 Kv { path: Path::from("$[0]"), value: Tokens::String("aaa".to_string()) },
@@ -37,7 +37,7 @@ mod tests {
     #[test]
     fn test_root_string() {
         let mut serializer = Serializer::new();
-        let actual = serializer.serialize_withline(Kvs {
+        let actual = serializer.serialize(Kvs {
             items: vec![
                 Kv { path: Path::from("$"), value: Tokens::String("aaa".to_string()) },
             ],
@@ -49,7 +49,7 @@ mod tests {
     #[test]
     fn test_root_number() {
         let mut serializer = Serializer::new();
-        let actual = serializer.serialize_withline(Kvs {
+        let actual = serializer.serialize(Kvs {
             items: vec![
                 Kv { path: Path::from("$"), value: Tokens::Number(107) },
             ],
@@ -61,7 +61,7 @@ mod tests {
     #[test]
     fn test_nested_dict() {
         let mut serializer = Serializer::new();
-        let actual = serializer.serialize_withline(Kvs {
+        let actual = serializer.serialize(Kvs {
             items: vec![
                 Kv { path: Path::from("$"), value: Tokens::MkDict },
                 Kv { path: Path::from("$.a"), value: Tokens::String("aaa".to_string()) },

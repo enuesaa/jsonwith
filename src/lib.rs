@@ -18,10 +18,10 @@ pub fn json2yaml(value: &str, indent: usize) -> String {
     deserializer.deserialize(values)
 }
 
-pub fn json2yamlv2(value: &str) {
+pub fn json2jsonv2(value: &str) -> String {
     let kvs = Deserializerv2::new().deserialize(value);
-    let raw = Serializerv2::new().serialize_withline(kvs);
-    println!("{}", raw);
+    let raw = Serializerv2::new().serialize(kvs);
+    raw
 }
 
 pub fn json2json(value: &str, indent: usize) -> String {
