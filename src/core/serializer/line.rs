@@ -2,17 +2,18 @@ use std::fmt;
 
 use crate::core::data::path::{Path, PathItem};
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Line {
     indent: usize,
     key: String,
     colon: bool,
     value: String,
     comma: bool,
-    dict_start_bracket: bool,
+    pub dict_start_bracket: bool,
     dict_end_bracket: bool,
-    array_start_bracket: bool,
+    pub array_start_bracket: bool,
     array_end_bracket: bool,
+    ln: bool,
 }
 impl Line {
     pub fn new() -> Self {
@@ -26,6 +27,7 @@ impl Line {
             dict_end_bracket: false,
             array_start_bracket: false,
             array_end_bracket: false,
+            ln: true,
         }
     }
 
@@ -75,13 +77,17 @@ impl Line {
     pub fn need_array_end_bracket(&mut self) {
         self.array_end_bracket = true;
     }
+
+    pub fn unneed_ln(&mut self) {
+        self.ln = false;
+    }
 }
 
 impl fmt::Display for Line {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(
+        write!(
             f,
-            "{}{}{}{}{}{}{}{}{}",
+            "{}{}{}{}{}{}{}{}{}{}",
             " ".repeat(self.indent),
             self.key,
             if self.colon { ": " } else { "" },
@@ -99,6 +105,7 @@ impl fmt::Display for Line {
             },
             if self.array_end_bracket { "]" } else { "" },
             if self.comma { "," } else { "" },
+            if self.ln { "\n" } else { "" },
         )
     }
 }

@@ -20,6 +20,7 @@ pub fn json2yaml(value: &str, indent: usize) -> String {
 
 pub fn json2jsonv2(value: &str) -> String {
     let kvs = Deserializerv2::new().deserialize(value);
+    // なんか serialize するときに pipe のようなものを渡せたらいいな
     let raw = Serializerv2::new().serialize(kvs);
     raw
 }

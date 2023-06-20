@@ -34,11 +34,16 @@ impl Serializer {
                 Tokens::EndArray => {
                     if let Some(last) = lines.last_mut() {
                         last.unneed_comma();
+                        spaces -= 2;
+                        if last.array_start_bracket {
+                            last.need_array_end_bracket();
+                            line.unneed_ln();
+                        } else {
+                            line.set_indent(spaces);
+                            line.need_array_end_bracket();
+                            line.need_comma();
+                        };
                     };
-                    spaces -= 2;
-                    line.set_indent(spaces);
-                    line.need_array_end_bracket();
-                    line.need_comma();
                 },
                 Tokens::MkDict => {
                     line.set_indent(spaces);
@@ -49,11 +54,16 @@ impl Serializer {
                 Tokens::EndDict => {
                     if let Some(last) = lines.last_mut() {
                         last.unneed_comma();
+                        spaces -= 2;
+                        if last.dict_start_bracket {
+                            last.need_dict_end_bracket();
+                            line.unneed_ln();
+                        } else {
+                            line.set_indent(spaces);
+                            line.need_dict_end_bracket();
+                            line.need_comma();
+                        };
                     };
-                    spaces -= 2;
-                    line.set_indent(spaces);
-                    line.need_dict_end_bracket();
-                    line.need_comma();
                 },
                 Tokens::String(value) => {
                     line.set_indent(spaces);
@@ -85,6 +95,8 @@ impl Serializer {
         if let Some(last) = lines.last_mut() {
             last.unneed_comma();
         };
+
+        println!("{:?}", lines.iter().map(|l| l.to_string()).collect::<Vec<String>>());
 
         lines.iter().map(|l| l.to_string()).collect::<Vec<String>>().join("")
     }
