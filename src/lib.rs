@@ -20,9 +20,15 @@ pub fn json2yaml(value: &str, indent: usize) -> String {
 
 pub fn json2jsonv2(value: &str) -> String {
     let kvs = Deserializerv2::new().deserialize(value);
-    // なんか serialize するときに pipe のようなものを渡せたらいいな
     let raw = Serializerv2::new().serialize(kvs);
     raw
+
+    // to_string の命名が綺麗だが serializer だと違和感があるので命名を変えてもいいかも
+
+    // let raw = Serializerv2::with(kvs)
+    //     .process(IndentProcessor::new())
+    //     .process(OtherProcessor::new())
+    //     .get_raw()
 }
 
 pub fn json2json(value: &str, indent: usize) -> String {
