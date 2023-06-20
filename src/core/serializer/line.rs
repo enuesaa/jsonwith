@@ -1,9 +1,10 @@
 use std::fmt;
 
-use crate::core::data::path::{Path, PathItem};
+use crate::core::data::{path::{Path, PathItem}, kv::Kv};
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct Line {
+    kv: Kv,
     indent: usize,
     key: String,
     colon: bool,
@@ -16,8 +17,9 @@ pub struct Line {
     ln: bool,
 }
 impl Line {
-    pub fn new() -> Self {
+    pub fn from(kv: Kv) -> Self {
         Self {
+            kv,
             indent: 0,
             key: String::from(""),
             colon: false,
@@ -29,6 +31,11 @@ impl Line {
             array_end_bracket: false,
             ln: true,
         }
+    }
+
+    // 責務が違う気がする. wrapper のようなものを用意するか..
+    pub fn get_kv(&self) -> Kv {
+        self.kv.clone()
     }
 
     pub fn set_indent(&mut self, indent: usize) {
@@ -109,3 +116,21 @@ impl fmt::Display for Line {
         )
     }
 }
+
+// impl Clone for Line {
+//     fn clone(&self) -> Self {
+//         Line {
+//             kv: self.kv.clone(),
+//             indent: self.indent.clone(),
+//             key: self.key.clone(),
+//             colon: self.colon.clone(),
+//             value: self.value.clone(),
+//             comma: self.comma.clone(),
+//             dict_start_bracket: self.dict_start_bracket.clone(),
+//             dict_end_bracket: self.dict_end_bracket.clone(),
+//             array_start_bracket: self.array_start_bracket.clone(),
+//             array_end_bracket: self.array_end_bracket.clone(),
+//             ln: self.ln.clone(),
+//         }
+//     }
+// }
