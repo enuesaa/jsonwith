@@ -2,9 +2,9 @@ use std::fmt;
 
 use crate::core::data::{path::{Path, PathItem}, kv::Kv};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Line {
-    kv: Kv,
+    kv: Kv, // kv というより original path と original value を持つ
     indent: usize,
     key: String,
     colon: bool,
@@ -33,7 +33,6 @@ impl Line {
         }
     }
 
-    // 責務が違う気がする. wrapper のようなものを用意するか..
     pub fn get_kv(&self) -> Kv {
         self.kv.clone()
     }
@@ -116,21 +115,3 @@ impl fmt::Display for Line {
         )
     }
 }
-
-// impl Clone for Line {
-//     fn clone(&self) -> Self {
-//         Line {
-//             kv: self.kv.clone(),
-//             indent: self.indent.clone(),
-//             key: self.key.clone(),
-//             colon: self.colon.clone(),
-//             value: self.value.clone(),
-//             comma: self.comma.clone(),
-//             dict_start_bracket: self.dict_start_bracket.clone(),
-//             dict_end_bracket: self.dict_end_bracket.clone(),
-//             array_start_bracket: self.array_start_bracket.clone(),
-//             array_end_bracket: self.array_end_bracket.clone(),
-//             ln: self.ln.clone(),
-//         }
-//     }
-// }

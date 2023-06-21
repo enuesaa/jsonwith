@@ -14,7 +14,7 @@ impl Serializer {
     }
 
     pub fn process<T: Processor>(&mut self, processor: T) -> &mut Self {
-        self.lines = processor.process(&mut self.lines);
+        processor.process(&mut self.lines);
         self
     }
 

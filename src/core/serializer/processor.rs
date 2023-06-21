@@ -2,14 +2,13 @@ use crate::core::serializer::line::Line;
 use crate::core::data::tokens::Tokens;
 
 pub trait Processor {
-    fn process(&self, lines: &Vec<Line>) -> Vec<Line>;
+    fn process(&self, lines: &mut Vec<Line>);
 }
 
 pub struct MappingProcessor {}
 impl Processor for MappingProcessor {
-    fn process(&self, lines: &Vec<Line>) -> Vec<Line> {
-        let mut lines = lines.clone();
-        for mut line in lines {
+    fn process(&self, lines: &mut Vec<Line>) {
+        for line in lines {
             let kv = line.get_kv();
             let path = kv.get_path();
             let value = kv.get_value();
@@ -36,6 +35,7 @@ impl Processor for MappingProcessor {
                     line.need_dict_start_bracket();
                 },
                 Tokens::EndDict => {
+                    // mut in mut っぽいなあ
                     if let Some(last) = lines.last_mut() {
                         last.unneed_comma();
                         if last.dict_start_bracket {
@@ -72,7 +72,6 @@ impl Processor for MappingProcessor {
         if let Some(last) = lines.last_mut() {
             last.unneed_comma();
         };
-        lines.clone()
     }
 }
 
@@ -80,10 +79,9 @@ pub struct IndentProcessor {
     indent: usize,
 }
 impl Processor for IndentProcessor {
-    fn process(&self, lines: &Vec<Line>) -> Vec<Line> {
-        let mut lines = lines.clone();
+    fn process(&self, lines: &mut Vec<Line>) {
         let mut spaces = 0;
-        for mut line in lines {
+        for line in lines {
             let kv = line.get_kv();
             let value = kv.get_value();
 
@@ -94,12 +92,12 @@ impl Processor for IndentProcessor {
                 },
                 Tokens::EndArray => {
                     spaces -= 2;
-                    if let Some(last) = lines.last() {
-                        // todo refactor
-                        if !last.array_start_bracket {
-                            line.set_indent(spaces);
-                        };
-                    };
+                    // if let Some(last) = lines.last() {
+                    //     // todo refactor
+                    //     if !last.array_start_bracket {
+                    //         line.set_indent(spaces);
+                    //     };
+                    // };
                 },
                 Tokens::MkDict => {
                     line.set_indent(spaces);
@@ -107,20 +105,19 @@ impl Processor for IndentProcessor {
                 },
                 Tokens::EndDict => {
                     spaces -= 2;
-                    if let Some(last) = lines.last() {
-                        if !last.dict_start_bracket {
-                            line.set_indent(spaces);
-                        };
-                    };
+                    // if let Some(last) = lines.last() {
+                    //     if !last.dict_start_bracket {
+                    //         line.set_indent(spaces);
+                    //     };
+                    // };
                 },
                 _ => {
                     line.set_indent(spaces);
                 },
             };
         };
-        if let Some(last) = lines.last_mut() {
-            last.unneed_comma();
-        };
-        lines.clone()
+        // if let Some(last) = lines.last_mut() {
+        //     last.unneed_comma();
+        // };
     }
 }
