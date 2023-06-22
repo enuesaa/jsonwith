@@ -2,122 +2,55 @@ use crate::core::serializer::line::Line;
 use crate::core::data::tokens::Tokens;
 
 pub trait Processor {
-    fn process(&self, lines: &mut Vec<Line>);
-}
-
-pub struct MappingProcessor {}
-impl Processor for MappingProcessor {
-    fn process(&self, lines: &mut Vec<Line>) {
-        for line in lines {
-            let kv = line.get_kv();
-            let path = kv.get_path();
-            let value = kv.get_value();
-
-            match value {
-                Tokens::MkArray => {
-                    line.set_key(&path);
-                    line.need_array_start_bracket();
-                },
-                Tokens::EndArray => {
-                    if let Some(last) = lines.last_mut() {
-                        last.unneed_comma();
-                        if last.array_start_bracket {
-                            last.need_array_end_bracket();
-                            line.unneed_ln();
-                        } else {
-                            line.need_array_end_bracket();
-                            line.need_comma();
-                        };
-                    };
-                },
-                Tokens::MkDict => {
-                    line.set_key(&path);
-                    line.need_dict_start_bracket();
-                },
-                Tokens::EndDict => {
-                    // mut in mut っぽいなあ
-                    if let Some(last) = lines.last_mut() {
-                        last.unneed_comma();
-                        if last.dict_start_bracket {
-                            last.need_dict_end_bracket();
-                            line.unneed_ln();
-                        } else {
-                            line.need_dict_end_bracket();
-                            line.need_comma();
-                        };
-                    };
-                },
-                Tokens::String(value) => {
-                    line.set_key(&path);
-                    line.set_string_value(&value);
-                    line.need_comma();
-                },
-                Tokens::Number(value) => {
-                    line.set_key(&path);
-                    line.set_value(&value.to_string());
-                    line.need_comma();
-                },
-                Tokens::Bool(value) => {
-                    line.set_key(&path);
-                    line.set_value(&value.to_string());
-                    line.need_comma();
-                },
-                Tokens::Null => {
-                    line.set_key(&path);
-                    line.set_value("null");
-                    line.need_comma();
-                },
-            };
-        };
-        if let Some(last) = lines.last_mut() {
-            last.unneed_comma();
-        };
-    }
+    fn process(&self, lines: &Vec<Line>) -> Vec<Line>;
 }
 
 pub struct IndentProcessor {
-    indent: usize,
+    pub indent: usize,
 }
 impl Processor for IndentProcessor {
-    fn process(&self, lines: &mut Vec<Line>) {
+    fn process(&self, lines: &Vec<Line>) -> Vec<Line> {
+        let mut converted_lines: Vec<Line> = Vec::new();
+
         let mut spaces = 0;
         for line in lines {
-            let kv = line.get_kv();
-            let value = kv.get_value();
 
-            match value {
+            let mut converted = line.clone();
+            match line.get_kv_value() {
                 Tokens::MkArray => {
-                    line.set_indent(spaces);
-                    spaces += 2;
+                    converted.set_indent(spaces);
+                    spaces += self.indent.clone();
                 },
                 Tokens::EndArray => {
-                    spaces -= 2;
-                    // if let Some(last) = lines.last() {
-                    //     // todo refactor
-                    //     if !last.array_start_bracket {
-                    //         line.set_indent(spaces);
-                    //     };
-                    // };
+                    spaces -= self.indent.clone();
+                    if let Some(last) = converted_lines.last() {
+                        if !last.array_start_bracket {
+                            converted.set_indent(spaces);
+                        };
+                    };
                 },
                 Tokens::MkDict => {
-                    line.set_indent(spaces);
-                    spaces += 2;
+                    converted.set_indent(spaces);
+                    spaces += self.indent.clone();
                 },
                 Tokens::EndDict => {
-                    spaces -= 2;
-                    // if let Some(last) = lines.last() {
-                    //     if !last.dict_start_bracket {
-                    //         line.set_indent(spaces);
-                    //     };
-                    // };
+                    spaces -= self.indent.clone();
+                    if let Some(last) = converted_lines.last() {
+                        if !last.dict_start_bracket {
+                            converted.set_indent(spaces);
+                        };
+                    };
                 },
                 _ => {
-                    line.set_indent(spaces);
+                    converted.set_indent(spaces);
                 },
             };
+            converted_lines.push(converted);
         };
-        // if let Some(last) = lines.last_mut() {
-        //     last.unneed_comma();
-        // };
+        if let Some(last) = converted_lines.last_mut() {
+            last.unneed_comma();
+        };
+
+        converted_lines
     }
 }

@@ -2,7 +2,6 @@ pub mod json;
 pub mod yaml;
 pub mod core;
 
-use crate::core::serializer::processor::MappingProcessor;
 use crate::core::serializer::processor::IndentProcessor;
 
 use crate::json::deserializer::Deserializer as JsonDeserializer;
@@ -23,15 +22,10 @@ pub fn json2yaml(value: &str, indent: usize) -> String {
 
 pub fn json2jsonv2(value: &str) -> String {
     let kvs = Deserializerv2::new().deserialize(value);
-    // let raw = Serializerv2::new().serialize(kvs);
-    // raw
-
-    // to_string の命名が綺麗だが serializer だと違和感があるので命名を変えてもいいかも
-
-    let raw = Serializerv2::with(kvs)
-        .process(MappingProcessor {})
+    let raw = Serializerv2::serialize(kvs)
         .process(IndentProcessor { indent: 2 } )
         .get_raw();
+    println!("{}", raw);
     raw
 }
 

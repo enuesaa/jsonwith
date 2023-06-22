@@ -1,10 +1,13 @@
 use std::fmt;
 
-use crate::core::data::{path::{Path, PathItem}, kv::Kv};
+use crate::core::data::path::{Path, PathItem};
+use crate::core::data::kv::Kv;
+use crate::core::data::tokens::Tokens;
 
 #[derive(Debug, Clone)]
 pub struct Line {
-    kv: Kv, // kv というより original path と original value を持つ
+    kv_path: Path,
+    kv_value: Tokens,
     indent: usize,
     key: String,
     colon: bool,
@@ -16,10 +19,11 @@ pub struct Line {
     array_end_bracket: bool,
     ln: bool,
 }
-impl Line {
-    pub fn from(kv: Kv) -> Self {
+impl From<Kv> for Line {
+    fn from(kv: Kv) -> Self {
         Self {
-            kv,
+            kv_path: kv.get_path(),
+            kv_value: kv.get_value(),
             indent: 0,
             key: String::from(""),
             colon: false,
@@ -32,9 +36,15 @@ impl Line {
             ln: true,
         }
     }
+}
 
-    pub fn get_kv(&self) -> Kv {
-        self.kv.clone()
+impl Line {
+    pub fn get_kv_path(&self) -> Path {
+        self.kv_path.clone()
+    }
+
+    pub fn get_kv_value(&self) -> Tokens {
+        self.kv_value.clone()
     }
 
     pub fn set_indent(&mut self, indent: usize) {
