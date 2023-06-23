@@ -24,3 +24,7 @@ jsonwith json2toml <json>
 ```bash
 jsonwith yaml2json <json>
 ```
+
+### Development Plan
+#### v2
+- json to hcl2

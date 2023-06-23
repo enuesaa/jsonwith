@@ -23,7 +23,7 @@ pub fn json2yaml(value: &str, indent: usize) -> String {
 pub fn json2jsonv2(value: &str) -> String {
     let kvs = Deserializerv2::new().deserialize(value);
     let raw = Serializerv2::serialize(kvs)
-        .process(IndentProcessor { indent: 2 } )
+        .process(&mut IndentProcessor::new(2))
         .get_raw();
     println!("{}", raw);
     raw

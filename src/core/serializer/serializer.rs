@@ -78,8 +78,11 @@ impl Serializer {
         Serializer { lines }
     }
 
-    pub fn process<T: Processor>(&mut self, processor: T) -> &mut Self {
-        self.lines = processor.process(&self.lines);
+    pub fn process<T: Processor>(&mut self, processor: &mut T) -> &mut Self {
+        for line in self.lines.clone() {
+            processor.push(&line);
+        };
+        self.lines = processor.process();
         self
     }
 
