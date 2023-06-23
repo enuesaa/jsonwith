@@ -33,7 +33,7 @@ impl From<Kv> for Line {
             dict_end_bracket: false,
             array_start_bracket: false,
             array_end_bracket: false,
-            ln: true,
+            ln: false,
         }
     }
 }
@@ -92,6 +92,10 @@ impl Line {
 
     pub fn need_array_end_bracket(&mut self) {
         self.array_end_bracket = true;
+    }
+
+    pub fn need_ln(&mut self) {
+        self.ln = true;
     }
 
     pub fn unneed_ln(&mut self) {

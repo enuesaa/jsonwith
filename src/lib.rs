@@ -2,7 +2,7 @@ pub mod json;
 pub mod yaml;
 pub mod core;
 
-use crate::core::serializer::processor::IndentProcessor;
+use crate::core::serializer::indent_processor::IndentProcessor;
 
 use crate::json::deserializer::Deserializer as JsonDeserializer;
 use crate::json::serializer::Serializer as JsonSerializer;
@@ -22,7 +22,8 @@ pub fn json2yaml(value: &str, indent: usize) -> String {
 
 pub fn json2jsonv2(value: &str) -> String {
     let kvs = Deserializerv2::new().deserialize(value);
-    let raw = Serializerv2::serialize(kvs)
+    let raw = Serializerv2::new(kvs)
+        .serialize()
         .process(&mut IndentProcessor::new(2))
         .get_raw();
     println!("{}", raw);
