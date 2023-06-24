@@ -3,6 +3,7 @@ use clap::Parser;
 use anyhow::anyhow;
 use anyhow::Result;
 
+use jsonwith::json2yamlv2;
 use jsonwith::{json2json, json2yaml, json2jsonv2};
 
 #[derive(Debug, Parser)]
@@ -42,9 +43,16 @@ fn main() -> Result<()> {
         };
     };
 
-    if format == "v2" {
+    if format == "json2jsonv2" {
         if let Ok(json_str) = fs::read_to_string("./tests/assets/minimum.json") {
             json2jsonv2(&json_str);
+            return Ok(());
+        };
+    };
+
+    if format == "json2yamlv2" {
+        if let Ok(json_str) = fs::read_to_string("./tests/assets/minimum.json") {
+            json2yamlv2(&json_str);
             return Ok(());
         };
     };

@@ -1,6 +1,6 @@
 use std::fmt;
 
-use crate::core::data::path::Path;
+use crate::core::data::path::{Path, PathItem};
 use crate::core::data::tokens::Tokens;
 use crate::core::data::kv::Kv;
 
@@ -34,6 +34,14 @@ impl From<Kv> for Line {
     }
 }
 impl Line {
+    pub fn get_kv_path(&self) -> Path {
+        self.kv_path.clone()
+    }
+
+    pub fn get_kv_value(&self) -> Tokens {
+        self.kv_value.clone()
+    }
+
     pub fn set_indent(&mut self, indent: usize) {
         self.indent = indent;
     }
@@ -42,16 +50,19 @@ impl Line {
         self.hyphen = true;
     }
 
-    pub fn set_key(&mut self, key: String) {
-        self.key = key;
+    pub fn set_key(&mut self, path: &Path) {
+        if let Some(PathItem::Key(key)) = path.get_last() {
+            self.key = key.to_string();
+            self.enable_colon();
+        };
     }
 
     pub fn enable_colon(&mut self) {
         self.colon = true;
     }
 
-    pub fn set_value(&mut self, value: String) {
-        self.value = value;
+    pub fn set_value(&mut self, value: &str) {
+        self.value = value.to_string();
     }
 
     pub fn enable_empty_dict_blancket(&mut self) {
@@ -60,6 +71,10 @@ impl Line {
 
     pub fn enable_empty_array_blancket(&mut self) {
         self.empty_array_blancket = true;
+    }
+
+    pub fn enable_ln(&mut self) {
+        self.ln = true;
     }
 
     // pub fn is_hyphen_only(&mut self) -> bool {
@@ -74,24 +89,17 @@ impl Line {
 
 impl fmt::Display for Line {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(
+        write!(
             f,
-            "{}{}{}{}{}{}{}",
+            "{}{}{}{}{}{}{}{}",
             " ".repeat(self.indent),
             if self.hyphen { "- " } else { "" },
             self.key,
             if self.colon { ": " } else { "" },
             self.value,
-            if self.empty_dict_blancket {
-                "{}"
-            } else {
-                ""
-            },
-            if self.empty_array_blancket {
-                "[]"
-            } else {
-                ""
-            },
+            if self.empty_dict_blancket { "{}" } else { "" },
+            if self.empty_array_blancket { "[]" } else { "" },
+            if self.ln { "\n" } else { "" },
         )
     }
 }
