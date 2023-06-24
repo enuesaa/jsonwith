@@ -51,7 +51,7 @@ fn main() -> Result<()> {
     };
 
     if format == "json2yamlv2" {
-        if let Ok(json_str) = fs::read_to_string("./tests/assets/minimum.json") {
+        if let Ok(json_str) = fs::read_to_string("./tests/assets/sample1.json") {
             json2yamlv2(&json_str);
             return Ok(());
         };

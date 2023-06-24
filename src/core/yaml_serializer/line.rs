@@ -54,6 +54,8 @@ impl Line {
         if let Some(PathItem::Key(key)) = path.get_last() {
             self.key = key.to_string();
             self.enable_colon();
+        } else if let Some(PathItem::Index(_)) = path.get_last() {
+            self.enable_hyphen();
         };
     }
 
