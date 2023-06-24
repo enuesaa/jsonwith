@@ -1,8 +1,8 @@
 use crate::core::data::kvs::Kvs;
-use crate::core::serializer::line::Line;
-use crate::core::serializer::processor::Processor;
+use crate::core::yaml_serializer::line::Line;
+use crate::core::yaml_serializer::processor::Processor;
 
-use crate::core::serializer::mapping_processor::MappingProcessor;
+use crate::core::yaml_serializer::mapping_processor::MappingProcessor;
 
 pub struct Serializer {
     lines: Vec<Line>
