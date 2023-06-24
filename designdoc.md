@@ -1,30 +1,33 @@
-# Refactor Plan
-## Command Input
-```bash
-jsonwith format <json>
-```
-### From file
-```bash
-cat <filename> | jsonwith format
-```
-
+# designdoc
 ## Commands
-### Format
+### format
 ```bash
-jsonwith format --indent 2 --compact <json>
+cat <filename> | jsonwith jsonformat
 ```
 
-### Convert
+### format with indent
 ```bash
-jsonwith json2yaml --indent 2 <json>
-```
-```bash
-jsonwith json2toml <json>
-```
-```bash
-jsonwith yaml2json <json>
+cat <filename> | jsonwith jsonformat --indent 2
 ```
 
-### Development Plan
-#### v2
-- json to hcl2
+### format with interactive prompt
+```bash
+$ jsonwith format
+filename: ./aaa.json
+```
+
+### convert json to yaml
+```bash
+cat <filename> | jsonwith json2yaml
+```
+
+### convert yaml to json
+```bash
+cat <filename> | jsonwith yaml2json
+```
+
+### convert json to hcl
+Planning implemention on version 2.
+```bash
+cat <filename> | jsonwith json2hcl
+```

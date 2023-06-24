@@ -1,28 +1,24 @@
 use std::fs;
 use clap::Parser;
 use anyhow::anyhow;
-use anyhow::Result;
+use anyhow::Result as AnyhowResult;
 
 use jsonwith::json2yamlv2;
 use jsonwith::json2jsonv2;
 
 #[derive(Debug, Parser)]
-#[clap(disable_help_flag = true)]
 struct Args {
-    #[clap(short = 'f', long = "format")]
+    #[clap(long = "format")]
     format: String,
 
-    #[clap(short = 'i', long = "input")]
-    input: String,
-
-    #[clap(long = "indent", default_value = "2")]
-    indent: usize,
+    #[clap(long = "file")]
+    file: String,
 }
 
-fn main() -> Result<()> {
+fn main() -> AnyhowResult<()> {
     let args = Args::parse();
     let format = args.format;
-    let filename = args.input;
+    let filename = args.file;
 
     if format == "yaml" {
         if let Ok(json_str) = fs::read_to_string(&filename) {
