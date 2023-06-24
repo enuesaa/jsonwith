@@ -54,6 +54,13 @@ impl Path {
         };
         None
     }
+
+    pub fn is_last_index(&self) -> bool {
+        if let Some(PathItem::Index(_)) = self.get_last() {
+            return true;
+        };
+        false
+    }
 }
 
 impl From<&str> for Path {

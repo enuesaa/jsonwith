@@ -9,7 +9,7 @@ pub struct Line {
     kv_path: Path,
     kv_value: Tokens,
     indent: usize,
-    hyphen: bool,
+    pub hyphen: bool,
     key: String,
     colon: bool,
     value: String,
@@ -50,12 +50,14 @@ impl Line {
         self.hyphen = true;
     }
 
+    pub fn disable_hyphen(&mut self) {
+        self.hyphen = false;
+    }
+
     pub fn set_key(&mut self, path: &Path) {
         if let Some(PathItem::Key(key)) = path.get_last() {
             self.key = key.to_string();
             self.enable_colon();
-        } else if let Some(PathItem::Index(_)) = path.get_last() {
-            self.enable_hyphen();
         };
     }
 
@@ -79,22 +81,22 @@ impl Line {
         self.ln = true;
     }
 
-    // pub fn is_hyphen_only(&mut self) -> bool {
-    //     self.need_hyphen
-    //         && self.key == *""
-    //         && !self.need_colon
-    //         && self.value == *""
-    //         && !self.need_empty_dict_blancket
-    //         && !self.need_empty_list_blancket
-    // }
+    pub fn disable_ln(&mut self) {
+        self.ln = false;
+    }
 }
 
 impl fmt::Display for Line {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut indent = self.indent.clone();
+        if self.hyphen {
+            indent -= 2;
+        };
+
         write!(
             f,
             "{}{}{}{}{}{}{}{}",
-            " ".repeat(self.indent),
+            " ".repeat(indent),
             if self.hyphen { "- " } else { "" },
             self.key,
             if self.colon { ": " } else { "" },
