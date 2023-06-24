@@ -70,7 +70,6 @@ impl Processor for MappingProcessor {
                 self.remove_last_comma();
                 if self.is_last_start_dict() {
                     self.modify_last_need_dict_end_bracket();
-                    // converted.unneed_ln();
                 } else {
                     converted.need_dict_end_bracket();
                     converted.need_comma();

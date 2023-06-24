@@ -26,6 +26,32 @@ impl MappingProcessor {
     fn is_root_dict(&self) -> bool {
         self.lines.iter().count() == 0
     }
+
+    fn is_last_start_array(&mut self) -> bool {
+        if let Some(last) = self.lines.last() {
+            return last.get_kv_value() == Tokens::MkArray;
+        };
+        false
+    }
+
+    fn is_last_start_dict(&mut self) -> bool {
+        if let Some(last) = self.lines.last() {
+            return last.get_kv_value() == Tokens::MkDict;
+        };
+        false
+    }
+
+    fn modify_last_need_empty_arary_brancket(&mut self) {
+        if let Some(last) = self.lines.last_mut() {
+            last.enable_empty_array_blancket();
+        };
+    }
+
+    fn modify_last_need_empty_dict_brancket(&mut self) {
+        if let Some(last) = self.lines.last_mut() {
+            last.enable_empty_dict_blancket();
+        };
+    }
 }
 
 impl Processor for MappingProcessor {
@@ -40,17 +66,23 @@ impl Processor for MappingProcessor {
                 self.increment_space();
             },
             Tokens::EndArray => {
+                if self.is_last_start_array() {
+                    self.modify_last_need_empty_arary_brancket();
+                };
                 self.decrement_space();
             },
             Tokens::MkDict => {
                 converted.set_indent(self.spaces);
                 converted.set_key(&converted.get_kv_path());
-                converted.enable_ln();
                 if !self.is_root_dict() {
+                    converted.enable_ln();
                     self.increment_space();
                 };
             },
             Tokens::EndDict => {
+                if self.is_last_start_dict() {
+                    self.modify_last_need_empty_dict_brancket();
+                };
                 self.decrement_space();
             },
             Tokens::String(value) => {
