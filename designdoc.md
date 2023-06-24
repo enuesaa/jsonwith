@@ -2,12 +2,12 @@
 ## Commands
 ### format
 ```bash
-cat <filename> | jsonwith jsonformat
+cat <filename> | jsonwith format
 ```
 
 ### format with indent
 ```bash
-cat <filename> | jsonwith jsonformat --indent 2
+cat <filename> | jsonwith format --indent 2
 ```
 
 ### format with interactive prompt

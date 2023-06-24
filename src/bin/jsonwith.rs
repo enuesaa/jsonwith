@@ -1,43 +1,43 @@
-use std::fs;
-use clap::Parser;
-use anyhow::anyhow;
-use anyhow::Result as AnyhowResult;
+use clap::{Parser, Subcommand, Args};
 
-use jsonwith::json2yamlv2;
-use jsonwith::json2jsonv2;
+use jsonwith::json2yaml;
+use jsonwith::json2json;
 
-#[derive(Debug, Parser)]
-struct Args {
-    #[clap(long = "format")]
-    format: String,
-
-    #[clap(long = "file")]
-    file: String,
+#[derive(Parser, Debug)]
+#[command(name = "jsonwith", about = "JSON Parser", disable_help_subcommand = true)]
+struct Cli {
+    #[command(subcommand)]
+    pub action: Actions,
 }
 
-fn main() -> AnyhowResult<()> {
-    let args = Args::parse();
-    let format = args.format;
-    let filename = args.file;
+#[derive(Args, Debug)]
+struct FormatArgs {
+    pub json: String,
+}
 
-    if format == "yaml" {
-        if let Ok(json_str) = fs::read_to_string(&filename) {
-            let yaml_str = json2yamlv2(&json_str);
-            println!("{}", yaml_str);
-            return Ok(());
-        } else {
-            return Err(anyhow!("Failed to open file."));
-        };
-    };
-    if format == "json" {
-        if let Ok(json_str) = fs::read_to_string(&filename) {
-            let formatted = json2jsonv2(&json_str);
+#[derive(Args, Debug)]
+struct Json2yamlArgs {
+    pub json: String,
+}
+
+#[derive(Subcommand, Debug)]
+enum Actions {
+    Format(FormatArgs),
+    Json2yaml(Json2yamlArgs),
+}
+
+fn main() {
+    let args = Cli::parse();
+    let action = args.action;
+
+    match action {
+        Actions::Format(args) => {
+            let formatted = json2json(&args.json);
             println!("{}", formatted);
-            return Ok(());
-        } else {
-            return Err(anyhow!("Failed to open file."));
-        };
+        },
+        Actions::Json2yaml(args) => {
+            let formatted = json2yaml(&args.json);
+            println!("{}", formatted);
+        },
     };
-
-    Err(anyhow!("Argument invalid."))
 }
