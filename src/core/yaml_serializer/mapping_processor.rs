@@ -10,7 +10,12 @@ pub struct MappingProcessor {
 }
 impl MappingProcessor {
     pub fn new() -> Self {
-        Self { indent: 2, spaces: 0, next_need_hyphen: false, lines: Vec::new() }
+        Self {
+            indent: 2,
+            spaces: 0,
+            next_need_hyphen: false,
+            lines: Vec::new(),
+        }
     }
 
     fn increment_space(&mut self) {
@@ -84,12 +89,12 @@ impl Processor for MappingProcessor {
                 converted.set_indent(self.spaces);
                 converted.enable_ln();
                 self.append_key_or_hyphen(&mut converted);
-            },
+            }
             Tokens::EndArray => {
                 if self.is_last_start_array() {
                     self.modify_last_need_empty_arary_brancket();
                 };
-            },
+            }
             Tokens::MkDict => {
                 converted.set_indent(self.spaces);
                 if !self.is_root_dict() {
@@ -97,37 +102,37 @@ impl Processor for MappingProcessor {
                     self.increment_space();
                 };
                 self.append_key_or_hyphen(&mut converted);
-            },
+            }
             Tokens::EndDict => {
                 if self.is_last_start_dict() {
                     self.modify_last_need_empty_dict_brancket();
                 };
                 self.decrement_space();
-            },
+            }
             Tokens::String(value) => {
                 converted.set_indent(self.spaces);
                 converted.set_value(&value);
                 converted.enable_ln();
                 self.append_key_or_hyphen(&mut converted);
-            },
+            }
             Tokens::Number(value) => {
                 converted.set_indent(self.spaces);
                 converted.set_value(&value.to_string());
                 converted.enable_ln();
                 self.append_key_or_hyphen(&mut converted);
-            },
+            }
             Tokens::Bool(value) => {
                 converted.set_indent(self.spaces);
                 converted.set_value(&value.to_string());
                 converted.enable_ln();
                 self.append_key_or_hyphen(&mut converted);
-            },
+            }
             Tokens::Null => {
                 converted.set_indent(self.spaces);
                 converted.set_value("null");
                 converted.enable_ln();
                 self.append_key_or_hyphen(&mut converted);
-            },
+            }
         };
 
         self.lines.push(converted);

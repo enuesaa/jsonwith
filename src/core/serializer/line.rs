@@ -1,7 +1,7 @@
 use std::fmt;
 
-use crate::core::data::path::{Path, PathItem};
 use crate::core::data::kv::Kv;
+use crate::core::data::path::{Path, PathItem};
 use crate::core::data::tokens::Tokens;
 
 #[derive(Debug, Clone)]
@@ -112,17 +112,9 @@ impl fmt::Display for Line {
             self.key,
             if self.colon { ": " } else { "" },
             self.value,
-            if self.dict_start_bracket {
-                "{"
-            } else {
-                ""
-            },
+            if self.dict_start_bracket { "{" } else { "" },
             if self.dict_end_bracket { "}" } else { "" },
-            if self.array_start_bracket {
-                "["
-            } else {
-                ""
-            },
+            if self.array_start_bracket { "[" } else { "" },
             if self.array_end_bracket { "]" } else { "" },
             if self.comma { "," } else { "" },
             if self.ln { "\n" } else { "" },

@@ -51,7 +51,7 @@ impl Processor for MappingProcessor {
             Tokens::MkArray => {
                 converted.set_key(&converted.get_kv_path());
                 converted.need_array_start_bracket();
-            },
+            }
             Tokens::EndArray => {
                 self.remove_last_comma();
                 if self.is_last_start_array() {
@@ -61,11 +61,11 @@ impl Processor for MappingProcessor {
                     converted.need_array_end_bracket();
                     converted.need_comma();
                 };
-            },
+            }
             Tokens::MkDict => {
                 converted.set_key(&converted.get_kv_path());
                 converted.need_dict_start_bracket();
-            },
+            }
             Tokens::EndDict => {
                 self.remove_last_comma();
                 if self.is_last_start_dict() {
@@ -74,27 +74,27 @@ impl Processor for MappingProcessor {
                     converted.need_dict_end_bracket();
                     converted.need_comma();
                 };
-            },
+            }
             Tokens::String(value) => {
                 converted.set_key(&converted.get_kv_path());
                 converted.set_string_value(&value);
                 converted.need_comma();
-            },
+            }
             Tokens::Number(value) => {
                 converted.set_key(&converted.get_kv_path());
                 converted.set_value(&value.to_string());
                 converted.need_comma();
-            },
+            }
             Tokens::Bool(value) => {
                 converted.set_key(&converted.get_kv_path());
                 converted.set_value(&value.to_string());
                 converted.need_comma();
-            },
+            }
             Tokens::Null => {
                 converted.set_key(&converted.get_kv_path());
                 converted.set_value("null");
                 converted.need_comma();
-            },
+            }
         };
 
         self.lines.push(converted);

@@ -1,6 +1,6 @@
 use std::fmt;
 
-// json path like 
+// json path like
 // $.a
 // $.a.b
 // $.a[0].b
@@ -67,7 +67,7 @@ impl From<&str> for Path {
     // from dotted like `$.a[0].b`
     fn from(dotted: &str) -> Self {
         if !dotted.starts_with("$") {
-            return Path { route: vec![] }
+            return Path { route: vec![] };
         };
         if dotted == "$" {
             return Path { route: vec![] };
@@ -75,19 +75,23 @@ impl From<&str> for Path {
 
         // convert `$.a[0].b` to `.a.[0].b`
         let prefmt = dotted.trim_start_matches("$").replace("[", ".[");
-        let route: Vec<PathItem> = prefmt.split(".").skip(1).map(|s| {
-            let value = s.to_string();
-            if s.starts_with("[") && s.ends_with("]") {
-                let i = s
-                    .trim_start_matches("[")
-                    .trim_end_matches("]")
-                    .parse::<usize>()
-                    .unwrap();
-                PathItem::Index(i)
-            } else {
-                PathItem::Key(value)
-            }
-        }).collect();
+        let route: Vec<PathItem> = prefmt
+            .split(".")
+            .skip(1)
+            .map(|s| {
+                let value = s.to_string();
+                if s.starts_with("[") && s.ends_with("]") {
+                    let i = s
+                        .trim_start_matches("[")
+                        .trim_end_matches("]")
+                        .parse::<usize>()
+                        .unwrap();
+                    PathItem::Index(i)
+                } else {
+                    PathItem::Key(value)
+                }
+            })
+            .collect();
 
         Path { route }
     }
@@ -98,12 +102,14 @@ impl fmt::Display for Path {
         if self.route.len() == 0 {
             return write!(f, "$");
         };
-        let values: Vec<String> = self.route.iter().map(|i| {
-            match i {
+        let values: Vec<String> = self
+            .route
+            .iter()
+            .map(|i| match i {
                 PathItem::Index(i) => format!("[{}]", i),
                 PathItem::Key(k) => format!(".{}", k.clone()),
-            }
-        }).collect();
+            })
+            .collect();
 
         write!(f, "${}", values.join(""))
     }

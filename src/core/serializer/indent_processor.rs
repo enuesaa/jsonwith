@@ -9,7 +9,11 @@ pub struct IndentProcessor {
 }
 impl IndentProcessor {
     pub fn new(indent: usize) -> Self {
-        Self { indent, spaces: 0, lines: Vec::new() }
+        Self {
+            indent,
+            spaces: 0,
+            lines: Vec::new(),
+        }
     }
 
     fn increment_space(&mut self) {
@@ -44,7 +48,7 @@ impl Processor for IndentProcessor {
             Tokens::MkArray => {
                 converted.set_indent(self.spaces);
                 self.increment_space();
-            },
+            }
             Tokens::EndArray => {
                 self.decrement_space();
                 if self.is_last_start_array() {
@@ -52,11 +56,11 @@ impl Processor for IndentProcessor {
                 } else {
                     converted.set_indent(self.spaces);
                 }
-            },
+            }
             Tokens::MkDict => {
                 converted.set_indent(self.spaces);
                 self.increment_space();
-            },
+            }
             Tokens::EndDict => {
                 self.decrement_space();
                 if self.is_last_start_dict() {
@@ -64,10 +68,10 @@ impl Processor for IndentProcessor {
                 } else {
                     converted.set_indent(self.spaces);
                 };
-            },
+            }
             _ => {
                 converted.set_indent(self.spaces);
-            },
+            }
         };
 
         self.lines.push(converted);

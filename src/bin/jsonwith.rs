@@ -1,10 +1,14 @@
-use clap::{Parser, Subcommand, Args};
+use clap::{Args, Parser, Subcommand};
 
-use jsonwith::json2yaml;
 use jsonwith::json2json;
+use jsonwith::json2yaml;
 
 #[derive(Parser, Debug)]
-#[command(name = "jsonwith", about = "JSON Parser", disable_help_subcommand = true)]
+#[command(
+    name = "jsonwith",
+    about = "JSON Parser",
+    disable_help_subcommand = true
+)]
 struct Cli {
     #[command(subcommand)]
     pub action: Actions,
@@ -34,10 +38,10 @@ fn main() {
         Actions::Format(args) => {
             let formatted = json2json(&args.json);
             println!("{}", formatted);
-        },
+        }
         Actions::Json2yaml(args) => {
             let formatted = json2yaml(&args.json);
             println!("{}", formatted);
-        },
+        }
     };
 }

@@ -1,5 +1,5 @@
-use std::fs;
 use jsonwith::json2json;
+use std::fs;
 
 fn read(filename: &str) -> String {
     match fs::read_to_string(filename) {

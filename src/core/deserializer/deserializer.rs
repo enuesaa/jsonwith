@@ -28,7 +28,7 @@ impl Deserializer {
                 Status::InStringValue => self.parse_string_value(&mut context, c),
                 Status::InKey => self.parse_key(&mut context, c),
             };
-        };
+        }
 
         context.kvs.clone()
     }
@@ -45,20 +45,20 @@ impl Deserializer {
                 } else {
                     context.declare_in_key();
                 };
-            },
+            }
             'n' => {
                 context.declare_in_null_value();
                 context.push_buf(c);
-            },
-            't'|'f' => {
+            }
+            't' | 'f' => {
                 context.declare_in_bool_value();
                 context.push_buf(c);
-            },
-            '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' => {
+            }
+            '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
                 context.declare_in_number_value();
                 context.push_buf(c);
-            },
-            _ => {},
+            }
+            _ => {}
         };
     }
 
@@ -91,16 +91,16 @@ impl Deserializer {
 
     fn parse_number_value(&mut self, context: &mut Context, c: char) {
         match c {
-            '0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'|'8'|'9' => {
+            '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
                 context.push_buf(c);
-            },
+            }
             _ => {
                 let value: usize = context.get_buf().parse().unwrap();
                 context.resolve_value(Tokens::Number(value));
                 context.declare_in_space();
 
                 self.parse_space(context, c);
-            },
+            }
         };
     }
 

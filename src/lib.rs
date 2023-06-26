@@ -2,8 +2,8 @@ pub mod core;
 pub mod json;
 pub mod yaml;
 
-use crate::core::serializer::indent_processor::IndentProcessor;
 use crate::core::deserializer::deserializer::Deserializer;
+use crate::core::serializer::indent_processor::IndentProcessor;
 use crate::core::serializer::serializer::Serializer;
 use crate::core::yaml_serializer::serializer::Serializer as YamlSerializer;
 
@@ -18,8 +18,6 @@ pub fn json2json(value: &str) -> String {
 
 pub fn json2yaml(value: &str) -> String {
     let kvs = Deserializer::new().deserialize(value);
-    let raw = YamlSerializer::new(kvs)
-        .serialize()
-        .get_raw();
+    let raw = YamlSerializer::new(kvs).serialize().get_raw();
     raw
 }

@@ -1,6 +1,6 @@
 use crate::core::data::kv::Kv;
-use crate::core::data::path::Path;
 use crate::core::data::kvs::Kvs;
+use crate::core::data::path::Path;
 use crate::core::data::tokens::Tokens;
 
 #[derive(PartialEq, Clone, Debug)]
@@ -36,44 +36,56 @@ impl Context {
     pub fn declare_in_key(&mut self) {
         self.status = Status::InKey;
     }
-    
+
     pub fn declare_in_null_value(&mut self) {
         self.status = Status::InNullValue;
     }
-    
+
     pub fn declare_in_number_value(&mut self) {
         self.status = Status::InNumberValue;
     }
-    
+
     pub fn declare_in_string_value(&mut self) {
         self.status = Status::InStringValue;
     }
-    
+
     pub fn declare_in_bool_value(&mut self) {
         self.status = Status::InBoolValue;
     }
 
     pub fn start_array(&mut self) {
         let path = self.get_path();
-        self.kvs.push(Kv { path, value: Tokens::MkArray });
+        self.kvs.push(Kv {
+            path,
+            value: Tokens::MkArray,
+        });
         self.path.push_index();
     }
 
     pub fn end_array(&mut self) {
         self.path.pop();
         let path = self.get_path();
-        self.kvs.push(Kv { path, value: Tokens::EndArray });
+        self.kvs.push(Kv {
+            path,
+            value: Tokens::EndArray,
+        });
     }
 
     pub fn start_dict(&mut self) {
         let path = self.get_path();
-        self.kvs.push(Kv { path, value: Tokens::MkDict });
+        self.kvs.push(Kv {
+            path,
+            value: Tokens::MkDict,
+        });
     }
 
     pub fn end_dict(&mut self) {
         self.path.pop();
         let path = self.get_path();
-        self.kvs.push(Kv { path, value: Tokens::EndDict });
+        self.kvs.push(Kv {
+            path,
+            value: Tokens::EndDict,
+        });
     }
 
     pub fn get_path(&self) -> Path {
@@ -90,7 +102,7 @@ impl Context {
 
     pub fn is_waiting_value(&self) -> bool {
         if let Some(last) = self.kvs.items.last() {
-            return last.path.to_string() != self.path.to_string()
+            return last.path.to_string() != self.path.to_string();
         };
         true
     }

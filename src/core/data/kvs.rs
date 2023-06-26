@@ -1,6 +1,6 @@
+use crate::core::data::kv::Kv;
 use std::fmt;
 use std::fmt::Debug;
-use crate::core::data::kv::Kv;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Kvs {
@@ -22,7 +22,7 @@ impl Kvs {
             let path = kv.get_path();
             let value = kv.get_value();
             print!("{}: {:?}\n", path, value);
-        };
+        }
     }
 
     pub fn list(&self) -> Vec<Kv> {
@@ -37,7 +37,7 @@ impl fmt::Display for Kvs {
             let path = kv.get_path();
             let value = kv.get_value();
             ret += &format!("{}: {:?}\n", path, value);
-        };
+        }
         write!(f, "{}", ret)
     }
 }
