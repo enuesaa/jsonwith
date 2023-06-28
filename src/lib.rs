@@ -2,9 +2,9 @@ pub mod core;
 pub mod json;
 pub mod yaml;
 
-use crate::core::deserializer::deserializer::Deserializer;
-use crate::core::serializer::indent_processor::IndentProcessor;
-use crate::core::serializer::serializer::Serializer;
+use crate::json::parse::parser::Deserializer;
+use crate::json::render::indent::IndentProcessor;
+use crate::json::render::renderer::Serializer;
 use crate::core::yaml_serializer::serializer::Serializer as YamlSerializer;
 
 pub fn json2json(value: &str) -> String {

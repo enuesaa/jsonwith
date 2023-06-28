@@ -4,8 +4,8 @@ mod tests {
     use crate::core::data::kvs::Kvs;
     use crate::core::data::path::Path;
     use crate::core::data::tokens::Tokens;
-    use crate::core::serializer::indent_processor::IndentProcessor;
-    use crate::core::serializer::serializer::Serializer;
+    use crate::json::render::renderer::Serializer;
+    use crate::json::render::indent::IndentProcessor;
 
     #[test]
     fn test_root_dict() {

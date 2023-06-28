@@ -4,7 +4,7 @@ mod tests {
     use crate::core::data::kvs::Kvs;
     use crate::core::data::path::Path;
     use crate::core::data::tokens::Tokens;
-    use crate::core::deserializer::deserializer::Deserializer;
+    use crate::json::parse::parser::Deserializer;
 
     #[test]
     fn test_root_dict() {
