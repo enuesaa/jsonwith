@@ -5,7 +5,6 @@ use crate::yaml::render::processor::Processor;
 pub struct MappingProcessor {
     indent: usize,
     spaces: usize,
-    next_need_hyphen: bool,
     lines: Vec<Line>,
 }
 impl MappingProcessor {
@@ -13,7 +12,6 @@ impl MappingProcessor {
         Self {
             indent: 2,
             spaces: 0,
-            next_need_hyphen: false,
             lines: Vec::new(),
         }
     }
@@ -59,27 +57,10 @@ impl MappingProcessor {
         };
     }
 
-    fn modify_last_disable_ln(&mut self) {
-        if let Some(last) = self.lines.last_mut() {
-            last.disable_ln();
-        };
-    }
-
     fn append_key_or_hyphen(&mut self, line: &mut Line) {
-        if self.next_need_hyphen {
-            // println!("no_need_hyphen");
-            line.enable_hyphen();
-            self.modify_last_disable_ln();
-            self.next_need_hyphen = false;
-        };
-
-        // println!("{:?}",line.get_kv_path());
-
         if line.get_kv_path().is_last_index() {
-            // println!("is_last_index");
-            self.next_need_hyphen = true;
+            line.enable_hyphen();
         } else {
-            // println!("is_last_index_no");
             line.set_key(&line.get_kv_path());
         };
     }
@@ -87,12 +68,10 @@ impl MappingProcessor {
 
 impl Processor for MappingProcessor {
     fn push(&mut self, line: &Line) {
-        println!("{:?}", line);
         let mut converted = line.clone();
 
         match line.get_kv_value() {
             Tokens::MkArray => {
-                // println!("a");
                 converted.set_indent(self.spaces);
                 converted.enable_ln();
                 self.append_key_or_hyphen(&mut converted);

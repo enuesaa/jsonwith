@@ -90,7 +90,10 @@ impl fmt::Display for Line {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let mut indent = self.indent.clone();
         if self.hyphen {
-            indent -= 2;
+            // todo fix
+            if indent > 2 {
+                indent -= 2;
+            };
         };
 
         write!(
