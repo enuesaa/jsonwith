@@ -1,8 +1,8 @@
-use crate::{json2json, json2yaml};
+use crate::{jsonformat, json2yaml};
 use crate::cli::commands::{FormatArgs, Json2yamlArgs};
 
 pub fn handle_format(args: FormatArgs) {
-    let result = json2json(&args.json);
+    let result = jsonformat(&args.json);
     println!("{}", result);
 }
 

@@ -31,10 +31,3 @@ Planning implemention on version 2.
 ```bash
 cat <filename> | jsonwith json2hcl
 ```
-
-## TODO
-- deserializer ではなく parser
-- serializer ではなく renderer
-- line ではなく renderableKv ... 要検討
-- refactor path
-- 責務の見直し

@@ -8,7 +8,7 @@ use crate::json::render::renderer::Renderer as JsonRenderer;
 use crate::json::render::process_indent::IndentProcessor as JsonIndentProcessor;
 use crate::yaml::render::renderer::Renderer as YamlRenderer;
 
-pub fn json2json(value: &str) -> String {
+pub fn jsonformat(value: &str) -> String {
     let kvs = JsonParser::new().deserialize(value);
     let raw = JsonRenderer::new(kvs)
         .serialize()
