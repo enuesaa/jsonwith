@@ -5,7 +5,7 @@ pub mod yaml;
 use crate::json::parse::parser::Deserializer;
 use crate::json::render::indent::IndentProcessor;
 use crate::json::render::renderer::Serializer;
-use crate::core::yaml_serializer::serializer::Serializer as YamlSerializer;
+use crate::yaml::render::renderer::Serializer as YamlSerializer;
 
 pub fn json2json(value: &str) -> String {
     let kvs = Deserializer::new().deserialize(value);

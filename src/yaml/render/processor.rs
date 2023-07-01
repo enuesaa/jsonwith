@@ -1,4 +1,4 @@
-use crate::core::yaml_serializer::line::Line;
+use crate::yaml::render::line::Line;
 
 pub trait Processor {
     fn push(&mut self, line: &Line);

@@ -4,7 +4,7 @@ mod tests {
     use crate::core::data::kvs::Kvs;
     use crate::core::data::path::Path;
     use crate::core::data::tokens::Tokens;
-    use crate::core::yaml_serializer::serializer::Serializer;
+    use crate::yaml::render::renderer::Serializer;
 
     #[test]
     fn test_root_dict() {
