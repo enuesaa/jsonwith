@@ -1,4 +1,4 @@
-use crate::core::data::tokens::Tokens;
+use crate::data::tokens::Tokens;
 use crate::yaml::render::line::Line;
 use crate::yaml::render::processor::Processor;
 

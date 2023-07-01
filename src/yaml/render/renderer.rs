@@ -1,17 +1,17 @@
-use crate::core::data::kvs::Kvs;
+use crate::data::kvs::Kvs;
 use crate::yaml::render::line::Line;
 use crate::yaml::render::processor::Processor;
 
-use crate::yaml::render::mapping::MappingProcessor;
-use crate::yaml::render::dictinarray::DictInArrayProcessor;
+use crate::yaml::render::process_mapping::MappingProcessor;
+use crate::yaml::render::process_dictinarray::DictInArrayProcessor;
 
-pub struct Serializer {
+pub struct Renderer {
     lines: Vec<Line>,
 }
-impl Serializer {
+impl Renderer {
     pub fn new(kvs: Kvs) -> Self {
         let lines: Vec<Line> = kvs.list().iter().map(|kv| Line::from(kv.clone())).collect();
-        Serializer { lines }
+        Renderer { lines }
     }
 
     pub fn serialize(&mut self) -> &mut Self {

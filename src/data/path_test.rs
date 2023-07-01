@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use crate::core::data::path::Path;
+    use crate::data::path::Path;
 
     #[test]
     fn test_new() {

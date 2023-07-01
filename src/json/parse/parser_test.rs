@@ -1,15 +1,15 @@
 #[cfg(test)]
 mod tests {
-    use crate::core::data::kv::Kv;
-    use crate::core::data::kvs::Kvs;
-    use crate::core::data::path::Path;
-    use crate::core::data::tokens::Tokens;
-    use crate::json::parse::parser::Deserializer;
+    use crate::data::kv::Kv;
+    use crate::data::kvs::Kvs;
+    use crate::data::path::Path;
+    use crate::data::tokens::Tokens;
+    use crate::json::parse::parser::Parser;
 
     #[test]
     fn test_root_dict() {
         let text = "{\"a\": \"aaa\"}";
-        let mut deserializer = Deserializer::new();
+        let mut deserializer = Parser::new();
         let actual = deserializer.deserialize(text);
 
         assert_eq!(
@@ -36,7 +36,7 @@ mod tests {
     #[test]
     fn test_root_array() {
         let text = "[\"aaa\"]";
-        let mut deserializer = Deserializer::new();
+        let mut deserializer = Parser::new();
         let actual = deserializer.deserialize(text);
 
         assert_eq!(
@@ -63,7 +63,7 @@ mod tests {
     #[test]
     fn test_root_string() {
         let text = "\"aaa\"";
-        let mut deserializer = Deserializer::new();
+        let mut deserializer = Parser::new();
         let actual = deserializer.deserialize(text);
 
         assert_eq!(
@@ -80,7 +80,7 @@ mod tests {
     #[test]
     fn test_root_number() {
         let text = "107";
-        let mut deserializer = Deserializer::new();
+        let mut deserializer = Parser::new();
         let actual = deserializer.deserialize(text);
         println!("{:?}", actual);
 
@@ -98,7 +98,7 @@ mod tests {
     #[test]
     fn test_nested_dict() {
         let text = "{\"a\": \"aaa\", \"b\": {\"c\": \"ddd\"}, \"e\": 108}";
-        let mut deserializer = Deserializer::new();
+        let mut deserializer = Parser::new();
         let actual = deserializer.deserialize(text);
 
         assert_eq!(

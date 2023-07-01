@@ -1,15 +1,15 @@
-use crate::core::data::kvs::Kvs;
+use crate::data::kvs::Kvs;
 use crate::json::render::line::Line;
 use crate::json::render::processor::Processor;
-use crate::json::render::mapping::MappingProcessor;
+use crate::json::render::process_mapping::MappingProcessor;
 
-pub struct Serializer {
+pub struct Renderer {
     lines: Vec<Line>,
 }
-impl Serializer {
+impl Renderer {
     pub fn new(kvs: Kvs) -> Self {
         let lines: Vec<Line> = kvs.list().iter().map(|kv| Line::from(kv.clone())).collect();
-        Serializer { lines }
+        Renderer { lines }
     }
 
     pub fn serialize(&mut self) -> &mut Self {

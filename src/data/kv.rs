@@ -1,5 +1,5 @@
-use crate::core::data::path::Path;
-use crate::core::data::tokens::Tokens;
+use crate::data::path::Path;
+use crate::data::tokens::Tokens;
 
 // immutable
 #[derive(Clone, Debug, PartialEq)]

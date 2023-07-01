@@ -1,8 +1,8 @@
 use std::fmt;
 
-use crate::core::data::kv::Kv;
-use crate::core::data::path::{Path, PathItem};
-use crate::core::data::tokens::Tokens;
+use crate::data::kv::Kv;
+use crate::data::path::{Path, PathItem};
+use crate::data::tokens::Tokens;
 
 #[derive(Debug, Clone)]
 pub struct Line {

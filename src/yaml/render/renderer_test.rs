@@ -1,14 +1,14 @@
 #[cfg(test)]
 mod tests {
-    use crate::core::data::kv::Kv;
-    use crate::core::data::kvs::Kvs;
-    use crate::core::data::path::Path;
-    use crate::core::data::tokens::Tokens;
-    use crate::yaml::render::renderer::Serializer;
+    use crate::data::kv::Kv;
+    use crate::data::kvs::Kvs;
+    use crate::data::path::Path;
+    use crate::data::tokens::Tokens;
+    use crate::yaml::render::renderer::Renderer;
 
     #[test]
     fn test_root_dict() {
-        let mut serializer = Serializer::new(Kvs {
+        let mut serializer = Renderer::new(Kvs {
             items: vec![
                 Kv {
                     path: Path::from("$"),
@@ -32,7 +32,7 @@ mod tests {
 
     #[test]
     fn test_root_array() {
-        let mut serializer = Serializer::new(Kvs {
+        let mut serializer = Renderer::new(Kvs {
             items: vec![
                 Kv {
                     path: Path::from("$"),
@@ -56,7 +56,7 @@ mod tests {
 
     #[test]
     fn test_array_in_dict() {
-        let mut serializer = Serializer::new(Kvs {
+        let mut serializer = Renderer::new(Kvs {
             items: vec![
                 Kv {
                     path: Path::from("$"),
@@ -84,7 +84,7 @@ mod tests {
 
     #[test]
     fn test_nested_dict() {
-        let mut serializer = Serializer::new(Kvs {
+        let mut serializer = Renderer::new(Kvs {
             items: vec![
                 Kv {
                     path: Path::from("$"),

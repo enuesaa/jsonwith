@@ -1,14 +1,14 @@
-use crate::core::data::kvs::Kvs;
-use crate::core::data::tokens::Tokens;
+use crate::data::kvs::Kvs;
+use crate::data::tokens::Tokens;
 use crate::json::parse::context::Context;
 use crate::json::parse::context::Status;
 
-pub struct Deserializer {
+pub struct Parser {
     indent: usize,
 }
-impl Deserializer {
+impl Parser {
     pub fn new() -> Self {
-        Deserializer { indent: 2 }
+        Parser { indent: 2 }
     }
 
     // configure options like this.

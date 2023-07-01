@@ -1,15 +1,15 @@
 #[cfg(test)]
 mod tests {
-    use crate::core::data::kv::Kv;
-    use crate::core::data::kvs::Kvs;
-    use crate::core::data::path::Path;
-    use crate::core::data::tokens::Tokens;
-    use crate::json::render::renderer::Serializer;
-    use crate::json::render::indent::IndentProcessor;
+    use crate::data::kv::Kv;
+    use crate::data::kvs::Kvs;
+    use crate::data::path::Path;
+    use crate::data::tokens::Tokens;
+    use crate::json::render::renderer::Renderer;
+    use crate::json::render::process_indent::IndentProcessor;
 
     #[test]
     fn test_root_dict() {
-        let mut serializer = Serializer::new(Kvs {
+        let mut serializer = Renderer::new(Kvs {
             items: vec![
                 Kv {
                     path: Path::from("$"),
@@ -34,7 +34,7 @@ mod tests {
 
     #[test]
     fn test_root_array() {
-        let mut serializer = Serializer::new(Kvs {
+        let mut serializer = Renderer::new(Kvs {
             items: vec![
                 Kv {
                     path: Path::from("$"),
@@ -59,7 +59,7 @@ mod tests {
 
     #[test]
     fn test_root_string() {
-        let mut serializer = Serializer::new(Kvs {
+        let mut serializer = Renderer::new(Kvs {
             items: vec![Kv {
                 path: Path::from("$"),
                 value: Tokens::String("aaa".to_string()),
@@ -74,7 +74,7 @@ mod tests {
 
     #[test]
     fn test_root_number() {
-        let mut serializer = Serializer::new(Kvs {
+        let mut serializer = Renderer::new(Kvs {
             items: vec![Kv {
                 path: Path::from("$"),
                 value: Tokens::Number(107),
@@ -89,7 +89,7 @@ mod tests {
 
     #[test]
     fn test_nested_dict() {
-        let mut serializer = Serializer::new(Kvs {
+        let mut serializer = Renderer::new(Kvs {
             items: vec![
                 Kv {
                     path: Path::from("$"),
