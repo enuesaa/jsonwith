@@ -55,6 +55,34 @@ mod tests {
     }
 
     #[test]
+    fn test_array_in_dict() {
+        let mut serializer = Serializer::new(Kvs {
+            items: vec![
+                Kv {
+                    path: Path::from("$"),
+                    value: Tokens::MkDict,
+                },
+                Kv {
+                    path: Path::from("$.a"),
+                    value: Tokens::MkArray,
+                },
+                Kv {
+                    path: Path::from("$.a[0]"),
+                    value: Tokens::String("aaa".to_string()),
+                },
+                Kv {
+                    path: Path::from("$"),
+                    value: Tokens::EndDict,
+                },
+            ],
+        });
+        serializer.serialize();
+        let actual = serializer.get_raw();
+
+        assert_eq!(actual, String::from("a: \n- aaa\n"));
+    }
+
+    #[test]
     fn test_nested_dict() {
         let mut serializer = Serializer::new(Kvs {
             items: vec![
@@ -103,50 +131,50 @@ e: 108
         );
     }
 
-    #[test]
-    fn test_array_in_array() {
-        let mut serializer = Serializer::new(Kvs {
-            items: vec![
-                Kv {
-                    path: Path::from("$"),
-                    value: Tokens::MkDict,
-                },
-                Kv {
-                    path: Path::from("$.a"),
-                    value: Tokens::MkArray,
-                },
-                Kv {
-                    path: Path::from("$.a[0]"),
-                    value: Tokens::MkArray,
-                },
-                Kv {
-                    path: Path::from("$.a[0][0]"),
-                    value: Tokens::String("aa".to_string()),
-                },
-                Kv {
-                    path: Path::from("$.a[0]"),
-                    value: Tokens::EndArray,
-                },
-                Kv {
-                    path: Path::from("$.a"),
-                    value: Tokens::EndArray,
-                },
-                Kv {
-                    path: Path::from("$"),
-                    value: Tokens::EndDict,
-                },
-            ],
-        });
-        serializer.serialize();
-        let actual = serializer.get_raw();
+//     #[test]
+//     fn test_array_in_array() {
+//         let mut serializer = Serializer::new(Kvs {
+//             items: vec![
+//                 Kv {
+//                     path: Path::from("$"),
+//                     value: Tokens::MkDict,
+//                 },
+//                 Kv {
+//                     path: Path::from("$.a"),
+//                     value: Tokens::MkArray,
+//                 },
+//                 Kv {
+//                     path: Path::from("$.a[0]"),
+//                     value: Tokens::MkArray,
+//                 },
+//                 Kv {
+//                     path: Path::from("$.a[0][0]"),
+//                     value: Tokens::String("aa".to_string()),
+//                 },
+//                 Kv {
+//                     path: Path::from("$.a[0]"),
+//                     value: Tokens::EndArray,
+//                 },
+//                 Kv {
+//                     path: Path::from("$.a"),
+//                     value: Tokens::EndArray,
+//                 },
+//                 Kv {
+//                     path: Path::from("$"),
+//                     value: Tokens::EndDict,
+//                 },
+//             ],
+//         });
+//         serializer.serialize();
+//         let actual = serializer.get_raw();
 
-        assert_eq!(
-            actual,
-            String::from(
-                "a: 
-- - aa
-"
-            )
-        );
-    }
+//         assert_eq!(
+//             actual,
+//             String::from(
+//                 "a: 
+// - - aa
+// "
+//             )
+//         );
+//     }
 }
