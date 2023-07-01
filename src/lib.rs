@@ -1,6 +1,7 @@
 pub mod core;
 pub mod json;
 pub mod yaml;
+pub mod cli;
 
 use crate::json::parse::parser::Deserializer;
 use crate::json::render::indent::IndentProcessor;
