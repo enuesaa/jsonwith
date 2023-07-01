@@ -3,6 +3,7 @@ use crate::yaml::render::line::Line;
 use crate::yaml::render::processor::Processor;
 
 use crate::yaml::render::mapping::MappingProcessor;
+use crate::yaml::render::dictinarray::DictInArrayProcessor;
 
 pub struct Serializer {
     lines: Vec<Line>,
@@ -15,6 +16,7 @@ impl Serializer {
 
     pub fn serialize(&mut self) -> &mut Self {
         self.process(&mut MappingProcessor::new());
+        self.process(&mut DictInArrayProcessor::new());
         self
     }
 

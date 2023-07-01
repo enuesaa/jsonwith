@@ -27,7 +27,7 @@ impl MappingProcessor {
         };
     }
 
-    fn is_root_dict(&self) -> bool {
+    fn is_root(&self) -> bool {
         self.lines.iter().count() == 0
     }
 
@@ -73,7 +73,9 @@ impl Processor for MappingProcessor {
         match line.get_kv_value() {
             Tokens::MkArray => {
                 converted.set_indent(self.spaces);
-                converted.enable_ln();
+                if !self.is_root() {
+                    converted.enable_ln();
+                };
                 self.append_key_or_hyphen(&mut converted);
             }
             Tokens::EndArray => {
@@ -83,7 +85,7 @@ impl Processor for MappingProcessor {
             }
             Tokens::MkDict => {
                 converted.set_indent(self.spaces);
-                if !self.is_root_dict() {
+                if !self.is_root() {
                     converted.enable_ln();
                     self.increment_space();
                 };

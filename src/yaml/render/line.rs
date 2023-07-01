@@ -91,7 +91,7 @@ impl fmt::Display for Line {
         let mut indent = self.indent.clone();
         if self.hyphen {
             // todo fix
-            if indent > 2 {
+            if indent >= 2 {
                 indent -= 2;
             };
         };
