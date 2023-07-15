@@ -1,7 +1,6 @@
 pub mod data;
 pub mod json;
 pub mod yaml;
-pub mod cli;
 
 use crate::json::parse::parser::Parser as JsonParser;
 use crate::json::render::renderer::Renderer as JsonRenderer;
