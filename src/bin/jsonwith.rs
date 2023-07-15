@@ -1,3 +1,4 @@
+use std::io::IsTerminal;
 use clap::{Parser, Subcommand, Args};
 
 use jsonwith::{jsonformat, json2yaml};
@@ -21,7 +22,7 @@ pub enum Actions {
 
 #[derive(Args)]
 pub struct FormatArgs {
-    pub json: String,
+    pub json: Option<String>,
 }
 
 #[derive(Args)]
@@ -35,7 +36,19 @@ fn main() {
 
     match action {
         Actions::Format(args) => {
-            let result = jsonformat(&args.json);
+            let json = args.json.unwrap_or_else(|| {
+                if std::io::stdin().is_terminal() {
+                    return String::from("");
+                };
+                let mut input = String::from("");
+                let _ = std::io::stdin().read_line(&mut input);
+                input
+            });
+            if json.len() == 0 {
+                println!("Error: missing required argument `json`");
+                std::process::exit(0);
+            };
+            let result = jsonformat(&json);
             println!("{}", result);
         },
         Actions::Json2yaml(args) => {

@@ -10,12 +10,6 @@ cat <filename> | jsonwith format
 cat <filename> | jsonwith format --indent 2
 ```
 
-### format with interactive prompt
-```bash
-$ jsonwith format
-filename: ./aaa.json
-```
-
 ### convert json to yaml
 ```bash
 cat <filename> | jsonwith json2yaml
@@ -31,3 +25,6 @@ Planning implemention on version 2.
 ```bash
 cat <filename> | jsonwith json2hcl
 ```
+
+## TODO
+- handle stdin
