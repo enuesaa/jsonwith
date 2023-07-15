@@ -9,25 +9,37 @@ fn read(filename: &str) -> String {
 }
 
 #[test]
-fn json2jsonv2_sample1() {
-    let sample1 = read("./tests/assets/sample1.json");
-    assert_eq!(jsonformat(&sample1), sample1);
+fn jsonformat_sample1() {
+    let raw = read("./tests/assets/sample1.json");
+    assert_eq!(jsonformat(&raw), raw);
 }
 
 #[test]
-fn json2jsonv2_sample2() {
-    let sample2 = read("./tests/assets/sample2.json");
-    assert_eq!(jsonformat(&sample2), sample2);
+fn jsonformat_sample2() {
+    let raw = read("./tests/assets/sample2.json");
+    assert_eq!(jsonformat(&raw), raw);
 }
 
 #[test]
-fn json2jsonv2_empty_dict() {
-    let emptydict = read("./tests/assets/emptydict.json");
-    assert_eq!(jsonformat(&emptydict), emptydict);
+fn jsonformat_minimum() {
+    let raw = read("./tests/assets/minimum.json");
+    assert_eq!(jsonformat(&raw), raw);
 }
 
 #[test]
-fn json2jsonv2_empty_list() {
-    let emptylist = read("./tests/assets/emptylist.json");
-    assert_eq!(jsonformat(&emptylist), emptylist);
+fn jsonformat_emptydict() {
+    let raw = read("./tests/assets/emptydict.json");
+    assert_eq!(jsonformat(&raw), raw);
+}
+
+#[test]
+fn jsonformat_emptylist() {
+    let raw = read("./tests/assets/emptylist.json");
+    assert_eq!(jsonformat(&raw), raw);
+}
+
+#[test]
+fn jsonformat_numberlist() {
+    let raw = read("./tests/assets/numberlist.json");
+    assert_eq!(jsonformat(&raw), raw);
 }

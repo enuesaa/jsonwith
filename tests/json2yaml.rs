@@ -9,15 +9,43 @@ fn read(filename: &str) -> String {
 }
 
 #[test]
-fn json2jsonv2_sample1() {
-    let sample1 = read("./tests/assets/sample1.json");
-    let sample1yaml = read("./tests/assets/sample1.yaml");
-    assert_eq!(json2yaml(&sample1), sample1yaml);
+fn json2yaml_sample1() {
+    let json = read("./tests/assets/sample1.json");
+    let expected = read("./tests/assets/sample1.yaml");
+    assert_eq!(json2yaml(&json), expected);
 }
 
 #[test]
-fn json2jsonv2_sample2() {
-    let sample2 = read("./tests/assets/sample2.json");
-    let sample2yaml = read("./tests/assets/sample2.yaml");
-    assert_eq!(json2yaml(&sample2), sample2yaml);
+fn json2yaml_sample2() {
+    let json = read("./tests/assets/sample2.json");
+    let expected = read("./tests/assets/sample2.yaml");
+    assert_eq!(json2yaml(&json), expected);
+}
+
+#[test]
+fn json2yaml_minimum() {
+    let json = read("./tests/assets/minimum.json");
+    let expected = read("./tests/assets/minimum.yaml");
+    assert_eq!(json2yaml(&json), expected);
+}
+
+#[test]
+fn json2yaml_emptydict() {
+    let json = read("./tests/assets/emptydict.json");
+    let expected = read("./tests/assets/emptydict.yaml");
+    assert_eq!(json2yaml(&json), expected);
+}
+
+#[test]
+fn json2yaml_emptylist() {
+    let json = read("./tests/assets/emptylist.json");
+    let expected = read("./tests/assets/emptylist.yaml");
+    assert_eq!(json2yaml(&json), expected);
+}
+
+#[test]
+fn json2yaml_numberlist() {
+    let json = read("./tests/assets/numberlist.json");
+    let expected = read("./tests/assets/numberlist.yaml");
+    assert_eq!(json2yaml(&json), expected);
 }
