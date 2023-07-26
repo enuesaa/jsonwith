@@ -7,7 +7,8 @@ use jsonwith::{jsonformat, json2yaml};
 #[command(
     name = "jsonwith",
     about = "JSON Parser",
-    disable_help_subcommand = true
+    disable_help_subcommand = true,
+    version,
 )]
 pub struct Cli {
     #[command(subcommand)]
