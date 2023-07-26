@@ -26,5 +26,11 @@ Planning implemention on version 2.
 cat <filename> | jsonwith json2hcl
 ```
 
-## TODO
-- handle stdin
+## Development Plan
+### ~ v0.1.0
+add tests.
+
+### v0.1.0
+v0.1.0 will release when command output are almostly good.
+- format
+- json2yaml
