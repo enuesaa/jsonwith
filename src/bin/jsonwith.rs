@@ -28,7 +28,7 @@ pub struct FormatArgs {
 
 #[derive(Args)]
 pub struct Json2yamlArgs {
-    pub json: String,
+    pub json: Option<String>,
 }
 
 fn main() {
@@ -37,14 +37,7 @@ fn main() {
 
     match action {
         Actions::Format(args) => {
-            let json = args.json.unwrap_or_else(|| {
-                if std::io::stdin().is_terminal() {
-                    return String::from("");
-                };
-                let mut input = String::from("");
-                let _ = std::io::stdin().read_line(&mut input);
-                input
-            });
+            let json = args.json.unwrap_or_else(|| read_stdin());
             if json.len() == 0 {
                 println!("Error: missing required argument `json`");
                 std::process::exit(0);
@@ -53,8 +46,22 @@ fn main() {
             println!("{}", result);
         },
         Actions::Json2yaml(args) => {
-            let result = json2yaml(&args.json);
+            let json = args.json.unwrap_or_else(|| read_stdin());
+            if json.len() == 0 {
+                println!("Error: missing required argument `json`");
+                std::process::exit(0);
+            };
+            let result = json2yaml(&json);
             println!("{}", result);
         },
     };
+}
+
+fn read_stdin() -> String {
+    if std::io::stdin().is_terminal() {
+        return String::from("");
+    };
+    let mut input = String::from("");
+    let _ = std::io::stdin().read_line(&mut input);
+    input
 }
