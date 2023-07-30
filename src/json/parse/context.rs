@@ -55,37 +55,25 @@ impl Context {
 
     pub fn start_array(&mut self) {
         let path = self.get_path();
-        self.kvs.push(Kv {
-            path,
-            value: Tokens::MkArray,
-        });
+        self.kvs.push(Kv::new(path, Tokens::MkArray));
         self.path.push_index();
     }
 
     pub fn end_array(&mut self) {
         self.path.pop();
         let path = self.get_path();
-        self.kvs.push(Kv {
-            path,
-            value: Tokens::EndArray,
-        });
+        self.kvs.push(Kv::new(path, Tokens::EndArray));
     }
 
     pub fn start_dict(&mut self) {
         let path = self.get_path();
-        self.kvs.push(Kv {
-            path,
-            value: Tokens::MkDict,
-        });
+        self.kvs.push(Kv::new(path, Tokens::MkDict));
     }
 
     pub fn end_dict(&mut self) {
         self.path.pop();
         let path = self.get_path();
-        self.kvs.push(Kv {
-            path,
-            value: Tokens::EndDict,
-        });
+        self.kvs.push(Kv::new(path, Tokens::EndDict));
     }
 
     pub fn get_path(&self) -> Path {
@@ -102,14 +90,14 @@ impl Context {
 
     pub fn is_waiting_value(&self) -> bool {
         if let Some(last) = self.kvs.items.last() {
-            return last.path.to_string() != self.path.to_string();
+            return last.get_path().to_string() != self.path.to_string();
         };
         true
     }
 
     pub fn resolve_as_path(&mut self) {
         if let Some(last) = self.kvs.items.last() {
-            if last.value != Tokens::MkArray && last.value != Tokens::MkDict {
+            if last.get_value() != Tokens::MkArray && last.get_value() != Tokens::MkDict {
                 self.path.pop();
             };
         };
@@ -121,7 +109,7 @@ impl Context {
 
     pub fn resolve_value(&mut self, value: Tokens) {
         let path = self.get_path();
-        self.kvs.push(Kv { path, value });
+        self.kvs.push(Kv::new(path, value));
         self.buf = String::from("");
         if self.path.is_array() {
             self.path.increment();

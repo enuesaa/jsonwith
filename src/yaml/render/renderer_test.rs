@@ -10,18 +10,9 @@ mod tests {
     fn test_root_dict() {
         let mut serializer = Renderer::new(Kvs {
             items: vec![
-                Kv {
-                    path: Path::from("$"),
-                    value: Tokens::MkDict,
-                },
-                Kv {
-                    path: Path::from("$.a"),
-                    value: Tokens::String("aaa".to_string()),
-                },
-                Kv {
-                    path: Path::from("$"),
-                    value: Tokens::EndDict,
-                },
+                Kv::new(Path::from("$"), Tokens::MkDict),
+                Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
+                Kv::new(Path::from("$"), Tokens::EndDict),
             ],
         });
         serializer.serialize();
@@ -34,18 +25,9 @@ mod tests {
     fn test_root_array() {
         let mut serializer = Renderer::new(Kvs {
             items: vec![
-                Kv {
-                    path: Path::from("$"),
-                    value: Tokens::MkArray,
-                },
-                Kv {
-                    path: Path::from("$[0]"),
-                    value: Tokens::String("aaa".to_string()),
-                },
-                Kv {
-                    path: Path::from("$"),
-                    value: Tokens::EndArray,
-                },
+                Kv::new(Path::from("$"), Tokens::MkArray),
+                Kv::new(Path::from("$[0]"), Tokens::String("aaa".to_string())),
+                Kv::new(Path::from("$"), Tokens::EndArray),
             ],
         });
         serializer.serialize();
@@ -58,22 +40,10 @@ mod tests {
     fn test_array_in_dict() {
         let mut serializer = Renderer::new(Kvs {
             items: vec![
-                Kv {
-                    path: Path::from("$"),
-                    value: Tokens::MkDict,
-                },
-                Kv {
-                    path: Path::from("$.a"),
-                    value: Tokens::MkArray,
-                },
-                Kv {
-                    path: Path::from("$.a[0]"),
-                    value: Tokens::String("aaa".to_string()),
-                },
-                Kv {
-                    path: Path::from("$"),
-                    value: Tokens::EndDict,
-                },
+                Kv::new(Path::from("$"), Tokens::MkDict),
+                Kv::new(Path::from("$.a"), Tokens::MkArray),
+                Kv::new(Path::from("$.a[0]"), Tokens::String("aaa".to_string())),
+                Kv::new(Path::from("$"), Tokens::EndDict),
             ],
         });
         serializer.serialize();
@@ -86,34 +56,13 @@ mod tests {
     fn test_nested_dict() {
         let mut serializer = Renderer::new(Kvs {
             items: vec![
-                Kv {
-                    path: Path::from("$"),
-                    value: Tokens::MkDict,
-                },
-                Kv {
-                    path: Path::from("$.a"),
-                    value: Tokens::String("aaa".to_string()),
-                },
-                Kv {
-                    path: Path::from("$.b"),
-                    value: Tokens::MkDict,
-                },
-                Kv {
-                    path: Path::from("$.b.c"),
-                    value: Tokens::String("ddd".to_string()),
-                },
-                Kv {
-                    path: Path::from("$.b"),
-                    value: Tokens::EndDict,
-                },
-                Kv {
-                    path: Path::from("$.e"),
-                    value: Tokens::Number(108),
-                },
-                Kv {
-                    path: Path::from("$"),
-                    value: Tokens::EndDict,
-                },
+                Kv::new(Path::from("$"), Tokens::MkDict),
+                Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
+                Kv::new(Path::from("$.b"), Tokens::MkDict),
+                Kv::new(Path::from("$.b.c"), Tokens::String("ddd".to_string())),
+                Kv::new(Path::from("$.b"), Tokens::EndDict),
+                Kv::new(Path::from("$.e"), Tokens::Number(108)),
+                Kv::new(Path::from("$"), Tokens::EndDict),
             ],
         });
         serializer.serialize();
