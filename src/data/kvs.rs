@@ -4,13 +4,12 @@ use std::fmt::Debug;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Kvs {
-    // todo make private.
-    pub items: Vec<Kv>,
+    items: Vec<Kv>,
 }
 
 impl Kvs {
-    pub fn new() -> Self {
-        Kvs { items: vec![] }
+    pub fn new(items: Vec<Kv>) -> Self {
+        Kvs { items }
     }
 
     pub fn push(&mut self, kv: Kv) {

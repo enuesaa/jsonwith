@@ -1,7 +1,6 @@
 use crate::data::path::Path;
 use crate::data::tokens::Tokens;
 
-// immutable
 #[derive(Clone, Debug, PartialEq)]
 pub struct Kv {
     path: Path,

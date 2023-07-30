@@ -14,13 +14,11 @@ mod tests {
 
         assert_eq!(
             actual,
-            Kvs {
-                items: vec![
-                    Kv::new(Path::from("$"), Tokens::MkDict),
-                    Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
-                    Kv::new(Path::from("$"), Tokens::EndDict),
-                ],
-            }
+            Kvs::new(vec![
+                Kv::new(Path::from("$"), Tokens::MkDict),
+                Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
+                Kv::new(Path::from("$"), Tokens::EndDict),
+            ]),
         );
     }
 
@@ -32,13 +30,11 @@ mod tests {
 
         assert_eq!(
             actual,
-            Kvs {
-                items: vec![
-                    Kv::new(Path::from("$"), Tokens::MkArray),
-                    Kv::new(Path::from("$[0]"), Tokens::String("aaa".to_string())),
-                    Kv::new(Path::from("$"), Tokens::EndArray),
-                ],
-            }
+            Kvs::new(vec![
+                Kv::new(Path::from("$"), Tokens::MkArray),
+                Kv::new(Path::from("$[0]"), Tokens::String("aaa".to_string())),
+                Kv::new(Path::from("$"), Tokens::EndArray),
+            ]),
         );
     }
 
@@ -50,9 +46,9 @@ mod tests {
 
         assert_eq!(
             actual,
-            Kvs {
-                items: vec![Kv::new(Path::from("$"), Tokens::String("aaa".to_string()))],
-            }
+            Kvs::new(vec![
+                Kv::new(Path::from("$"), Tokens::String("aaa".to_string())),
+            ]),
         );
     }
 
@@ -65,9 +61,9 @@ mod tests {
 
         assert_eq!(
             actual,
-            Kvs {
-                items: vec![Kv::new(Path::from("$"), Tokens::Number(107))],
-            }
+            Kvs::new(vec![
+                Kv::new(Path::from("$"), Tokens::Number(107)),
+            ]),
         );
     }
 
@@ -79,17 +75,15 @@ mod tests {
 
         assert_eq!(
             actual,
-            Kvs {
-                items: vec![
-                    Kv::new(Path::from("$"), Tokens::MkDict),
-                    Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
-                    Kv::new(Path::from("$.b"), Tokens::MkDict),
-                    Kv::new(Path::from("$.b.c"), Tokens::String("ddd".to_string())),
-                    Kv::new(Path::from("$.b"), Tokens::EndDict),
-                    Kv::new(Path::from("$.e"), Tokens::Number(108)),
-                    Kv::new(Path::from("$"), Tokens::EndDict),
-                ],
-            }
+            Kvs::new(vec![
+                Kv::new(Path::from("$"), Tokens::MkDict),
+                Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
+                Kv::new(Path::from("$.b"), Tokens::MkDict),
+                Kv::new(Path::from("$.b.c"), Tokens::String("ddd".to_string())),
+                Kv::new(Path::from("$.b"), Tokens::EndDict),
+                Kv::new(Path::from("$.e"), Tokens::Number(108)),
+                Kv::new(Path::from("$"), Tokens::EndDict),
+            ]),
         );
     }
 }

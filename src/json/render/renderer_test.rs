@@ -9,13 +9,13 @@ mod tests {
 
     #[test]
     fn test_root_dict() {
-        let mut serializer = Renderer::new(Kvs {
-            items: vec![
+        let mut serializer = Renderer::new(
+            Kvs::new(vec![
                 Kv::new(Path::from("$"), Tokens::MkDict),
                 Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
                 Kv::new(Path::from("$"), Tokens::EndDict),
-            ],
-        });
+            ]),
+        );
         serializer.serialize();
         serializer.process(&mut IndentProcessor::new(2));
         let actual = serializer.get_raw();
@@ -25,13 +25,13 @@ mod tests {
 
     #[test]
     fn test_root_array() {
-        let mut serializer = Renderer::new(Kvs {
-            items: vec![
+        let mut serializer = Renderer::new(
+            Kvs::new(vec![
                 Kv::new(Path::from("$"), Tokens::MkArray),
                 Kv::new(Path::from("$[0]"), Tokens::String("aaa".to_string())),
                 Kv::new(Path::from("$"), Tokens::EndArray),
-            ],
-        });
+            ]),
+        );
         serializer.serialize();
         serializer.process(&mut IndentProcessor::new(2));
         let actual = serializer.get_raw();
@@ -41,9 +41,11 @@ mod tests {
 
     #[test]
     fn test_root_string() {
-        let mut serializer = Renderer::new(Kvs {
-            items: vec![Kv::new(Path::from("$"), Tokens::String("aaa".to_string()))],
-        });
+        let mut serializer = Renderer::new(
+            Kvs::new(vec![
+                Kv::new(Path::from("$"), Tokens::String("aaa".to_string())),
+            ]),
+        );
         serializer.serialize();
         serializer.process(&mut IndentProcessor::new(2));
         let actual = serializer.get_raw();
@@ -53,9 +55,11 @@ mod tests {
 
     #[test]
     fn test_root_number() {
-        let mut serializer = Renderer::new(Kvs {
-            items: vec![Kv::new(Path::from("$"), Tokens::Number(107))],
-        });
+        let mut serializer = Renderer::new(
+            Kvs::new(vec![
+                Kv::new(Path::from("$"), Tokens::Number(107)),
+            ]),
+        );
         serializer.serialize();
         serializer.process(&mut IndentProcessor::new(2));
         let actual = serializer.get_raw();
@@ -65,8 +69,8 @@ mod tests {
 
     #[test]
     fn test_nested_dict() {
-        let mut serializer = Renderer::new(Kvs {
-            items: vec![
+        let mut serializer = Renderer::new(
+            Kvs::new(vec![
                 Kv::new(Path::from("$"), Tokens::MkDict),
                 Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
                 Kv::new(Path::from("$.b"), Tokens::MkDict),
@@ -74,8 +78,8 @@ mod tests {
                 Kv::new(Path::from("$.b"), Tokens::EndDict),
                 Kv::new(Path::from("$.e"), Tokens::Number(108)),
                 Kv::new(Path::from("$"), Tokens::EndDict),
-            ],
-        });
+            ]),
+        );
         serializer.serialize();
         serializer.process(&mut IndentProcessor::new(2));
         let actual = serializer.get_raw();

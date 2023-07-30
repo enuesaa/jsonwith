@@ -22,7 +22,7 @@ pub struct Context {
 impl Context {
     pub fn new() -> Self {
         Context {
-            kvs: Kvs::new(),
+            kvs: Kvs::new(vec![]),
             status: Status::InSpace,
             path: Path::new(),
             buf: String::from(""),
@@ -89,14 +89,14 @@ impl Context {
     }
 
     pub fn is_waiting_value(&self) -> bool {
-        if let Some(last) = self.kvs.items.last() {
+        if let Some(last) = self.kvs.list().last() {
             return last.get_path().to_string() != self.path.to_string();
         };
         true
     }
 
     pub fn resolve_as_path(&mut self) {
-        if let Some(last) = self.kvs.items.last() {
+        if let Some(last) = self.kvs.list().last() {
             if last.get_value() != Tokens::MkArray && last.get_value() != Tokens::MkDict {
                 self.path.pop();
             };
