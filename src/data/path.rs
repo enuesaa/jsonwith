@@ -114,10 +114,3 @@ impl fmt::Display for Path {
         write!(f, "${}", values.join(""))
     }
 }
-
-// see https://doc.rust-lang.org/std/string/trait.ToString.html
-// impl ToString for Path {
-//     fn to_string(&self) -> String {
-//         "$".to_string() + &self.route.join(".")
-//     }
-// }
