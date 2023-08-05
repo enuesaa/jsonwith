@@ -4,6 +4,7 @@ use crate::data::kv::Kv;
 use crate::data::path::{Path, PathItem};
 use crate::data::tokens::Tokens;
 
+// todo: private
 #[derive(Debug, Clone)]
 pub struct Line {
     kv_path: Path,

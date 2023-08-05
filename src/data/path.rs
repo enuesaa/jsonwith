@@ -12,7 +12,7 @@ pub enum PathItem {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Path {
-    pub route: Vec<PathItem>,
+    route: Vec<PathItem>,
 }
 impl Path {
     pub fn new() -> Self {

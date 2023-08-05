@@ -14,9 +14,9 @@ pub enum Status {
 }
 
 pub struct Context {
-    pub kvs: Kvs,
-    pub status: Status,
-    pub path: Path,
+    kvs: Kvs,
+    status: Status,
+    path: Path,
     buf: String,
 }
 impl Context {
@@ -114,5 +114,13 @@ impl Context {
         if self.path.is_array() {
             self.path.increment();
         };
+    }
+
+    pub fn get_kvs(&self) -> Kvs {
+        self.kvs.clone()
+    }
+
+    pub fn get_status(&self) -> Status {
+        self.status.clone()
     }
 }

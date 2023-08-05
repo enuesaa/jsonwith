@@ -20,7 +20,7 @@ impl Parser {
         let mut context = Context::new();
         let text = format!("{} ", text); // to trigger last process in parse_number_value.
         for c in text.chars() {
-            match context.status {
+            match context.get_status() {
                 Status::InSpace => self.parse_space(&mut context, c),
                 Status::InNullValue => self.parse_null_value(&mut context, c),
                 Status::InBoolValue => self.parse_bool_value(&mut context, c),
@@ -30,7 +30,7 @@ impl Parser {
             };
         }
 
-        context.kvs.clone()
+        context.get_kvs()
     }
 
     fn parse_space(&mut self, context: &mut Context, c: char) {
