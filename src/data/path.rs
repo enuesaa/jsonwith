@@ -1,15 +1,15 @@
 use std::fmt;
 
-// json path like
-// $.a
-// $.a.b
-// $.a[0].b
 #[derive(Clone, Debug, PartialEq)]
 pub enum PathItem {
     Key(String),
     Index(usize),
 }
 
+// like json path
+// - $.a
+// - $.a.b
+// - $.a[0].b
 #[derive(Clone, Debug, PartialEq)]
 pub struct Path {
     route: Vec<PathItem>,

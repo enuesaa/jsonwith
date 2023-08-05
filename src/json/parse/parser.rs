@@ -18,7 +18,8 @@ impl Parser {
 
     pub fn deserialize(&mut self, text: &str) -> Kvs {
         let mut context = Context::new();
-        let text = format!("{} ", text); // to trigger last process in parse_number_value.
+        // because parse_number_value() cant judge last item when value is number, push white space to notify number.
+        let text = format!("{} ", text);
         for c in text.chars() {
             match context.get_status() {
                 Status::InSpace => self.parse_space(&mut context, c),

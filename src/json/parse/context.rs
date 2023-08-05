@@ -7,7 +7,7 @@ use crate::data::tokens::Tokens;
 pub enum Status {
     InSpace,
     InKey,
-    InNullValue,
+    InNullValue, // todo: remove value suffix
     InNumberValue,
     InStringValue,
     InBoolValue,
@@ -53,6 +53,7 @@ impl Context {
         self.status = Status::InBoolValue;
     }
 
+    // todo: rename to mk_array 
     pub fn start_array(&mut self) {
         let path = self.get_path();
         self.kvs.push(Kv::new(path, Tokens::MkArray));

@@ -16,14 +16,6 @@ impl Kvs {
         self.items.push(kv)
     }
 
-    pub fn render(&self) {
-        for kv in self.items.iter() {
-            let path = kv.get_path();
-            let value = kv.get_value();
-            print!("{}: {:?}\n", path, value);
-        }
-    }
-
     pub fn list(&self) -> Vec<Kv> {
         self.items.clone()
     }
