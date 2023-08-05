@@ -17,17 +17,21 @@ pub struct Cli {
 
 #[derive(Subcommand)]
 pub enum Actions {
+    /// format json
     Format(FormatArgs),
+    /// convert json to yaml
     Json2yaml(Json2yamlArgs),
 }
 
 #[derive(Args)]
 pub struct FormatArgs {
+    /// json string like '{"a":"b"}'
     pub json: Option<String>,
 }
 
 #[derive(Args)]
 pub struct Json2yamlArgs {
+    /// json string like '{"a":"b"}'
     pub json: Option<String>,
 }
 
