@@ -26,14 +26,14 @@ impl IndentProcessor {
 
     fn is_last_start_array(&self) -> bool {
         if let Some(last) = self.lines.last() {
-            return last.array_start_bracket; // todo refactor
+            return last.is_array_start_bracket(); // todo refactor
         };
         false
     }
 
     fn is_last_start_dict(&self) -> bool {
         if let Some(last) = self.lines.last() {
-            return last.dict_start_bracket;
+            return last.is_dict_start_bracket();
         };
         false
     }

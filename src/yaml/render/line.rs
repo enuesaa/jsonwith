@@ -9,7 +9,7 @@ pub struct Line {
     kv_path: Path,
     kv_value: Tokens,
     indent: usize,
-    pub hyphen: bool,
+    hyphen: bool,
     key: String,
     colon: bool,
     value: String,

@@ -14,9 +14,9 @@ pub struct Line {
     colon: bool,
     value: String,
     comma: bool,
-    pub dict_start_bracket: bool,
+    dict_start_bracket: bool,
     dict_end_bracket: bool,
-    pub array_start_bracket: bool,
+    array_start_bracket: bool,
     array_end_bracket: bool,
     ln: bool,
 }
@@ -101,6 +101,14 @@ impl Line {
 
     pub fn unneed_ln(&mut self) {
         self.ln = false;
+    }
+
+    pub fn is_dict_start_bracket(&self) -> bool {
+        self.dict_start_bracket.clone()
+    }
+
+    pub fn is_array_start_bracket(&self) -> bool {
+        self.array_start_bracket.clone()
     }
 }
 
