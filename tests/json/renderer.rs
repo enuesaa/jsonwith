@@ -9,9 +9,9 @@ use jsonwith::json::render::process_indent::IndentProcessor;
 fn test_root_dict() {
     let mut serializer = Renderer::new(
         Kvs::from(vec![
-            Kv::new(Path::from("$"), Tokens::MkDict),
-            Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
-            Kv::new(Path::from("$"), Tokens::EndDict),
+            Kv::with(Path::from("$"), Tokens::MkDict),
+            Kv::with(Path::from("$.a"), Tokens::String("aaa".to_string())),
+            Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );
     serializer.serialize();
@@ -25,9 +25,9 @@ fn test_root_dict() {
 fn test_root_array() {
     let mut serializer = Renderer::new(
         Kvs::from(vec![
-            Kv::new(Path::from("$"), Tokens::MkArray),
-            Kv::new(Path::from("$[0]"), Tokens::String("aaa".to_string())),
-            Kv::new(Path::from("$"), Tokens::EndArray),
+            Kv::with(Path::from("$"), Tokens::MkArray),
+            Kv::with(Path::from("$[0]"), Tokens::String("aaa".to_string())),
+            Kv::with(Path::from("$"), Tokens::EndArray),
         ]),
     );
     serializer.serialize();
@@ -41,7 +41,7 @@ fn test_root_array() {
 fn test_root_string() {
     let mut serializer = Renderer::new(
         Kvs::from(vec![
-            Kv::new(Path::from("$"), Tokens::String("aaa".to_string())),
+            Kv::with(Path::from("$"), Tokens::String("aaa".to_string())),
         ]),
     );
     serializer.serialize();
@@ -55,7 +55,7 @@ fn test_root_string() {
 fn test_root_number() {
     let mut serializer = Renderer::new(
         Kvs::from(vec![
-            Kv::new(Path::from("$"), Tokens::Number(107)),
+            Kv::with(Path::from("$"), Tokens::Number(107)),
         ]),
     );
     serializer.serialize();
@@ -69,13 +69,13 @@ fn test_root_number() {
 fn test_nested_dict() {
     let mut serializer = Renderer::new(
         Kvs::from(vec![
-            Kv::new(Path::from("$"), Tokens::MkDict),
-            Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
-            Kv::new(Path::from("$.b"), Tokens::MkDict),
-            Kv::new(Path::from("$.b.c"), Tokens::String("ddd".to_string())),
-            Kv::new(Path::from("$.b"), Tokens::EndDict),
-            Kv::new(Path::from("$.e"), Tokens::Number(108)),
-            Kv::new(Path::from("$"), Tokens::EndDict),
+            Kv::with(Path::from("$"), Tokens::MkDict),
+            Kv::with(Path::from("$.a"), Tokens::String("aaa".to_string())),
+            Kv::with(Path::from("$.b"), Tokens::MkDict),
+            Kv::with(Path::from("$.b.c"), Tokens::String("ddd".to_string())),
+            Kv::with(Path::from("$.b"), Tokens::EndDict),
+            Kv::with(Path::from("$.e"), Tokens::Number(108)),
+            Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );
     serializer.serialize();

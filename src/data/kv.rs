@@ -8,7 +8,7 @@ pub struct Kv {
 }
 
 impl Kv {
-    pub fn new(path: Path, value: Tokens) -> Self {
+    pub fn with(path: Path, value: Tokens) -> Self {
         Self {
             path,
             value,

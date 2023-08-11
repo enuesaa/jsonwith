@@ -13,9 +13,9 @@ fn test_root_dict() {
     assert_eq!(
         actual,
         Kvs::from(vec![
-            Kv::new(Path::from("$"), Tokens::MkDict),
-            Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
-            Kv::new(Path::from("$"), Tokens::EndDict),
+            Kv::with(Path::from("$"), Tokens::MkDict),
+            Kv::with(Path::from("$.a"), Tokens::String("aaa".to_string())),
+            Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );
 }
@@ -29,9 +29,9 @@ fn test_root_array() {
     assert_eq!(
         actual,
         Kvs::from(vec![
-            Kv::new(Path::from("$"), Tokens::MkArray),
-            Kv::new(Path::from("$[0]"), Tokens::String("aaa".to_string())),
-            Kv::new(Path::from("$"), Tokens::EndArray),
+            Kv::with(Path::from("$"), Tokens::MkArray),
+            Kv::with(Path::from("$[0]"), Tokens::String("aaa".to_string())),
+            Kv::with(Path::from("$"), Tokens::EndArray),
         ]),
     );
 }
@@ -45,7 +45,7 @@ fn test_root_string() {
     assert_eq!(
         actual,
         Kvs::from(vec![
-            Kv::new(Path::from("$"), Tokens::String("aaa".to_string())),
+            Kv::with(Path::from("$"), Tokens::String("aaa".to_string())),
         ]),
     );
 }
@@ -60,7 +60,7 @@ fn test_root_number() {
     assert_eq!(
         actual,
         Kvs::from(vec![
-            Kv::new(Path::from("$"), Tokens::Number(107)),
+            Kv::with(Path::from("$"), Tokens::Number(107)),
         ]),
     );
 }
@@ -74,13 +74,13 @@ fn test_nested_dict() {
     assert_eq!(
         actual,
         Kvs::from(vec![
-            Kv::new(Path::from("$"), Tokens::MkDict),
-            Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
-            Kv::new(Path::from("$.b"), Tokens::MkDict),
-            Kv::new(Path::from("$.b.c"), Tokens::String("ddd".to_string())),
-            Kv::new(Path::from("$.b"), Tokens::EndDict),
-            Kv::new(Path::from("$.e"), Tokens::Number(108)),
-            Kv::new(Path::from("$"), Tokens::EndDict),
+            Kv::with(Path::from("$"), Tokens::MkDict),
+            Kv::with(Path::from("$.a"), Tokens::String("aaa".to_string())),
+            Kv::with(Path::from("$.b"), Tokens::MkDict),
+            Kv::with(Path::from("$.b.c"), Tokens::String("ddd".to_string())),
+            Kv::with(Path::from("$.b"), Tokens::EndDict),
+            Kv::with(Path::from("$.e"), Tokens::Number(108)),
+            Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );
 }
