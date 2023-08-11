@@ -12,7 +12,7 @@ fn test_root_dict() {
 
     assert_eq!(
         actual,
-        Kvs::new(vec![
+        Kvs::from(vec![
             Kv::new(Path::from("$"), Tokens::MkDict),
             Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
             Kv::new(Path::from("$"), Tokens::EndDict),
@@ -28,7 +28,7 @@ fn test_root_array() {
 
     assert_eq!(
         actual,
-        Kvs::new(vec![
+        Kvs::from(vec![
             Kv::new(Path::from("$"), Tokens::MkArray),
             Kv::new(Path::from("$[0]"), Tokens::String("aaa".to_string())),
             Kv::new(Path::from("$"), Tokens::EndArray),
@@ -44,7 +44,7 @@ fn test_root_string() {
 
     assert_eq!(
         actual,
-        Kvs::new(vec![
+        Kvs::from(vec![
             Kv::new(Path::from("$"), Tokens::String("aaa".to_string())),
         ]),
     );
@@ -59,7 +59,7 @@ fn test_root_number() {
 
     assert_eq!(
         actual,
-        Kvs::new(vec![
+        Kvs::from(vec![
             Kv::new(Path::from("$"), Tokens::Number(107)),
         ]),
     );
@@ -73,7 +73,7 @@ fn test_nested_dict() {
 
     assert_eq!(
         actual,
-        Kvs::new(vec![
+        Kvs::from(vec![
             Kv::new(Path::from("$"), Tokens::MkDict),
             Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
             Kv::new(Path::from("$.b"), Tokens::MkDict),

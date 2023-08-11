@@ -8,7 +8,7 @@ use jsonwith::json::render::process_indent::IndentProcessor;
 #[test]
 fn test_root_dict() {
     let mut serializer = Renderer::new(
-        Kvs::new(vec![
+        Kvs::from(vec![
             Kv::new(Path::from("$"), Tokens::MkDict),
             Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
             Kv::new(Path::from("$"), Tokens::EndDict),
@@ -24,7 +24,7 @@ fn test_root_dict() {
 #[test]
 fn test_root_array() {
     let mut serializer = Renderer::new(
-        Kvs::new(vec![
+        Kvs::from(vec![
             Kv::new(Path::from("$"), Tokens::MkArray),
             Kv::new(Path::from("$[0]"), Tokens::String("aaa".to_string())),
             Kv::new(Path::from("$"), Tokens::EndArray),
@@ -40,7 +40,7 @@ fn test_root_array() {
 #[test]
 fn test_root_string() {
     let mut serializer = Renderer::new(
-        Kvs::new(vec![
+        Kvs::from(vec![
             Kv::new(Path::from("$"), Tokens::String("aaa".to_string())),
         ]),
     );
@@ -54,7 +54,7 @@ fn test_root_string() {
 #[test]
 fn test_root_number() {
     let mut serializer = Renderer::new(
-        Kvs::new(vec![
+        Kvs::from(vec![
             Kv::new(Path::from("$"), Tokens::Number(107)),
         ]),
     );
@@ -68,7 +68,7 @@ fn test_root_number() {
 #[test]
 fn test_nested_dict() {
     let mut serializer = Renderer::new(
-        Kvs::new(vec![
+        Kvs::from(vec![
             Kv::new(Path::from("$"), Tokens::MkDict),
             Kv::new(Path::from("$.a"), Tokens::String("aaa".to_string())),
             Kv::new(Path::from("$.b"), Tokens::MkDict),

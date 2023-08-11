@@ -8,7 +8,6 @@ license = "MIT"
 anyhow = "1.0.71"
 clap = { version = "4.2.5", features = ["derive"] }
 
-# see https://stackoverflow.com/questions/26946646
 [lib]
 name = "jsonwith"
 path = "src/lib.rs"

@@ -1,5 +1,5 @@
 use crate::data::kv::Kv;
-use std::fmt;
+use std::{fmt, vec};
 use std::fmt::Debug;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -8,8 +8,8 @@ pub struct Kvs {
 }
 
 impl Kvs {
-    pub fn new(items: Vec<Kv>) -> Self {
-        Kvs { items }
+    pub fn new() -> Self {
+        Kvs { items: vec![] }
     }
 
     pub fn push(&mut self, kv: Kv) {
@@ -18,6 +18,12 @@ impl Kvs {
 
     pub fn list(&self) -> Vec<Kv> {
         self.items.clone()
+    }
+}
+
+impl From<Vec<Kv>> for Kvs {
+    fn from(items: Vec<Kv>) -> Self {
+        Kvs { items }
     }
 }
 

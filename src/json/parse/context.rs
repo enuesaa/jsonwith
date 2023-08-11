@@ -22,7 +22,7 @@ pub struct Context {
 impl Context {
     pub fn new() -> Self {
         Context {
-            kvs: Kvs::new(vec![]),
+            kvs: Kvs::new(),
             status: Status::InSpace,
             path: Path::new(),
             buf: String::from(""),
