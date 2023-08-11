@@ -27,7 +27,7 @@ impl Path {
         self.route.push(PathItem::Index(0));
     }
 
-    pub fn increment(&mut self) {
+    pub fn increment_index(&mut self) {
         if let Some(last) = self.route.last_mut() {
             if let PathItem::Index(i) = last {
                 *last = PathItem::Index(*i + 1);

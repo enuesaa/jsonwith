@@ -113,7 +113,7 @@ impl Context {
         self.kvs.push(Kv::with(path, value));
         self.buf = String::from("");
         if self.path.is_last_index() {
-            self.path.increment();
+            self.path.increment_index();
         };
     }
 
