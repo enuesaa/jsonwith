@@ -35,15 +35,6 @@ impl Path {
         };
     }
 
-    pub fn is_array(&self) -> bool {
-        if let Some(last) = self.route.last() {
-            if let PathItem::Index(_) = last {
-                return true;
-            };
-        };
-        false
-    }
-
     pub fn pop(&mut self) {
         self.route.pop();
     }

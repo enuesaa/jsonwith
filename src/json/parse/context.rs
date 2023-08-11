@@ -112,7 +112,7 @@ impl Context {
         let path = self.get_path();
         self.kvs.push(Kv::with(path, value));
         self.buf = String::from("");
-        if self.path.is_array() {
+        if self.path.is_last_index() {
             self.path.increment();
         };
     }
