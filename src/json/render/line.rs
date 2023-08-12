@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::data::kv::Kv;
-use crate::data::path::{Path, PathItem};
+use crate::data::path::Path;
 use crate::data::tokens::Tokens;
 
 #[derive(Debug, Clone)]
@@ -52,8 +52,8 @@ impl Line {
     }
 
     pub fn set_key(&mut self, path: &Path) {
-        if let Some(PathItem::Key(key)) = path.get_last() {
-            self.key = format!("\"{}\"", key);
+        if path.is_last_key() {
+            self.key = format!("\"{}\"", path.get_last_key());
             self.need_colon();
         };
     }

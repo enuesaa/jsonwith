@@ -55,11 +55,11 @@ fn test_create_array() {
 fn test_create_nested_array() {
     let mut path = Path::from("$.a.bb");
     path.push_index(0);
-    path.increment_index();
-    path.increment_index();
+    path.modify_index(path.get_last_index() + 1);
+    path.modify_index(path.get_last_index() + 1);
     path.push_key("cc");
     path.push_index(0);
-    path.increment_index();
+    path.modify_index(path.get_last_index() + 1);
     assert_eq!(path.to_string(), "$.a.bb[2].cc[1]");
 }
 

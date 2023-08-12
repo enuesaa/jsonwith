@@ -40,11 +40,22 @@ impl Path {
         self.route.push(PathItem::Index(i));
     }
 
-    pub fn increment_index(&mut self) {
-        if let Some(last) = self.route.last_mut() {
-            if let PathItem::Index(i) = last {
-                *last = PathItem::Index(*i + 1);
-            };
+    pub fn modify(&mut self, s: &str) {
+        self.pop();
+        self.push(s);
+    }
+
+    pub fn modify_key(&mut self, key: &str) {
+        if self.is_last_key() {
+            self.pop();
+            self.push_key(key);
+        };
+    }
+
+    pub fn modify_index(&mut self, i: usize) {
+        if self.is_last_index() {
+            self.pop();
+            self.push_index(i);
         };
     }
 
@@ -52,16 +63,26 @@ impl Path {
         self.route.pop();
     }
 
-    #[deprecated]
-    pub fn get_last(&self) -> Option<PathItem> {
-        if let Some(last) = self.route.last() {
-            return Some(last.clone());
+    pub fn get_last_key(&self) -> String {
+        if let Some(PathItem::Key(s)) = self.route.last() {
+            return s.to_string();
         };
-        None
+        "".to_string()
+    }
+
+    pub fn get_last_index(&self) -> usize {
+        if let Some(PathItem::Index(i)) = self.route.last() {
+            return i.clone();
+        };
+        0
+    }
+
+    pub fn is_last_key(&self) -> bool {
+        !self.is_last_index()
     }
 
     pub fn is_last_index(&self) -> bool {
-        if let Some(PathItem::Index(_)) = self.get_last() {
+        if let Some(PathItem::Index(_)) = self.route.last() {
             return true;
         };
         false
@@ -72,33 +93,22 @@ impl From<&str> for Path {
     // from dotted like `$.a[0].b`
     fn from(dotted: &str) -> Self {
         if !dotted.starts_with("$") {
-            return Path { route: vec![] };
+            return Path::new();
         };
         if dotted == "$" {
-            return Path { route: vec![] };
+            return Path::new();
         };
 
-        // convert `$.a[0].b` to `.a.[0].b`
-        let prefmt = dotted.trim_start_matches("$").replace("[", ".[");
-        let route: Vec<PathItem> = prefmt
+        let mut path = Path::new();
+        dotted // $.a[0].b
+            .trim_start_matches("$") // .a[0].b
+            .replace("[", ".[") // `.a.[0].b`
             .split(".")
             .skip(1)
-            .map(|s| {
-                let value = s.to_string();
-                if s.starts_with("[") && s.ends_with("]") {
-                    let i = s
-                        .trim_start_matches("[")
-                        .trim_end_matches("]")
-                        .parse::<usize>()
-                        .unwrap();
-                    PathItem::Index(i)
-                } else {
-                    PathItem::Key(value)
-                }
-            })
-            .collect();
-
-        Path { route }
+            .for_each(|s| {
+                path.push(s);
+            });     
+        path
     }
 }
 
