@@ -47,18 +47,18 @@ fn test_pop_route() {
 #[test]
 fn test_create_array() {
     let mut path = Path::from("$.a.bb");
-    path.push_index();
+    path.push_index(0);
     assert_eq!(path.to_string(), "$.a.bb[0]");
 }
 
 #[test]
 fn test_create_nested_array() {
     let mut path = Path::from("$.a.bb");
-    path.push_index();
+    path.push_index(0);
     path.increment_index();
     path.increment_index();
     path.push_key("cc");
-    path.push_index();
+    path.push_index(0);
     path.increment_index();
     assert_eq!(path.to_string(), "$.a.bb[2].cc[1]");
 }

@@ -57,7 +57,7 @@ impl Context {
     pub fn start_array(&mut self) {
         let path = self.get_path();
         self.kvs.push(Kv::with(path, Tokens::MkArray));
-        self.path.push_index();
+        self.path.push_index(0);
     }
 
     pub fn end_array(&mut self) {

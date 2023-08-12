@@ -19,12 +19,25 @@ impl Path {
         Path { route: vec![] }
     }
 
+    pub fn push(&mut self, s: &str) {
+        if s.starts_with("[") && s.ends_with("]") {
+            let i = s
+                .trim_start_matches("[")
+                .trim_end_matches("]")
+                .parse::<usize>()
+                .unwrap();
+            self.route.push(PathItem::Index(i));
+        } else {
+            self.route.push(PathItem::Key(s.to_string()));
+        }
+    }
+
     pub fn push_key(&mut self, key: &str) {
         self.route.push(PathItem::Key(key.to_string()));
     }
 
-    pub fn push_index(&mut self) {
-        self.route.push(PathItem::Index(0));
+    pub fn push_index(&mut self, i: usize) {
+        self.route.push(PathItem::Index(i));
     }
 
     pub fn increment_index(&mut self) {
@@ -39,6 +52,7 @@ impl Path {
         self.route.pop();
     }
 
+    #[deprecated]
     pub fn get_last(&self) -> Option<PathItem> {
         if let Some(last) = self.route.last() {
             return Some(last.clone());
