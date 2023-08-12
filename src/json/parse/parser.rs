@@ -36,9 +36,9 @@ impl Parser {
 
     fn parse_space(&mut self, context: &mut Context, c: char) {
         match c {
-            '{' => context.start_dict(),
+            '{' => context.mk_dict(),
             '}' => context.end_dict(),
-            '[' => context.start_array(),
+            '[' => context.mk_array(),
             ']' => context.end_array(),
             '"' => {
                 if context.is_waiting_value() {
@@ -110,6 +110,6 @@ impl Parser {
             context.resolve_as_path();
         } else {
             context.push_buf(c);
-        }
+        };
     }
 }

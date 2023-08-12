@@ -53,8 +53,7 @@ impl Context {
         self.status = Status::InBool;
     }
 
-    // todo: rename to mk_array 
-    pub fn start_array(&mut self) {
+    pub fn mk_array(&mut self) {
         let path = self.get_path();
         self.kvs.push(Kv::with(path, Tokens::MkArray));
         self.path.push_index(0);
@@ -66,7 +65,7 @@ impl Context {
         self.kvs.push(Kv::with(path, Tokens::EndArray));
     }
 
-    pub fn start_dict(&mut self) {
+    pub fn mk_dict(&mut self) {
         let path = self.get_path();
         self.kvs.push(Kv::with(path, Tokens::MkDict));
     }
