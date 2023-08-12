@@ -7,10 +7,10 @@ use crate::data::tokens::Tokens;
 pub enum Status {
     InSpace,
     InKey,
-    InNullValue, // todo: remove value suffix
-    InNumberValue,
-    InStringValue,
-    InBoolValue,
+    InNull,
+    InNumber,
+    InString,
+    InBool,
 }
 
 pub struct Context {
@@ -37,20 +37,20 @@ impl Context {
         self.status = Status::InKey;
     }
 
-    pub fn declare_in_null_value(&mut self) {
-        self.status = Status::InNullValue;
+    pub fn declare_in_null(&mut self) {
+        self.status = Status::InNull;
     }
 
-    pub fn declare_in_number_value(&mut self) {
-        self.status = Status::InNumberValue;
+    pub fn declare_in_number(&mut self) {
+        self.status = Status::InNumber;
     }
 
-    pub fn declare_in_string_value(&mut self) {
-        self.status = Status::InStringValue;
+    pub fn declare_in_string(&mut self) {
+        self.status = Status::InString;
     }
 
-    pub fn declare_in_bool_value(&mut self) {
-        self.status = Status::InBoolValue;
+    pub fn declare_in_bool(&mut self) {
+        self.status = Status::InBool;
     }
 
     // todo: rename to mk_array 

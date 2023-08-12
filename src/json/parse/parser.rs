@@ -23,10 +23,10 @@ impl Parser {
         for c in text.chars() {
             match context.get_status() {
                 Status::InSpace => self.parse_space(&mut context, c),
-                Status::InNullValue => self.parse_null_value(&mut context, c),
-                Status::InBoolValue => self.parse_bool_value(&mut context, c),
-                Status::InNumberValue => self.parse_number_value(&mut context, c),
-                Status::InStringValue => self.parse_string_value(&mut context, c),
+                Status::InNull => self.parse_null(&mut context, c),
+                Status::InBool => self.parse_bool(&mut context, c),
+                Status::InNumber => self.parse_number(&mut context, c),
+                Status::InString => self.parse_string(&mut context, c),
                 Status::InKey => self.parse_key(&mut context, c),
             };
         }
@@ -42,28 +42,28 @@ impl Parser {
             ']' => context.end_array(),
             '"' => {
                 if context.is_waiting_value() {
-                    context.declare_in_string_value();
+                    context.declare_in_string();
                 } else {
                     context.declare_in_key();
                 };
             }
             'n' => {
-                context.declare_in_null_value();
+                context.declare_in_null();
                 context.push_buf(c);
             }
             't' | 'f' => {
-                context.declare_in_bool_value();
+                context.declare_in_bool();
                 context.push_buf(c);
             }
             '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
-                context.declare_in_number_value();
+                context.declare_in_number();
                 context.push_buf(c);
             }
             _ => {}
         };
     }
 
-    fn parse_null_value(&mut self, context: &mut Context, c: char) {
+    fn parse_null(&mut self, context: &mut Context, c: char) {
         context.push_buf(c);
         if &context.get_buf() == "null" {
             context.resolve_value(Tokens::Null);
@@ -71,7 +71,7 @@ impl Parser {
         }
     }
 
-    fn parse_bool_value(&mut self, context: &mut Context, c: char) {
+    fn parse_bool(&mut self, context: &mut Context, c: char) {
         context.push_buf(c);
         let buf = &context.get_buf();
         if buf == "true" || buf == "false" {
@@ -80,7 +80,7 @@ impl Parser {
         };
     }
 
-    fn parse_string_value(&self, context: &mut Context, c: char) {
+    fn parse_string(&self, context: &mut Context, c: char) {
         if c == '"' && !context.get_buf().ends_with('\\') {
             let value = context.get_buf();
             context.resolve_value(Tokens::String(value));
@@ -90,7 +90,7 @@ impl Parser {
         }
     }
 
-    fn parse_number_value(&mut self, context: &mut Context, c: char) {
+    fn parse_number(&mut self, context: &mut Context, c: char) {
         match c {
             '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
                 context.push_buf(c);
