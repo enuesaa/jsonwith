@@ -1,5 +1,5 @@
 use crate::data::kv::Kv;
-use std::{fmt, vec};
+use std::fmt;
 use std::fmt::Debug;
 
 #[derive(Clone, Debug, PartialEq)]
@@ -9,7 +9,7 @@ pub struct Kvs {
 
 impl Kvs {
     pub fn new() -> Self {
-        Kvs { items: vec![] }
+        Kvs { items: Vec::new() }
     }
 
     pub fn push(&mut self, kv: Kv) {

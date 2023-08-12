@@ -1,12 +1,11 @@
 [package]
 name = "jsonwith"
-version = "0.0.2"
+version = "0.0.3"
 edition = "2021"
 license = "MIT"
 
 [dependencies]
-anyhow = "1.0.71"
-clap = { version = "4.2.5", features = ["derive"] }
+clap = { version = "4.3.21", features = ["derive"] }
 
 [lib]
 name = "jsonwith"
