@@ -78,7 +78,10 @@ impl Path {
     }
 
     pub fn is_last_key(&self) -> bool {
-        !self.is_last_index()
+        if let Some(PathItem::Key(_)) = self.route.last() {
+            return true;
+        };
+        false
     }
 
     pub fn is_last_index(&self) -> bool {
