@@ -54,11 +54,11 @@ impl Line {
     pub fn set_key(&mut self, path: &Path) {
         if path.is_last_key() {
             self.key = format!("\"{}\"", path.get_last_key());
-            self.need_colon();
+            self.enable_colon();
         };
     }
 
-    fn need_colon(&mut self) {
+    pub fn enable_colon(&mut self) {
         self.colon = true;
     }
 
@@ -70,35 +70,35 @@ impl Line {
         self.value = format!("\"{}\"", value);
     }
 
-    pub fn need_comma(&mut self) {
+    pub fn enable_comma(&mut self) {
         self.comma = true;
     }
 
-    pub fn unneed_comma(&mut self) {
+    pub fn disable_comma(&mut self) {
         self.comma = false;
     }
 
-    pub fn need_dict_start_bracket(&mut self) {
+    pub fn enable_dict_start_bracket(&mut self) {
         self.dict_start_bracket = true;
     }
 
-    pub fn need_dict_end_bracket(&mut self) {
+    pub fn enable_dict_end_bracket(&mut self) {
         self.dict_end_bracket = true;
     }
 
-    pub fn need_array_start_bracket(&mut self) {
+    pub fn enable_array_start_bracket(&mut self) {
         self.array_start_bracket = true;
     }
 
-    pub fn need_array_end_bracket(&mut self) {
+    pub fn enable_array_end_bracket(&mut self) {
         self.array_end_bracket = true;
     }
 
-    pub fn need_ln(&mut self) {
+    pub fn enable_ln(&mut self) {
         self.ln = true;
     }
 
-    pub fn unneed_ln(&mut self) {
+    pub fn disable_ln(&mut self) {
         self.ln = false;
     }
 

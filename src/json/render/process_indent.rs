@@ -42,7 +42,7 @@ impl IndentProcessor {
 impl Processor for IndentProcessor {
     fn push(&mut self, line: &Line) {
         let mut converted = line.clone();
-        converted.need_ln();
+        converted.enable_ln();
 
         match line.get_kv_value() {
             Tokens::MkArray => {
@@ -52,7 +52,7 @@ impl Processor for IndentProcessor {
             Tokens::EndArray => {
                 self.decrement_space();
                 if self.is_last_start_array() {
-                    converted.unneed_ln();
+                    converted.disable_ln();
                 } else {
                     converted.set_indent(self.spaces);
                 }
@@ -64,7 +64,7 @@ impl Processor for IndentProcessor {
             Tokens::EndDict => {
                 self.decrement_space();
                 if self.is_last_start_dict() {
-                    converted.unneed_ln();
+                    converted.disable_ln();
                 } else {
                     converted.set_indent(self.spaces);
                 };
