@@ -63,6 +63,13 @@ impl Path {
         self.route.pop();
     }
 
+    pub fn get_last(&self) -> PathItem {
+        if let Some(val) = self.route.last() {
+            return val.clone()
+        }
+        PathItem::Key("".to_string())
+    }
+
     pub fn get_last_key(&self) -> String {
         if let Some(PathItem::Key(s)) = self.route.last() {
             return s.to_string();
