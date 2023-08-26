@@ -23,7 +23,6 @@ impl MappingProcessor {
     }
 
     fn decrement_space(&mut self) {
-        // todo refactor
         if self.spaces > 0 {
             self.spaces -= self.indent.clone();
         };
@@ -58,23 +57,11 @@ impl MappingProcessor {
             last.enable_empty_dict_blancket();
         };
     }
-
-    fn append_key_or_hyphen(&mut self, line: &mut Line) {
-        if line.get_kv_path().is_last_index() {
-            line.enable_hyphen();
-        } else {
-            line.set_key(&line.get_kv_path());
-        };
-    }
 }
 
 impl Processor for MappingProcessor {
     fn push(&mut self, line: &Line) {
         let mut converted = line.clone();
-
-        if line.get_kv_value() != Tokens::MkArray {
-            self.should_index_if_next_is_array = false;
-        };
 
         match line.get_kv_value() {
             Tokens::MkArray => {
@@ -82,7 +69,6 @@ impl Processor for MappingProcessor {
                 if !self.is_root() {
                     converted.enable_ln();
                 };
-                self.append_key_or_hyphen(&mut converted);
                 if self.should_index_if_next_is_array {
                     self.increment_space();
                 };
@@ -99,7 +85,6 @@ impl Processor for MappingProcessor {
                     converted.enable_ln();
                     self.increment_space();
                 };
-                self.append_key_or_hyphen(&mut converted);
             }
             Tokens::EndDict => {
                 if self.is_last_start_dict() {
@@ -111,26 +96,33 @@ impl Processor for MappingProcessor {
                 converted.set_indent(self.spaces);
                 converted.set_value(&value);
                 converted.enable_ln();
-                self.append_key_or_hyphen(&mut converted);
             }
             Tokens::Number(value) => {
                 converted.set_indent(self.spaces);
                 converted.set_value(&value.to_string());
                 converted.enable_ln();
-                self.append_key_or_hyphen(&mut converted);
             }
             Tokens::Bool(value) => {
                 converted.set_indent(self.spaces);
                 converted.set_value(&value.to_string());
                 converted.enable_ln();
-                self.append_key_or_hyphen(&mut converted);
             }
             Tokens::Null => {
                 converted.set_indent(self.spaces);
                 converted.set_value("null");
                 converted.enable_ln();
-                self.append_key_or_hyphen(&mut converted);
             }
+        };
+
+        if line.get_kv_value() != Tokens::MkArray {
+            self.should_index_if_next_is_array = false;
+        };
+        if line.get_kv_value() != Tokens::EndArray && line.get_kv_value() != Tokens::EndDict {
+            if converted.get_kv_path().is_last_index() {
+                converted.enable_hyphen();
+            } else {
+                converted.set_key(&converted.get_kv_path());
+            };
         };
 
         self.lines.push(converted);
