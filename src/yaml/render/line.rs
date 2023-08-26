@@ -88,18 +88,10 @@ impl Line {
 
 impl fmt::Display for Line {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let mut indent = self.indent.clone();
-        if self.hyphen {
-            // todo fix
-            if indent >= 2 {
-                indent -= 2;
-            };
-        };
-
         write!(
             f,
             "{}{}{}{}{}{}{}{}",
-            " ".repeat(indent),
+            " ".repeat(self.indent),
             if self.hyphen { "- " } else { "" },
             self.key,
             if self.colon { ": " } else { "" },

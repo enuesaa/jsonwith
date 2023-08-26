@@ -6,6 +6,7 @@ pub struct MappingProcessor {
     indent: usize,
     spaces: usize,
     lines: Vec<Line>,
+    should_index_if_next_is_array: bool,
 }
 impl MappingProcessor {
     pub fn new() -> Self {
@@ -13,6 +14,7 @@ impl MappingProcessor {
             indent: 2,
             spaces: 0,
             lines: Vec::new(),
+            should_index_if_next_is_array: false,
         }
     }
 
@@ -70,6 +72,10 @@ impl Processor for MappingProcessor {
     fn push(&mut self, line: &Line) {
         let mut converted = line.clone();
 
+        if line.get_kv_value() != Tokens::MkArray {
+            self.should_index_if_next_is_array = false;
+        };
+
         match line.get_kv_value() {
             Tokens::MkArray => {
                 converted.set_indent(self.spaces);
@@ -77,6 +83,10 @@ impl Processor for MappingProcessor {
                     converted.enable_ln();
                 };
                 self.append_key_or_hyphen(&mut converted);
+                if self.should_index_if_next_is_array {
+                    self.increment_space();
+                };
+                self.should_index_if_next_is_array = true;
             }
             Tokens::EndArray => {
                 if self.is_last_start_array() {
