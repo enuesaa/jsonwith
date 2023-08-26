@@ -21,8 +21,8 @@ fn jsonformat_sample2() {
 }
 
 #[test]
-fn jsonformat_minimum() {
-    let raw = read("./tests/assets/minimum.json");
+fn jsonformat_sample3() {
+    let raw = read("./tests/assets/sample3.json");
     assert_eq!(jsonformat(&raw), raw);
 }
 
@@ -41,5 +41,11 @@ fn jsonformat_emptylist() {
 #[test]
 fn jsonformat_numberlist() {
     let raw = read("./tests/assets/numberlist.json");
+    assert_eq!(jsonformat(&raw), raw);
+}
+
+#[test]
+fn jsonformat_nestedlist() {
+    let raw = read("./tests/assets/nestedlist.json");
     assert_eq!(jsonformat(&raw), raw);
 }

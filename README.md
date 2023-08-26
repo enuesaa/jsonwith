@@ -1,5 +1,5 @@
 # jsonwith
-Toy JSON Parser
+JSON Parser. This is my hobby project.
 
 ## Install
 ```bash

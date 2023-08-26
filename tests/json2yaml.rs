@@ -23,9 +23,9 @@ fn json2yaml_sample2() {
 }
 
 #[test]
-fn json2yaml_minimum() {
-    let json = read("./tests/assets/minimum.json");
-    let expected = read("./tests/assets/minimum.yaml");
+fn json2yaml_sample3() {
+    let json = read("./tests/assets/sample3.json");
+    let expected = read("./tests/assets/sample3.yaml");
     assert_eq!(json2yaml(&json), expected);
 }
 
@@ -47,5 +47,12 @@ fn json2yaml_emptylist() {
 fn json2yaml_numberlist() {
     let json = read("./tests/assets/numberlist.json");
     let expected = read("./tests/assets/numberlist.yaml");
+    assert_eq!(json2yaml(&json), expected);
+}
+
+#[test]
+fn jsonformat_nestedlist() {
+    let json = read("./tests/assets/nestedlist.json");
+    let expected = read("./tests/assets/nestedlist.yaml");
     assert_eq!(json2yaml(&json), expected);
 }
