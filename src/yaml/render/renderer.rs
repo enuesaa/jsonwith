@@ -14,7 +14,7 @@ impl Renderer {
         Renderer { lines }
     }
 
-    pub fn serialize(&mut self) -> &mut Self {
+    pub fn render(&mut self) -> &mut Self {
         self.process(&mut MappingProcessor::new());
         self.process(&mut DictInArrayProcessor::new());
         self

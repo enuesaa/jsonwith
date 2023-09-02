@@ -7,8 +7,8 @@ use jsonwith::json::parse::parser::Parser;
 #[test]
 fn test_root_dict() {
     let text = "{\"a\": \"aaa\"}";
-    let mut deserializer = Parser::new();
-    let actual = deserializer.deserialize(text);
+    let mut parser = Parser::new();
+    let actual = parser.parse(text);
 
     assert_eq!(
         actual,
@@ -23,8 +23,8 @@ fn test_root_dict() {
 #[test]
 fn test_root_array() {
     let text = "[\"aaa\"]";
-    let mut deserializer = Parser::new();
-    let actual = deserializer.deserialize(text);
+    let mut parser = Parser::new();
+    let actual = parser.parse(text);
 
     assert_eq!(
         actual,
@@ -39,8 +39,8 @@ fn test_root_array() {
 #[test]
 fn test_root_string() {
     let text = "\"aaa\"";
-    let mut deserializer = Parser::new();
-    let actual = deserializer.deserialize(text);
+    let mut parser = Parser::new();
+    let actual = parser.parse(text);
 
     assert_eq!(
         actual,
@@ -53,8 +53,8 @@ fn test_root_string() {
 #[test]
 fn test_root_number() {
     let text = "107";
-    let mut deserializer = Parser::new();
-    let actual = deserializer.deserialize(text);
+    let mut parser = Parser::new();
+    let actual = parser.parse(text);
     println!("{:?}", actual);
 
     assert_eq!(
@@ -68,8 +68,8 @@ fn test_root_number() {
 #[test]
 fn test_nested_dict() {
     let text = "{\"a\": \"aaa\", \"b\": {\"c\": \"ddd\"}, \"e\": 108}";
-    let mut deserializer = Parser::new();
-    let actual = deserializer.deserialize(text);
+    let mut parser = Parser::new();
+    let actual = parser.parse(text);
 
     assert_eq!(
         actual,

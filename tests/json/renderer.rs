@@ -7,67 +7,67 @@ use jsonwith::json::render::process_indent::IndentProcessor;
 
 #[test]
 fn test_root_dict() {
-    let mut serializer = Renderer::new(
+    let mut renderer = Renderer::new(
         Kvs::from(vec![
             Kv::with(Path::from("$"), Tokens::MkDict),
             Kv::with(Path::from("$.a"), Tokens::String("aaa".to_string())),
             Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );
-    serializer.serialize();
-    serializer.process(&mut IndentProcessor::new(2));
-    let actual = serializer.get_raw();
+    renderer.render();
+    renderer.process(&mut IndentProcessor::new(2));
+    let actual = renderer.get_raw();
 
     assert_eq!(actual, String::from("{\n  \"a\": \"aaa\"\n}\n"));
 }
 
 #[test]
 fn test_root_array() {
-    let mut serializer = Renderer::new(
+    let mut renderer = Renderer::new(
         Kvs::from(vec![
             Kv::with(Path::from("$"), Tokens::MkArray),
             Kv::with(Path::from("$[0]"), Tokens::String("aaa".to_string())),
             Kv::with(Path::from("$"), Tokens::EndArray),
         ]),
     );
-    serializer.serialize();
-    serializer.process(&mut IndentProcessor::new(2));
-    let actual = serializer.get_raw();
+    renderer.render();
+    renderer.process(&mut IndentProcessor::new(2));
+    let actual = renderer.get_raw();
 
     assert_eq!(actual, String::from("[\n  \"aaa\"\n]\n"));
 }
 
 #[test]
 fn test_root_string() {
-    let mut serializer = Renderer::new(
+    let mut renderer = Renderer::new(
         Kvs::from(vec![
             Kv::with(Path::from("$"), Tokens::String("aaa".to_string())),
         ]),
     );
-    serializer.serialize();
-    serializer.process(&mut IndentProcessor::new(2));
-    let actual = serializer.get_raw();
+    renderer.render();
+    renderer.process(&mut IndentProcessor::new(2));
+    let actual = renderer.get_raw();
 
     assert_eq!(actual, String::from("\"aaa\"\n"));
 }
 
 #[test]
 fn test_root_number() {
-    let mut serializer = Renderer::new(
+    let mut renderer = Renderer::new(
         Kvs::from(vec![
             Kv::with(Path::from("$"), Tokens::Number(107)),
         ]),
     );
-    serializer.serialize();
-    serializer.process(&mut IndentProcessor::new(2));
-    let actual = serializer.get_raw();
+    renderer.render();
+    renderer.process(&mut IndentProcessor::new(2));
+    let actual = renderer.get_raw();
 
     assert_eq!(actual, String::from("107\n"));
 }
 
 #[test]
 fn test_nested_dict() {
-    let mut serializer = Renderer::new(
+    let mut renderer = Renderer::new(
         Kvs::from(vec![
             Kv::with(Path::from("$"), Tokens::MkDict),
             Kv::with(Path::from("$.a"), Tokens::String("aaa".to_string())),
@@ -78,9 +78,9 @@ fn test_nested_dict() {
             Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );
-    serializer.serialize();
-    serializer.process(&mut IndentProcessor::new(2));
-    let actual = serializer.get_raw();
+    renderer.render();
+    renderer.process(&mut IndentProcessor::new(2));
+    let actual = renderer.get_raw();
 
     assert_eq!(
         actual,

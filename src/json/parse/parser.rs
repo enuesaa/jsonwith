@@ -16,7 +16,7 @@ impl Parser {
         self.indent = indent;
     }
 
-    pub fn deserialize(&mut self, text: &str) -> Kvs {
+    pub fn parse(&mut self, text: &str) -> Kvs {
         let mut context = Context::new();
         // because parse_number_value() cant judge last item when value is number, push white space to notify number.
         let text = format!("{} ", text);
