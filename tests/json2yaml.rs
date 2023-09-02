@@ -51,8 +51,22 @@ fn json2yaml_numberlist() {
 }
 
 #[test]
-fn jsonformat_nestedlist() {
+fn json2yaml_nestedlist() {
     let json = read("./tests/assets/nestedlist.json");
     let expected = read("./tests/assets/nestedlist.yaml");
+    assert_eq!(json2yaml(&json), expected);
+}
+
+#[test]
+fn json2yaml_rootstring() {
+    let json = read("./tests/assets/rootstring.json");
+    let expected = read("./tests/assets/rootstring.yaml");
+    assert_eq!(json2yaml(&json), expected);
+}
+
+#[test]
+fn json2yaml_rootlist() {
+    let json = read("./tests/assets/rootlist.json");
+    let expected = read("./tests/assets/rootlist.yaml");
     assert_eq!(json2yaml(&json), expected);
 }

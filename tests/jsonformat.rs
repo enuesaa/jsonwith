@@ -49,3 +49,21 @@ fn jsonformat_nestedlist() {
     let raw = read("./tests/assets/nestedlist.json");
     assert_eq!(jsonformat(&raw), raw);
 }
+
+#[test]
+fn jsonformat_rootstring() {
+    let raw = read("./tests/assets/rootstring.json");
+    assert_eq!(jsonformat(&raw), raw);
+}
+
+#[test]
+fn jsonformat_rootnumber() {
+    let raw = read("./tests/assets/rootnumber.json");
+    assert_eq!(jsonformat(&raw), raw);
+}
+
+#[test]
+fn jsonformat_rootlist() {
+    let raw = read("./tests/assets/rootlist.json");
+    assert_eq!(jsonformat(&raw), raw);
+}
