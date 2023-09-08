@@ -3,7 +3,6 @@ use jsonwith::data::kvs::Kvs;
 use jsonwith::data::path::Path;
 use jsonwith::data::tokens::Tokens;
 use jsonwith::json::render::renderer::Renderer;
-use jsonwith::json::render::process_indent::IndentProcessor;
 
 #[test]
 fn test_root_dict() {
@@ -14,9 +13,7 @@ fn test_root_dict() {
             Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );
-    renderer.render();
-    renderer.process(&mut IndentProcessor::new(2));
-    let actual = renderer.get_raw();
+    let actual = renderer.render();
 
     assert_eq!(actual, String::from("{\n  \"a\": \"aaa\"\n}\n"));
 }
@@ -30,9 +27,7 @@ fn test_root_array() {
             Kv::with(Path::from("$"), Tokens::EndArray),
         ]),
     );
-    renderer.render();
-    renderer.process(&mut IndentProcessor::new(2));
-    let actual = renderer.get_raw();
+    let actual = renderer.render();
 
     assert_eq!(actual, String::from("[\n  \"aaa\"\n]\n"));
 }
@@ -44,9 +39,7 @@ fn test_root_string() {
             Kv::with(Path::from("$"), Tokens::String("aaa".to_string())),
         ]),
     );
-    renderer.render();
-    renderer.process(&mut IndentProcessor::new(2));
-    let actual = renderer.get_raw();
+    let actual = renderer.render();
 
     assert_eq!(actual, String::from("\"aaa\"\n"));
 }
@@ -58,9 +51,7 @@ fn test_root_number() {
             Kv::with(Path::from("$"), Tokens::Number(107)),
         ]),
     );
-    renderer.render();
-    renderer.process(&mut IndentProcessor::new(2));
-    let actual = renderer.get_raw();
+    let actual = renderer.render();
 
     assert_eq!(actual, String::from("107\n"));
 }
@@ -78,9 +69,7 @@ fn test_nested_dict() {
             Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );
-    renderer.render();
-    renderer.process(&mut IndentProcessor::new(2));
-    let actual = renderer.get_raw();
+    let actual = renderer.render();
 
     assert_eq!(
         actual,

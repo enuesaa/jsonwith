@@ -15,18 +15,18 @@ impl Renderer {
         Renderer { lines, indent: 2 }
     }
 
-    pub fn configure_indent(&mut self, indent: usize) -> &mut Self {
+    pub fn with_indent(&mut self, indent: usize) -> &mut Self {
         self.indent = indent;
         self
     }
 
-    pub fn render(&mut self) -> &mut Self {
+    pub fn render(&mut self) -> String {
         self.process(&mut MappingProcessor::new(self.indent));
         self.process(&mut DictInArrayProcessor::new());
-        self
+        self.get_raw()
     }
 
-    pub fn process<T: Processor>(&mut self, processor: &mut T) -> &mut Self {
+    fn process<T: Processor>(&mut self, processor: &mut T) -> &mut Self {
         for line in self.lines.clone() {
             processor.push(&line);
         }
@@ -34,7 +34,7 @@ impl Renderer {
         self
     }
 
-    pub fn get_raw(&self) -> String {
+    fn get_raw(&self) -> String {
         self.lines
             .iter()
             .map(|l| l.to_string())

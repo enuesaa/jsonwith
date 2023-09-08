@@ -3,17 +3,10 @@ use crate::data::tokens::Tokens;
 use crate::json::parse::context::Context;
 use crate::json::parse::context::Status;
 
-pub struct Parser {
-    indent: usize,
-}
+pub struct Parser {}
 impl Parser {
     pub fn new() -> Self {
-        Parser { indent: 2 }
-    }
-
-    // configure options like this.
-    pub fn set_indent(&mut self, indent: usize) {
-        self.indent = indent;
+        Parser {}
     }
 
     pub fn parse(&mut self, text: &str) -> Kvs {

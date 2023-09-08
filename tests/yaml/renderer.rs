@@ -13,8 +13,7 @@ fn test_root_dict() {
             Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );
-    renderer.render();
-    let actual = renderer.get_raw();
+    let actual = renderer.render();
 
     assert_eq!(actual, String::from("a: aaa\n"));
 }
@@ -28,8 +27,7 @@ fn test_root_array() {
             Kv::with(Path::from("$"), Tokens::EndArray),
         ]),
     );
-    renderer.render();
-    let actual = renderer.get_raw();
+    let actual = renderer.render();
 
     assert_eq!(actual, String::from("- aaa\n"));
 }
@@ -44,8 +42,7 @@ fn test_array_in_dict() {
             Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );
-    renderer.render();
-    let actual = renderer.get_raw();
+    let actual = renderer.render();
 
     assert_eq!(actual, String::from("a: \n- aaa\n"));
 }
@@ -63,8 +60,7 @@ fn test_nested_dict() {
             Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );
-    renderer.render();
-    let actual = renderer.get_raw();
+    let actual = renderer.render();
 
     assert_eq!(
         actual,
