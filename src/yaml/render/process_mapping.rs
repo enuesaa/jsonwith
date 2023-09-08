@@ -9,9 +9,9 @@ pub struct MappingProcessor {
     should_index_if_next_is_array: bool,
 }
 impl MappingProcessor {
-    pub fn new() -> Self {
+    pub fn new(indent: usize) -> Self {
         Self {
-            indent: 2,
+            indent: indent,
             spaces: 0,
             lines: Vec::new(),
             should_index_if_next_is_array: false,

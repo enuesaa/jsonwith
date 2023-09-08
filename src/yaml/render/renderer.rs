@@ -7,15 +7,21 @@ use crate::yaml::render::process_dictinarray::DictInArrayProcessor;
 
 pub struct Renderer {
     lines: Vec<Line>,
+    indent: usize,
 }
 impl Renderer {
     pub fn new(kvs: Kvs) -> Self {
         let lines: Vec<Line> = kvs.list().iter().map(|kv| Line::from(kv.clone())).collect();
-        Renderer { lines }
+        Renderer { lines, indent: 2 }
+    }
+
+    pub fn configure_indent(&mut self, indent: usize) -> &mut Self {
+        self.indent = indent;
+        self
     }
 
     pub fn render(&mut self) -> &mut Self {
-        self.process(&mut MappingProcessor::new());
+        self.process(&mut MappingProcessor::new(self.indent));
         self.process(&mut DictInArrayProcessor::new());
         self
     }

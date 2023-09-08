@@ -27,12 +27,20 @@ pub enum Actions {
 pub struct FormatArgs {
     /// json string like '{"a":"b"}'
     pub json: Option<String>,
+
+    /// indent size
+    #[arg(long, default_value_t = 2)]
+    pub indent: usize,
 }
 
 #[derive(Args)]
 pub struct Json2yamlArgs {
     /// json string like '{"a":"b"}'
     pub json: Option<String>,
+
+    /// indent size
+    #[arg(long, default_value_t = 2)]
+    pub indent: usize,
 }
 
 fn main() {
@@ -46,7 +54,7 @@ fn main() {
                 println!("Error: missing required argument `json`");
                 std::process::exit(0);
             };
-            let result = jsonformat(&json);
+            let result = jsonformat(&json, args.indent);
             println!("{}", result);
         },
         Actions::Json2yaml(args) => {
@@ -55,7 +63,7 @@ fn main() {
                 println!("Error: missing required argument `json`");
                 std::process::exit(0);
             };
-            let result = json2yaml(&json);
+            let result = json2yaml(&json, args.indent);
             println!("{}", result);
         },
     };
