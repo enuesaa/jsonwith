@@ -24,7 +24,12 @@ impl Parser {
         context.get_kvs()
     }
 
-    fn parse_space(&mut self, context: &mut Context, c: char) {}
+    fn parse_space(&mut self, context: &mut Context, c: char) {
+        match c {
+            '-' => {},
+            _ => {}, // key
+        };
+    }
     fn parse_bool(&mut self, context: &mut Context, c: char) {}
     fn parse_number(&mut self, context: &mut Context, c: char) {}
     fn parse_string(&mut self, context: &mut Context, c: char) {}

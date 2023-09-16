@@ -10,5 +10,6 @@ mod json {
 }
 
 mod yaml {
+    mod parser;
     mod renderer;
 }

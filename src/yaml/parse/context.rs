@@ -10,10 +10,14 @@ pub enum Status {
     InBool,
 }
 
-pub struct Context {}
+pub struct Context {
+    status: Status,
+}
 impl Context {
     pub fn new() -> Self {
-        Context {}
+        Context {
+            status: Status::InSpace,
+        }
     }
 
     pub fn get_kvs(&self) -> Kvs {
@@ -21,6 +25,6 @@ impl Context {
     }
 
     pub fn get_status(&self) -> Status {
-        Status::InBool
+        self.status.clone()
     }
 }
