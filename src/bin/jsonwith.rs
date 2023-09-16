@@ -1,7 +1,7 @@
 use std::io::IsTerminal;
 use clap::{Parser, Subcommand, Args};
 
-use jsonwith::{jsonformat, json2yaml};
+use jsonwith::{jsonformat, json2yaml, yaml2json};
 
 #[derive(Parser)]
 #[command(
@@ -21,6 +21,8 @@ pub enum Actions {
     Format(FormatArgs),
     /// convert json to yaml
     Json2yaml(Json2yamlArgs),
+    /// convert yaml to json [developing]
+    Yaml2json(Yaml2jsonArgs),
 }
 
 #[derive(Args)]
@@ -41,6 +43,12 @@ pub struct Json2yamlArgs {
     /// indent size
     #[arg(long, default_value_t = 2)]
     pub indent: usize,
+}
+
+#[derive(Args)]
+pub struct Yaml2jsonArgs {
+    /// yaml string like 'a: b\nc: d'
+    pub yaml: Option<String>,
 }
 
 fn main() {
@@ -66,6 +74,15 @@ fn main() {
             let result = json2yaml(&json, args.indent);
             println!("{}", result);
         },
+        Actions::Yaml2json(args) => {
+            let yaml = args.yaml.unwrap_or_else(|| read_stdin());
+            if yaml.len() == 0 {
+                println!("Error: missing required argument `json`");
+                std::process::exit(0);
+            };
+            let result = yaml2json(&yaml, 2);
+            println!("{}", result);
+        }
     };
 }
 
