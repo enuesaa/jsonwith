@@ -104,9 +104,10 @@ impl Context {
 
         self.path.push_key(&self.buf);
         self.buf = "".to_string();
-        self.status = Status::InSpace;
+        self.status = Status::InSpace; // TODO: refactor
     }
 
+    // TODO: should refcator argument value
     pub fn resolve_value(&mut self, value: Tokens) {
         let path = self.get_path();
         self.kvs.push(Kv::with(path, value));

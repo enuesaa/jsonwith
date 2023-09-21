@@ -77,7 +77,7 @@ fn main() {
         Actions::Yaml2json(args) => {
             let yaml = args.yaml.unwrap_or_else(|| read_stdin());
             if yaml.len() == 0 {
-                println!("Error: missing required argument `json`");
+                println!("Error: missing required argument `yaml`");
                 std::process::exit(0);
             };
             let result = yaml2json(&yaml, 2);

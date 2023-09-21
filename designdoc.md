@@ -9,3 +9,8 @@ cat <filename> | jsonwith yaml2json
 ```bash
 cat <filename> | jsonwith json2hcl
 ```
+
+### yaml2json
+```bash
+cargo run yaml2json "a: b"
+```
