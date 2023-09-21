@@ -21,7 +21,7 @@ pub enum Actions {
     Format(FormatArgs),
     /// convert json to yaml
     Json2yaml(Json2yamlArgs),
-    /// convert yaml to json [developing]
+    /// convert yaml to json [under development]
     Yaml2json(Yaml2jsonArgs),
 }
 
@@ -75,6 +75,7 @@ fn main() {
             println!("{}", result);
         },
         Actions::Yaml2json(args) => {
+            println!("Warning: The `yaml2json` subcommand is under development.");
             let yaml = args.yaml.unwrap_or_else(|| read_stdin());
             if yaml.len() == 0 {
                 println!("Error: missing required argument `yaml`");
