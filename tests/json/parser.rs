@@ -44,9 +44,10 @@ fn test_root_string() {
 
     assert_eq!(
         actual,
-        Kvs::from(vec![
-            Kv::with(Path::from("$"), Tokens::String("aaa".to_string())),
-        ]),
+        Kvs::from(vec![Kv::with(
+            Path::from("$"),
+            Tokens::String("aaa".to_string())
+        ),]),
     );
 }
 
@@ -59,9 +60,7 @@ fn test_root_number() {
 
     assert_eq!(
         actual,
-        Kvs::from(vec![
-            Kv::with(Path::from("$"), Tokens::Number(107)),
-        ]),
+        Kvs::from(vec![Kv::with(Path::from("$"), Tokens::Number(107)),]),
     );
 }
 

@@ -65,7 +65,7 @@ impl Path {
 
     pub fn get_last(&self) -> PathItem {
         if let Some(val) = self.route.last() {
-            return val.clone()
+            return val.clone();
         }
         PathItem::Key("".to_string())
     }
@@ -117,7 +117,7 @@ impl From<&str> for Path {
             .skip(1)
             .for_each(|s| {
                 path.push(s);
-            });     
+            });
         path
     }
 }

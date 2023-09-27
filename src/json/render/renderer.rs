@@ -1,7 +1,7 @@
 use crate::data::kvs::Kvs;
 use crate::json::render::line::Line;
-use crate::json::render::processor::Processor;
 use crate::json::render::process_mapping::MappingProcessor;
+use crate::json::render::processor::Processor;
 
 use super::process_indent::IndentProcessor;
 

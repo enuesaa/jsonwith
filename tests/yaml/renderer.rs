@@ -6,13 +6,11 @@ use jsonwith::yaml::render::renderer::Renderer;
 
 #[test]
 fn test_root_dict() {
-    let mut renderer = Renderer::new(
-        Kvs::from(vec![
-            Kv::with(Path::from("$"), Tokens::MkDict),
-            Kv::with(Path::from("$.a"), Tokens::String("aaa".to_string())),
-            Kv::with(Path::from("$"), Tokens::EndDict),
-        ]),
-    );
+    let mut renderer = Renderer::new(Kvs::from(vec![
+        Kv::with(Path::from("$"), Tokens::MkDict),
+        Kv::with(Path::from("$.a"), Tokens::String("aaa".to_string())),
+        Kv::with(Path::from("$"), Tokens::EndDict),
+    ]));
     let actual = renderer.render();
 
     assert_eq!(actual, String::from("a: aaa\n"));
@@ -20,13 +18,11 @@ fn test_root_dict() {
 
 #[test]
 fn test_root_array() {
-    let mut renderer = Renderer::new(
-        Kvs::from(vec![
-            Kv::with(Path::from("$"), Tokens::MkArray),
-            Kv::with(Path::from("$[0]"), Tokens::String("aaa".to_string())),
-            Kv::with(Path::from("$"), Tokens::EndArray),
-        ]),
-    );
+    let mut renderer = Renderer::new(Kvs::from(vec![
+        Kv::with(Path::from("$"), Tokens::MkArray),
+        Kv::with(Path::from("$[0]"), Tokens::String("aaa".to_string())),
+        Kv::with(Path::from("$"), Tokens::EndArray),
+    ]));
     let actual = renderer.render();
 
     assert_eq!(actual, String::from("- aaa\n"));
@@ -34,14 +30,12 @@ fn test_root_array() {
 
 #[test]
 fn test_array_in_dict() {
-    let mut renderer = Renderer::new(
-        Kvs::from(vec![
-            Kv::with(Path::from("$"), Tokens::MkDict),
-            Kv::with(Path::from("$.a"), Tokens::MkArray),
-            Kv::with(Path::from("$.a[0]"), Tokens::String("aaa".to_string())),
-            Kv::with(Path::from("$"), Tokens::EndDict),
-        ]),
-    );
+    let mut renderer = Renderer::new(Kvs::from(vec![
+        Kv::with(Path::from("$"), Tokens::MkDict),
+        Kv::with(Path::from("$.a"), Tokens::MkArray),
+        Kv::with(Path::from("$.a[0]"), Tokens::String("aaa".to_string())),
+        Kv::with(Path::from("$"), Tokens::EndDict),
+    ]));
     let actual = renderer.render();
 
     assert_eq!(actual, String::from("a: \n- aaa\n"));
@@ -49,17 +43,15 @@ fn test_array_in_dict() {
 
 #[test]
 fn test_nested_dict() {
-    let mut renderer = Renderer::new(
-        Kvs::from(vec![
-            Kv::with(Path::from("$"), Tokens::MkDict),
-            Kv::with(Path::from("$.a"), Tokens::String("aaa".to_string())),
-            Kv::with(Path::from("$.b"), Tokens::MkDict),
-            Kv::with(Path::from("$.b.c"), Tokens::String("ddd".to_string())),
-            Kv::with(Path::from("$.b"), Tokens::EndDict),
-            Kv::with(Path::from("$.e"), Tokens::Number(108)),
-            Kv::with(Path::from("$"), Tokens::EndDict),
-        ]),
-    );
+    let mut renderer = Renderer::new(Kvs::from(vec![
+        Kv::with(Path::from("$"), Tokens::MkDict),
+        Kv::with(Path::from("$.a"), Tokens::String("aaa".to_string())),
+        Kv::with(Path::from("$.b"), Tokens::MkDict),
+        Kv::with(Path::from("$.b.c"), Tokens::String("ddd".to_string())),
+        Kv::with(Path::from("$.b"), Tokens::EndDict),
+        Kv::with(Path::from("$.e"), Tokens::Number(108)),
+        Kv::with(Path::from("$"), Tokens::EndDict),
+    ]));
     let actual = renderer.render();
 
     assert_eq!(

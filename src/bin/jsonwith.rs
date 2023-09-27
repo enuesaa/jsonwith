@@ -1,14 +1,14 @@
+use clap::{Args, Parser, Subcommand};
 use std::io::IsTerminal;
-use clap::{Parser, Subcommand, Args};
 
-use jsonwith::{jsonformat, json2yaml, yaml2json};
+use jsonwith::{json2yaml, jsonformat, yaml2json};
 
 #[derive(Parser)]
 #[command(
     name = "jsonwith",
     about = "JSON Parser",
     disable_help_subcommand = true,
-    version,
+    version
 )]
 pub struct Cli {
     #[command(subcommand)]
@@ -64,7 +64,7 @@ fn main() {
             };
             let result = jsonformat(&json, args.indent);
             println!("{}", result);
-        },
+        }
         Actions::Json2yaml(args) => {
             let json = args.json.unwrap_or_else(|| read_stdin());
             if json.len() == 0 {
@@ -73,7 +73,7 @@ fn main() {
             };
             let result = json2yaml(&json, args.indent);
             println!("{}", result);
-        },
+        }
         Actions::Yaml2json(args) => {
             println!("Warning: The `yaml2json` subcommand is under development.");
             let yaml = args.yaml.unwrap_or_else(|| read_stdin());

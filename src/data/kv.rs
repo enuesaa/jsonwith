@@ -9,10 +9,7 @@ pub struct Kv {
 
 impl Kv {
     pub fn with(path: Path, value: Tokens) -> Self {
-        Self {
-            path,
-            value,
-        }
+        Self { path, value }
     }
 
     pub fn get_path(&self) -> Path {

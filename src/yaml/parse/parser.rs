@@ -22,7 +22,7 @@ impl Parser {
                 Status::InKey => self.parse_key(&mut context, c),
                 Status::InWaitingValue => self.parse_waiting_value(&mut context, c),
             };
-        };
+        }
         context.resolve_value();
         context.end_root_dict();
 
@@ -32,11 +32,11 @@ impl Parser {
     fn parse_space(&mut self, context: &mut Context, c: char) {
         println!("here is space: {:?}", c);
         match c {
-            '-' => {},
+            '-' => {}
             _ => {
                 context.declare_in_key();
                 context.push_buf(c);
-            }, // key
+            } // key
         };
     }
 
@@ -58,10 +58,10 @@ impl Parser {
             ':' => {
                 context.resolve_as_path();
                 context.declare_in_waiting_value();
-            },
+            }
             _ => {
                 context.push_buf(c);
-            },
+            }
         };
     }
 
@@ -72,11 +72,11 @@ impl Parser {
     fn parse_waiting_value(&mut self, context: &mut Context, c: char) {
         println!("here is waiting value: {:?}", c);
         match c {
-            ' ' => {},
+            ' ' => {}
             '"' => {
                 context.declare_in_string();
                 context.push_buf(c);
-            },
+            }
             'n' => {
                 // we can not distinguish string or null. so, treat as string.
                 context.declare_in_string();
@@ -89,11 +89,11 @@ impl Parser {
             '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
                 context.declare_in_string();
                 context.push_buf(c);
-            },
+            }
             _ => {
                 context.declare_in_string();
                 context.push_buf(c);
-            },
+            }
         }
     }
 }

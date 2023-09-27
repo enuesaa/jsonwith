@@ -25,13 +25,13 @@ impl Processor for DictInArrayProcessor {
                     converted.disable_ln();
                     self.rm_next_indent = true;
                 };
-            },
+            }
             _ => {
                 if self.rm_next_indent {
                     converted.set_indent(0);
                     self.rm_next_indent = false;
                 };
-            },
+            }
         };
 
         self.lines.push(converted);

@@ -1,4 +1,4 @@
-use crate::data::{kvs::Kvs, path::Path, kv::Kv, tokens::Tokens};
+use crate::data::{kv::Kv, kvs::Kvs, path::Path, tokens::Tokens};
 
 #[derive(PartialEq, Clone, Debug)]
 pub enum Status {
@@ -78,7 +78,8 @@ impl Context {
 
     pub fn resolve_value(&mut self) {
         let path = self.get_path();
-        self.kvs.push(Kv::with(path, Tokens::String(self.buf.clone())));
+        self.kvs
+            .push(Kv::with(path, Tokens::String(self.buf.clone())));
         self.buf = "".to_string();
     }
 

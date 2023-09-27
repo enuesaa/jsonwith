@@ -2,8 +2,8 @@ use crate::data::kvs::Kvs;
 use crate::yaml::render::line::Line;
 use crate::yaml::render::processor::Processor;
 
-use crate::yaml::render::process_mapping::MappingProcessor;
 use crate::yaml::render::process_dictinarray::DictInArrayProcessor;
+use crate::yaml::render::process_mapping::MappingProcessor;
 
 pub struct Renderer {
     lines: Vec<Line>,

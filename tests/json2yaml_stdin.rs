@@ -3,7 +3,6 @@ use std::process::Stdio;
 
 #[test]
 fn json2yaml_stdin_given() {
-
     let output = Command::new("sh")
         .args(&["-c", "echo '{\"a\":\"b\"}' | cargo run json2yaml"])
         .stdout(Stdio::piped())
