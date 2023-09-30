@@ -4,11 +4,9 @@ use crate::data::{kv::Kv, kvs::Kvs, path::Path, tokens::Tokens};
 pub enum Status {
     InSpace,
     InKey,
-    InNull,
-    InNumber,
     InString,
-    InBool,
-    InWaitingValue,
+    WaitingValue,
+    WaitingNewline,
 }
 
 pub struct Context {
@@ -47,24 +45,16 @@ impl Context {
         self.status = Status::InKey;
     }
 
-    pub fn declare_in_null(&mut self) {
-        self.status = Status::InNull;
-    }
-
-    pub fn declare_in_number(&mut self) {
-        self.status = Status::InNumber;
-    }
-
     pub fn declare_in_string(&mut self) {
         self.status = Status::InString;
     }
 
-    pub fn declare_in_bool(&mut self) {
-        self.status = Status::InBool;
+    pub fn declare_waiting_value(&mut self) {
+        self.status = Status::WaitingValue;
     }
 
-    pub fn declare_in_waiting_value(&mut self) {
-        self.status = Status::InWaitingValue;
+    pub fn declare_waiting_newline(&mut self) {
+        self.status = Status::WaitingNewline;
     }
 
     pub fn push_buf(&mut self, c: char) {

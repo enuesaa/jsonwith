@@ -15,12 +15,10 @@ impl Parser {
         for c in text.chars() {
             match context.get_status() {
                 Status::InSpace => self.parse_space(&mut context, c),
-                Status::InNull => self.parse_null(&mut context, c),
-                Status::InBool => self.parse_bool(&mut context, c),
-                Status::InNumber => self.parse_number(&mut context, c),
                 Status::InString => self.parse_string(&mut context, c),
                 Status::InKey => self.parse_key(&mut context, c),
-                Status::InWaitingValue => self.parse_waiting_value(&mut context, c),
+                Status::WaitingValue => self.parse_waiting_value(&mut context, c),
+                Status::WaitingNewline => self.parse_waiting_newline(&mut context, c),
             };
         }
         context.resolve_value();
@@ -40,16 +38,17 @@ impl Parser {
         };
     }
 
-    fn parse_bool(&mut self, context: &mut Context, c: char) {
-        println!("here is bool: {:?}", c);
-    }
-
-    fn parse_number(&mut self, context: &mut Context, c: char) {
-        println!("here is number: {:?}", c);
-    }
-
     fn parse_string(&mut self, context: &mut Context, c: char) {
         println!("here is string: {:?}", c);
+        match c {
+            '\\' => {
+                context.resolve_value();
+                context.declare_waiting_newline();
+            }
+            _ => {
+                context.push_buf(c);
+            }
+        }
     }
 
     fn parse_key(&mut self, context: &mut Context, c: char) {
@@ -57,7 +56,7 @@ impl Parser {
         match c {
             ':' => {
                 context.resolve_as_path();
-                context.declare_in_waiting_value();
+                context.declare_waiting_value();
             }
             _ => {
                 context.push_buf(c);
@@ -65,35 +64,26 @@ impl Parser {
         };
     }
 
-    fn parse_null(&mut self, context: &mut Context, c: char) {
-        println!("here is null: {:?}", c);
-    }
-
     fn parse_waiting_value(&mut self, context: &mut Context, c: char) {
         println!("here is waiting value: {:?}", c);
         match c {
             ' ' => {}
-            '"' => {
-                context.declare_in_string();
-                context.push_buf(c);
-            }
-            'n' => {
+            _ => {
                 // we can not distinguish string or null. so, treat as string.
                 context.declare_in_string();
                 context.push_buf(c);
             }
-            't' | 'f' => {
-                context.declare_in_string();
-                context.push_buf(c);
+        }
+    }
+
+    fn parse_waiting_newline(&mut self, context: &mut Context, c: char) {
+        println!("here is waiting newline: {:?}", c);
+        match c {
+            // oh..
+            'n' => {
+                context.declare_in_space();
             }
-            '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
-                context.declare_in_string();
-                context.push_buf(c);
-            }
-            _ => {
-                context.declare_in_string();
-                context.push_buf(c);
-            }
+            _ => {}
         }
     }
 }
