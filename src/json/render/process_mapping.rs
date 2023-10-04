@@ -56,7 +56,7 @@ impl Processor for MappingProcessor {
                 self.remove_last_comma();
                 if self.is_last_start_array() {
                     self.enable_last_array_end_bracket();
-                    // converted.disable_ln();
+                    converted.enable_comma();
                 } else {
                     converted.enable_array_end_bracket();
                     converted.enable_comma();
@@ -70,6 +70,7 @@ impl Processor for MappingProcessor {
                 self.remove_last_comma();
                 if self.is_last_start_dict() {
                     self.enable_last_dict_end_bracket();
+                    converted.enable_comma();
                 } else {
                     converted.enable_dict_end_bracket();
                     converted.enable_comma();

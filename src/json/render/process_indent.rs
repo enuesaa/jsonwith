@@ -37,6 +37,12 @@ impl IndentProcessor {
         };
         false
     }
+    
+    fn disbale_last_ln(&mut self) {
+        if let Some(last) = self.lines.last_mut() {
+            last.disable_ln();
+        };
+    }
 }
 
 impl Processor for IndentProcessor {
@@ -52,7 +58,7 @@ impl Processor for IndentProcessor {
             Tokens::EndArray => {
                 self.decrement_space();
                 if self.is_last_start_array() {
-                    converted.disable_ln();
+                    self.disbale_last_ln();
                 } else {
                     converted.set_indent(self.spaces);
                 }
@@ -64,7 +70,7 @@ impl Processor for IndentProcessor {
             Tokens::EndDict => {
                 self.decrement_space();
                 if self.is_last_start_dict() {
-                    converted.disable_ln();
+                    self.disbale_last_ln();
                 } else {
                     converted.set_indent(self.spaces);
                 };
