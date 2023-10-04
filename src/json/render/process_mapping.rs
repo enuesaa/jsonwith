@@ -15,6 +15,12 @@ impl MappingProcessor {
             last.disable_comma();
         };
     }
+    
+    fn remove_last_ln(&mut self) {
+        if let Some(last) = self.lines.last_mut() {
+            last.disable_ln();
+        };
+    }
 
     fn is_last_start_array(&self) -> bool {
         if let Some(last) = self.lines.last() {
@@ -29,23 +35,12 @@ impl MappingProcessor {
         };
         false
     }
-
-    fn enable_last_array_end_bracket(&mut self) {
-        if let Some(last) = self.lines.last_mut() {
-            last.enable_array_end_bracket();
-        };
-    }
-
-    fn enable_last_dict_end_bracket(&mut self) {
-        if let Some(last) = self.lines.last_mut() {
-            last.enable_dict_end_bracket();
-        };
-    }
 }
 
 impl Processor for MappingProcessor {
     fn push(&mut self, line: &Line) {
         let mut converted = line.clone();
+        converted.enable_ln();
 
         match line.get_kv_value() {
             Tokens::MkArray => {
@@ -55,12 +50,10 @@ impl Processor for MappingProcessor {
             Tokens::EndArray => {
                 self.remove_last_comma();
                 if self.is_last_start_array() {
-                    self.enable_last_array_end_bracket();
-                    converted.enable_comma();
-                } else {
-                    converted.enable_array_end_bracket();
-                    converted.enable_comma();
+                    self.remove_last_ln();
                 };
+                converted.enable_array_end_bracket();
+                converted.enable_comma();
             }
             Tokens::MkDict => {
                 converted.set_key(&converted.get_kv_path());
@@ -69,12 +62,10 @@ impl Processor for MappingProcessor {
             Tokens::EndDict => {
                 self.remove_last_comma();
                 if self.is_last_start_dict() {
-                    self.enable_last_dict_end_bracket();
-                    converted.enable_comma();
-                } else {
-                    converted.enable_dict_end_bracket();
-                    converted.enable_comma();
+                    self.remove_last_ln();
                 };
+                converted.enable_dict_end_bracket();
+                converted.enable_comma();
             }
             Tokens::String(value) => {
                 converted.set_key(&converted.get_kv_path());

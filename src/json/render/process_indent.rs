@@ -37,18 +37,11 @@ impl IndentProcessor {
         };
         false
     }
-    
-    fn disbale_last_ln(&mut self) {
-        if let Some(last) = self.lines.last_mut() {
-            last.disable_ln();
-        };
-    }
 }
 
 impl Processor for IndentProcessor {
     fn push(&mut self, line: &Line) {
         let mut converted = line.clone();
-        converted.enable_ln();
 
         match line.get_kv_value() {
             Tokens::MkArray => {
@@ -57,9 +50,7 @@ impl Processor for IndentProcessor {
             }
             Tokens::EndArray => {
                 self.decrement_space();
-                if self.is_last_start_array() {
-                    self.disbale_last_ln();
-                } else {
+                if !self.is_last_start_array() {
                     converted.set_indent(self.spaces);
                 }
             }
@@ -69,9 +60,7 @@ impl Processor for IndentProcessor {
             }
             Tokens::EndDict => {
                 self.decrement_space();
-                if self.is_last_start_dict() {
-                    self.disbale_last_ln();
-                } else {
+                if !self.is_last_start_dict() {
                     converted.set_indent(self.spaces);
                 };
             }
