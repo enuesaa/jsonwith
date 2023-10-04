@@ -84,9 +84,7 @@ fn test_need_comma_after_end_dict() {
 
     assert_eq!(
         actual,
-        String::from(
-            "{\n  \"a\": {},\n  \"b\": \"bbb\"\n}\n"
-        )
+        String::from("{\n  \"a\": {},\n  \"b\": \"bbb\"\n}\n")
     );
 }
 
@@ -100,10 +98,5 @@ fn test_donot_need_comma_last_end_dict() {
     ]));
     let actual = renderer.render();
 
-    assert_eq!(
-        actual,
-        String::from(
-            "{\n  \"a\": {}\n}\n"
-        )
-    );
+    assert_eq!(actual, String::from("{\n  \"a\": {}\n}\n"));
 }

@@ -15,7 +15,7 @@ impl MappingProcessor {
             last.disable_comma();
         };
     }
-    
+
     fn remove_last_ln(&mut self) {
         if let Some(last) = self.lines.last_mut() {
             last.disable_ln();
