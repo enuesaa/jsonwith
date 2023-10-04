@@ -70,3 +70,40 @@ fn test_nested_dict() {
         )
     );
 }
+
+#[test]
+fn test_need_comma_after_end_dict() {
+    let mut renderer = Renderer::new(Kvs::from(vec![
+        Kv::with(Path::from("$"), Tokens::MkDict),
+        Kv::with(Path::from("$.a"), Tokens::MkDict),
+        Kv::with(Path::from("$.a"), Tokens::EndDict),
+        Kv::with(Path::from("$.b"), Tokens::String("bbb".to_string())),
+        Kv::with(Path::from("$"), Tokens::EndDict),
+    ]));
+    let actual = renderer.render();
+
+    assert_eq!(
+        actual,
+        String::from(
+            "{\n  \"a\": {},\n  \"b\": \"bbb\"\n}\n"
+        )
+    );
+}
+
+#[test]
+fn test_donot_need_comma_last_end_dict() {
+    let mut renderer = Renderer::new(Kvs::from(vec![
+        Kv::with(Path::from("$"), Tokens::MkDict),
+        Kv::with(Path::from("$.a"), Tokens::MkDict),
+        Kv::with(Path::from("$.a"), Tokens::EndDict),
+        Kv::with(Path::from("$"), Tokens::EndDict),
+    ]));
+    let actual = renderer.render();
+
+    assert_eq!(
+        actual,
+        String::from(
+            "{\n  \"a\": {}\n}\n"
+        )
+    );
+}
