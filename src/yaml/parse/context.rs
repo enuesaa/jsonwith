@@ -68,8 +68,21 @@ impl Context {
 
     pub fn resolve_value(&mut self) {
         let path = self.get_path();
-        self.kvs
-            .push(Kv::with(path, Tokens::String(self.buf.clone())));
+
+        let buf = self.buf.clone();
+        let value = match buf.as_str() {
+            "null" => Tokens::Null,
+            "false" => Tokens::Bool(false),
+            "true" => Tokens::Bool(true),
+            _ => {
+                if buf.chars().all(|c| c.is_numeric()) {
+                    Tokens::Number(buf.parse::<usize>().unwrap())
+                } else {
+                    Tokens::String(buf)
+                }
+            },
+        };
+        self.kvs.push(Kv::with(path, value));
         self.buf = "".to_string();
     }
 
