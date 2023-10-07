@@ -1,6 +1,8 @@
-**This app is toy**
 # jsonwith
 JSON Parser
+
+> **Note**
+> `jsonwith` is toy app.
 
 ## Install
 ```bash
