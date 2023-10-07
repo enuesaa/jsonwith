@@ -18,6 +18,7 @@ impl Parser {
                 Status::InString => self.parse_string(&mut context, c),
                 Status::InKey => self.parse_key(&mut context, c),
                 Status::WaitingValue => self.parse_waiting_value(&mut context, c),
+                Status::WaitingNestedValue => self.parse_waiting_nested_value(&mut context, c),
                 Status::WaitingNewline => self.parse_waiting_newline(&mut context, c),
             };
         }
@@ -67,10 +68,27 @@ impl Parser {
     fn parse_waiting_value(&mut self, context: &mut Context, c: char) {
         println!("here is waiting value: {:?}", c);
         match c {
+            '\\' => {
+                context.declare_waiting_nested_value();
+            }
             ' ' => {}
             _ => {
                 // we can not distinguish string or null. so, treat as string.
                 context.declare_in_string();
+                context.push_buf(c);
+            }
+        }
+    }
+
+    fn parse_waiting_nested_value(&mut self, context: &mut Context, c: char) {
+        println!("here is waiting nested value: {:?}", c);
+        match c {
+            'n' => {
+                context.resolve_value();
+            }, // check is first value
+            ' ' => {},
+            _ => {
+                context.declare_in_key();
                 context.push_buf(c);
             }
         }

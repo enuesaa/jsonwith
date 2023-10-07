@@ -6,6 +6,7 @@ pub enum Status {
     InKey,
     InString,
     WaitingValue,
+    WaitingNestedValue,
     WaitingNewline,
 }
 
@@ -53,6 +54,10 @@ impl Context {
         self.status = Status::WaitingValue;
     }
 
+    pub fn declare_waiting_nested_value(&mut self) {
+        self.status = Status::WaitingNestedValue;
+    }
+
     pub fn declare_waiting_newline(&mut self) {
         self.status = Status::WaitingNewline;
     }
@@ -74,6 +79,7 @@ impl Context {
             "null" => Tokens::Null,
             "false" => Tokens::Bool(false),
             "true" => Tokens::Bool(true),
+            "" => Tokens::String(buf),
             _ => {
                 if buf.chars().all(|c| c.is_numeric()) {
                     Tokens::Number(buf.parse::<usize>().unwrap())
