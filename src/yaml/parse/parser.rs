@@ -34,14 +34,36 @@ impl Parser {
         let mut path = context.get_last_path();
 
         let last_indent = context.get_last_indent();
-        if last_indent >= line.get_indent() {
+        if last_indent > line.get_indent() {
             path.pop();
-        }
-        if last_indent <= line.get_indent() {
+            context.push(path.clone(), Tokens::EndDict);
+        } else if last_indent < line.get_indent() {
+            path.push(&line.get_key());
+        } else {
+            path.pop();
             path.push(&line.get_key());
         }
+        
 
-        let value = Tokens::String(line.get_value());
+        if !line.has_value() {
+            context.push(path, Tokens::MkDict);
+            return;
+        }
+
+        let buf = line.get_value();
+        let value = match buf.as_str() {
+            "null" => Tokens::Null,
+            "false" => Tokens::Bool(false),
+            "true" => Tokens::Bool(true),
+            "" => Tokens::String(buf),
+            _ => {
+                if buf.chars().all(|c| c.is_numeric()) {
+                    Tokens::Number(buf.parse::<usize>().unwrap())
+                } else {
+                    Tokens::String(buf)
+                }
+            },
+        };
         context.push(path, value);
     }
 

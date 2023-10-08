@@ -11,8 +11,8 @@ pub struct Line {
     status: Status,
     indent: usize,
     has_hyphen: bool,
-    key: String,
-    value: String,
+    key: Option<String>,
+    value: Option<String>,
 }
 impl Line {
     pub fn new() -> Self {
@@ -20,8 +20,8 @@ impl Line {
             status: Status::InIndent,
             indent: 0,
             has_hyphen: false,
-            key: String::from(""),
-            value: String::from(""),
+            key: None,
+            value: None,
         }
     }
 
@@ -53,7 +53,7 @@ impl Line {
                     self.status = Status::InKey;
                 },
                 _ => {
-                    self.key = String::from(c);
+                    self.key = Some(String::from(c));
                     self.status = Status::InKey;
                 },
             };
@@ -67,14 +67,23 @@ impl Line {
                     self.status = Status::InValue;
                 },
                 _ => {
-                    self.key += &String::from(c);
+                    if let Some(k) = self.key.clone() {
+                        self.key = Some(k + &String::from(c));
+                    };
                 },
             }
             return;
         }
 
         if self.status == Status::InValue {
-            self.value += &String::from(c);
+            if c == ' ' {
+                return;
+            }
+            if let Some(v) = self.value.clone() {
+                self.value = Some(v + &String::from(c));
+            } else {
+                self.value = Some(String::from(c));
+            };
             return;
         }
     }
@@ -88,11 +97,25 @@ impl Line {
     }
 
     pub fn get_key(&self) -> String {
-        self.key.clone()
+        if let Some(key) = self.key.clone() {
+            return key.to_string();
+        }
+        String::from("")
+    }
+
+    pub fn has_key(&self) -> bool {
+        self.key.is_some()
     }
 
     pub fn get_value(&self) -> String {
-        self.value.clone()
+        if let Some(value) = self.value.clone() {
+            return value.to_string();
+        }
+        String::from("")
+    }
+
+    pub fn has_value(&self) -> bool {
+        self.value.is_some()
     }
 
     pub fn is_ended(&self) -> bool {
