@@ -51,7 +51,6 @@ impl Line {
                 },
                 '-' => {
                     self.hyphen = true;
-                    self.indent += 2;
                     self.status = Status::InKey;
                 },
                 _ => {

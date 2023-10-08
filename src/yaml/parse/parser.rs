@@ -6,22 +6,20 @@ use crate::yaml::parse::line::Line;
 
 pub struct Parser {
     kvs: Kvs,
+    path: Path,
     last_indent: usize,
-    last_has_hyphen: bool,
-    next_mk_path: Option<Path>,
 }
 impl Parser {
     pub fn new() -> Self {
         Parser {
             kvs: Kvs::new(),
+            path: Path::new(),
             last_indent: 0,
-            last_has_hyphen: false,
-            next_mk_path: None,
         }
     }
 
     pub fn parse(&mut self, text: &str) -> Kvs {
-        self.push_mkdict(Path::new());
+        self.push_mkdict(self.path.clone());
 
         let mut line = Line::new();
         for c in text.chars() {
@@ -32,6 +30,7 @@ impl Parser {
             }
         }
         self.push_line(line);
+
         self.append_close_tags();
         self.push_enddict(Path::new());
 
@@ -39,40 +38,26 @@ impl Parser {
     }
 
     fn push_line(&mut self, line: Line) {
-        let mut path = self.get_last_path();
-
         if self.last_indent > line.get_indent() {
-            path.pop();
-            self.push(path.clone(), Tokens::EndDict);
-            path.pop();
-            path.push(&line.get_key());
+            self.path.pop();
+            self.push(self.path.clone(), Tokens::EndDict);
+            self.path.pop();
+            self.path.push(&line.get_key());
         }
         if self.last_indent < line.get_indent() {
-            if let Some(next) = self.next_mk_path.clone() {
-                if line.has_hyphen() {
-                    self.push(next.clone(), Tokens::MkArray);
-                } else {
-                    self.push(next.clone(), Tokens::MkDict);
-                }
-                self.next_mk_path = None;
-            };
-            path.push(&line.get_key());
+            self.path.push(&line.get_key());
         }
         if self.last_indent == line.get_indent() {
-            path.pop();
-            path.push(&line.get_key());
+            self.path.pop();
+            self.path.push(&line.get_key());
         }
-        // if !self.last_has_hyphen && line.has_hyphen() {
-        //     self.push(next.clone(), Tokens::MkArray);
-        // }
 
         self.last_indent = line.get_indent().clone();
 
         if !line.has_value() {
-            self.next_mk_path = Some(path.clone());
             return;
         }
-        self.push(path, self.judge_token(line.get_value()));
+        self.push(self.path.clone(), self.judge_token(line.get_value()));
     }
 
     fn judge_token(&self, text: String) -> Tokens {
@@ -105,16 +90,9 @@ impl Parser {
 
     fn append_close_tags(&mut self) {
         if self.last_indent > 0 {
-            let mut path = self.get_last_path();
+            let mut path = self.path.clone();
             path.pop();
             self.push_enddict(path);
         }
-    }
-
-    fn get_last_path(&self) -> Path {
-        if let Some(last) = self.kvs.list().last() {
-            return last.get_path();
-        };
-        Path::new()
     }
 }
