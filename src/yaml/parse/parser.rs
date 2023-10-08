@@ -54,7 +54,7 @@ impl Parser {
             if line.has_hyphen() {
                 if self.path.is_last_index() {
                     let index = self.path.get_last_index();
-                    self.path.push_index(index + 1);
+                    self.path.modify_index(index + 1);
                 } else {
                     self.push_mkarray(self.path.clone());
                     self.path.push_index(0);
@@ -114,10 +114,16 @@ impl Parser {
     }
 
     fn append_close_tags(&mut self) {
-        // if self.last_indent > 0 {
-        //     let mut path = self.path.clone();
-        //     path.pop();
-        //     self.push_enddict(path);
-        // }
+        if self.path.len() > 1 {
+            if self.path.is_last_index() {
+                self.path.pop();
+                self.push_endarray(self.path.clone());
+                self.path.pop();
+            } else {
+                self.path.pop();
+                self.push_enddict(self.path.clone());
+                self.path.pop();
+            }
+        }
     }
 }

@@ -67,3 +67,22 @@ fn test_null() {
         ]),
     );
 }
+
+#[test]
+fn test_array() {
+    let text = "a:\\n- b\\n- c";
+    let mut parser = Parser::new();
+    let actual = parser.parse(text);
+
+    assert_eq!(
+        actual,
+        Kvs::from(vec![
+            Kv::with(Path::from("$"), Tokens::MkDict),
+            Kv::with(Path::from("$.a"), Tokens::MkArray),
+            Kv::with(Path::from("$.a[0]"), Tokens::String("b".to_string())),
+            Kv::with(Path::from("$.a[1]"), Tokens::String("c".to_string())),
+            Kv::with(Path::from("$.a"), Tokens::EndArray),
+            Kv::with(Path::from("$"), Tokens::EndDict),
+        ]),
+    );
+}
