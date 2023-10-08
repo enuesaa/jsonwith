@@ -10,7 +10,7 @@ pub enum Status {
 pub struct Line {
     status: Status,
     indent: usize,
-    hasHyphen: bool,
+    has_hyphen: bool,
     key: String,
     value: String,
 }
@@ -19,7 +19,7 @@ impl Line {
         Self {
             status: Status::InIndent,
             indent: 0,
-            hasHyphen: false,
+            has_hyphen: false,
             key: String::from(""),
             value: String::from(""),
         }
@@ -49,7 +49,7 @@ impl Line {
                     self.indent += 1;
                 },
                 '-' => {
-                    self.hasHyphen = true;
+                    self.has_hyphen = true;
                     self.status = Status::InKey;
                 },
                 _ => {
@@ -79,7 +79,23 @@ impl Line {
         }
     }
 
+    pub fn get_indent(&self) -> usize {
+        self.indent.clone()
+    }
+
+    pub fn get_has_hyphen(&self) -> bool {
+        self.has_hyphen.clone()
+    }
+
+    pub fn get_key(&self) -> String {
+        self.key.clone()
+    }
+
+    pub fn get_value(&self) -> String {
+        self.value.clone()
+    }
+
     pub fn is_ended(&self) -> bool {
-        return false;
+        return self.status == Status::BreakLine;
     }
 }
