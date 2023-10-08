@@ -45,6 +45,7 @@ impl Parser {
             self.path.push(&line.get_key());
         }
         if self.last_indent < line.get_indent() {
+            self.push_mkdict(self.path.clone());
             self.path.push(&line.get_key());
         }
         if self.last_indent == line.get_indent() {
@@ -53,10 +54,15 @@ impl Parser {
                     let index = self.path.get_last_index();
                     self.path.push_index(index + 1);
                 } else {
+                    self.push_mkarray(self.path.clone());
                     self.path.push_index(0);
                 }
             } else {
-                self.path.pop();
+                if self.path.is_last_index() {
+                    self.path.pop();
+                    self.push_endarray(self.path.clone());
+                }
+                self.path.pop();    
                 self.path.push(&line.get_key());
             };
         };
@@ -95,6 +101,14 @@ impl Parser {
 
     fn push_enddict(&mut self, path: Path) {
         self.push(path, Tokens::EndDict);
+    }
+
+    fn push_mkarray(&mut self, path: Path) {
+        self.push(path, Tokens::MkArray);
+    }
+
+    fn push_endarray(&mut self, path: Path) {
+        self.push(path, Tokens::EndArray);
     }
 
     fn append_close_tags(&mut self) {
