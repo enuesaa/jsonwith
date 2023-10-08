@@ -7,6 +7,7 @@ pub enum Status {
     BreakLine,
 }
 
+#[derive(Clone)]
 pub struct Line {
     status: Status,
     indent: usize,

@@ -7,12 +7,14 @@ use crate::yaml::parse::line::Line;
 pub struct Parser {
     kvs: Kvs,
     last_indent: usize,
+    next_mk_path: Option<Path>,
 }
 impl Parser {
     pub fn new() -> Self {
         Parser {
             kvs: Kvs::new(),
             last_indent: 0,
+            next_mk_path: None,
         }
     }
 
@@ -21,11 +23,11 @@ impl Parser {
 
         let mut line = Line::new();
         for c in text.chars() {
+            line.push(c);
             if line.is_ended() {
                 self.push_context(line);
                 line = Line::new();
             }
-            line.push(c);
         }
         self.push_context(line);
         self.push_root_enddict();
@@ -44,6 +46,14 @@ impl Parser {
             path.push(&line.get_key());
         }
         if last_indent < line.get_indent() {
+            if let Some(next) = self.next_mk_path.clone() {
+                if line.get_has_hyphen() {
+                    self.push(next.clone(), Tokens::MkArray);
+                } else {
+                    self.push(next.clone(), Tokens::MkDict);
+                }
+                self.next_mk_path = None;
+            };
             path.push(&line.get_key());
         }
         if last_indent == line.get_indent() {
@@ -54,7 +64,7 @@ impl Parser {
         self.set_last_indent(line.get_indent());
 
         if !line.has_value() {
-            self.push(path, Tokens::MkDict);
+            self.next_mk_path = Some(path.clone());
             return;
         }
 
@@ -72,7 +82,6 @@ impl Parser {
                 }
             },
         };
-        println!("{:?}", path);
         self.push(path, value);
     }
 
