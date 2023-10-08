@@ -12,6 +12,7 @@ pub struct Line {
     status: Status,
     indent: usize,
     hyphen: bool,
+    colon: bool,
     key: Option<String>,
     value: Option<String>,
 }
@@ -21,6 +22,7 @@ impl Line {
             status: Status::InIndent,
             indent: 0,
             hyphen: false,
+            colon: false,
             key: None,
             value: None,
         }
@@ -65,12 +67,15 @@ impl Line {
             match c {
                 ' ' => {},
                 ':' => {
+                    self.colon = true;
                     self.status = Status::InValue;
                 },
                 _ => {
                     if let Some(k) = self.key.clone() {
                         self.key = Some(k + &String::from(c));
-                    };
+                    } else {
+                        self.key = Some(String::from(c));
+                    }
                 },
             }
             return;
@@ -86,6 +91,13 @@ impl Line {
                 self.value = Some(String::from(c));
             };
             return;
+        }
+    }
+
+    pub fn flush(&mut self) {
+        if !self.colon {
+            self.value = self.key.clone();
+            self.key = None;
         }
     }
 

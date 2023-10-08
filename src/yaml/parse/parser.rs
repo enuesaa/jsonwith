@@ -25,10 +25,12 @@ impl Parser {
         for c in text.chars() {
             line.push(c);
             if line.is_ended() {
+                line.flush();
                 self.push_line(line);
                 line = Line::new();
             }
         }
+        line.flush();
         self.push_line(line);
 
         self.append_close_tags();
