@@ -97,6 +97,10 @@ impl Path {
         };
         false
     }
+
+    pub fn len(&self) -> usize {
+        self.route.len()
+    }
 }
 
 impl From<&str> for Path {

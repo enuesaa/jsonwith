@@ -48,9 +48,18 @@ impl Parser {
             self.path.push(&line.get_key());
         }
         if self.last_indent == line.get_indent() {
-            self.path.pop();
-            self.path.push(&line.get_key());
-        }
+            if line.has_hyphen() {
+                if self.path.is_last_index() {
+                    let index = self.path.get_last_index();
+                    self.path.push_index(index + 1);
+                } else {
+                    self.path.push_index(0);
+                }
+            } else {
+                self.path.pop();
+                self.path.push(&line.get_key());
+            };
+        };
 
         self.last_indent = line.get_indent().clone();
 
@@ -89,10 +98,10 @@ impl Parser {
     }
 
     fn append_close_tags(&mut self) {
-        if self.last_indent > 0 {
-            let mut path = self.path.clone();
-            path.pop();
-            self.push_enddict(path);
-        }
+        // if self.last_indent > 0 {
+        //     let mut path = self.path.clone();
+        //     path.pop();
+        //     self.push_enddict(path);
+        // }
     }
 }
