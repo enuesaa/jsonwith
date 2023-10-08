@@ -37,13 +37,17 @@ impl Parser {
         let mut path = self.get_last_path();
 
         let last_indent = self.get_last_indent();
-        if last_indent >= line.get_indent() {
-            path.pop();
-        }
         if last_indent > line.get_indent() {
+            path.pop();
             self.push(path.clone(), Tokens::EndDict);
+            path.pop();
+            path.push(&line.get_key());
         }
-        if last_indent <= line.get_indent() {
+        if last_indent < line.get_indent() {
+            path.push(&line.get_key());
+        }
+        if last_indent == line.get_indent() {
+            path.pop();
             path.push(&line.get_key());
         }
 
@@ -68,6 +72,7 @@ impl Parser {
                 }
             },
         };
+        println!("{:?}", path);
         self.push(path, value);
     }
 
