@@ -1,108 +1,119 @@
+use crate::data::kv::Kv;
 use crate::data::kvs::Kvs;
-use crate::yaml::parse::context::Context;
-use crate::yaml::parse::context::Status;
+use crate::data::path::Path;
+use crate::data::tokens::Tokens;
+use crate::yaml::parse::line::Line;
 
-pub struct Parser {}
+pub struct Parser {
+    kvs: Kvs,
+    last_indent: usize,
+    next_mk_path: Option<Path>,
+}
 impl Parser {
     pub fn new() -> Self {
-        Parser {}
+        Parser {
+            kvs: Kvs::new(),
+            last_indent: 0,
+            next_mk_path: None,
+        }
     }
 
     pub fn parse(&mut self, text: &str) -> Kvs {
-        let mut context = Context::new();
+        self.push_root_mkdict();
 
+        let mut line = Line::new();
         for c in text.chars() {
-            match context.get_status() {
-                Status::InDictOrArray => self.parse_dict_or_array(&mut context, c),
-                Status::InValue => self.parse_value(&mut context, c),
-                Status::InKey => self.parse_key(&mut context, c),
-                Status::WaitingValue => self.parse_waiting_value(&mut context, c),
-                Status::WaitingNDictOrArray => self.parse_waiting_n_dict_or_array(&mut context, c),
-                Status::WaitingN => self.parse_waiting_n(&mut context, c),
+            line.push(c);
+            if line.is_ended() {
+                self.push_context(line);
+                line = Line::new();
+            }
+        }
+        self.push_context(line);
+        self.push_root_enddict();
+
+        self.kvs.clone()
+    }
+
+    fn push_context(&mut self, line: Line) {
+        let mut path = self.get_last_path();
+
+        let last_indent = self.get_last_indent();
+        if last_indent > line.get_indent() {
+            path.pop();
+            self.push(path.clone(), Tokens::EndDict);
+            path.pop();
+            path.push(&line.get_key());
+        }
+        if last_indent < line.get_indent() {
+            if let Some(next) = self.next_mk_path.clone() {
+                if line.get_has_hyphen() {
+                    self.push(next.clone(), Tokens::MkArray);
+                } else {
+                    self.push(next.clone(), Tokens::MkDict);
+                }
+                self.next_mk_path = None;
             };
+            path.push(&line.get_key());
         }
-        context.resolve_value();
-        context.end_root_dict(); // todo: refactor
-
-        context.get_kvs()
-    }
-
-    fn parse_dict_or_array(&mut self, context: &mut Context, c: char) {
-        println!("here is dict or array: {:?}", c);
-        match c {
-            ' ' => {},
-            '-' => {
-                // array
-                context.start_array();
-                context.declare_in_dict_or_array(); // here may be string 
-            }
-            _ => {
-                context.start_dict();
-                context.declare_in_key();
-                context.push_buf(c);
-            }
-        };
-    }
-
-    fn parse_value(&mut self, context: &mut Context, c: char) {
-        println!("here is value: {:?}", c);
-        match c {
-            '\\' => {
-                context.resolve_value(); // this is tmp
-                context.declare_waiting_n();
-            }
-            _ => {
-                context.push_buf(c);
-            }
+        if last_indent == line.get_indent() {
+            path.pop();
+            path.push(&line.get_key());
         }
-    }
 
-    fn parse_key(&mut self, context: &mut Context, c: char) {
-        println!("here is key: {:?}", c);
-        match c {
-            ':' => {
-                context.resolve_as_path();
-                context.declare_waiting_value();
-            }
-            _ => {
-                context.push_buf(c);
-            }
-        };
-    }
+        self.set_last_indent(line.get_indent());
 
-    fn parse_waiting_value(&mut self, context: &mut Context, c: char) {
-        println!("here is waiting value: {:?}", c);
-        match c {
-            '\\' => {
-                context.declare_waiting_n_dict_or_array();
-            }
-            ' ' => {}
-            _ => {
-                // we can not distinguish string or null. so, treat as string.
-                context.declare_in_value();
-                context.push_buf(c);
-            }
+        if !line.has_value() {
+            self.next_mk_path = Some(path.clone());
+            return;
         }
-    }
 
-    fn parse_waiting_n_dict_or_array(&mut self, context: &mut Context, c: char) {
-        println!("here is waiting n dict or array: {:?}", c);
-        match c {
-            'n' => {
-                context.declare_in_dict_or_array();
+        let buf = line.get_value();
+        let value = match buf.as_str() {
+            "null" => Tokens::Null,
+            "false" => Tokens::Bool(false),
+            "true" => Tokens::Bool(true),
+            "" => Tokens::String(buf),
+            _ => {
+                if buf.chars().all(|c| c.is_numeric()) {
+                    Tokens::Number(buf.parse::<usize>().unwrap())
+                } else {
+                    Tokens::String(buf)
+                }
             },
-            _ => {},
-        }
+        };
+        self.push(path, value);
     }
 
-    fn parse_waiting_n(&mut self, context: &mut Context, c: char) {
-        println!("here is waiting n: {:?}", c);
-        match c {
-            // oh..
-            'n' => {
-                context.declare_in_key();
-            }
-            _ => {}
+    fn push_root_mkdict(&mut self) {
+        self.push(Path::new(), Tokens::MkDict);
+    }
+
+    fn push_root_enddict(&mut self) {
+        if self.get_last_indent() > 0 {
+            let mut path = self.get_last_path();
+            path.pop();
+            self.push(path, Tokens::EndDict);
         }
+        self.push(Path::new(), Tokens::EndDict);
+    }
+
+    fn push(&mut self, path: Path, value: Tokens) {
+        self.kvs.push(Kv::with(path, value));
+    }
+
+    fn get_last_path(&self) -> Path {
+        if let Some(last) = self.kvs.list().last() {
+            return last.get_path();
+        };
+        Path::new()
+    }
+
+    fn get_last_indent(&self) -> usize {
+        self.last_indent.clone()
+    }
+
+    fn set_last_indent(&mut self, indent: usize) {
+        self.last_indent = indent;
     }
 }
