@@ -7,6 +7,7 @@ use crate::yaml::parse::line::Line;
 pub struct Parser {
     kvs: Kvs,
     last_indent: usize,
+    last_has_hyphen: bool,
     next_mk_path: Option<Path>,
 }
 impl Parser {
@@ -14,40 +15,41 @@ impl Parser {
         Parser {
             kvs: Kvs::new(),
             last_indent: 0,
+            last_has_hyphen: false,
             next_mk_path: None,
         }
     }
 
     pub fn parse(&mut self, text: &str) -> Kvs {
-        self.push_root_mkdict();
+        self.push_mkdict(Path::new());
 
         let mut line = Line::new();
         for c in text.chars() {
             line.push(c);
             if line.is_ended() {
-                self.push_context(line);
+                self.push_line(line);
                 line = Line::new();
             }
         }
-        self.push_context(line);
-        self.push_root_enddict();
+        self.push_line(line);
+        self.append_close_tags();
+        self.push_enddict(Path::new());
 
         self.kvs.clone()
     }
 
-    fn push_context(&mut self, line: Line) {
+    fn push_line(&mut self, line: Line) {
         let mut path = self.get_last_path();
 
-        let last_indent = self.get_last_indent();
-        if last_indent > line.get_indent() {
+        if self.last_indent > line.get_indent() {
             path.pop();
             self.push(path.clone(), Tokens::EndDict);
             path.pop();
             path.push(&line.get_key());
         }
-        if last_indent < line.get_indent() {
+        if self.last_indent < line.get_indent() {
             if let Some(next) = self.next_mk_path.clone() {
-                if line.get_has_hyphen() {
+                if line.has_hyphen() {
                     self.push(next.clone(), Tokens::MkArray);
                 } else {
                     self.push(next.clone(), Tokens::MkDict);
@@ -56,50 +58,57 @@ impl Parser {
             };
             path.push(&line.get_key());
         }
-        if last_indent == line.get_indent() {
+        if self.last_indent == line.get_indent() {
             path.pop();
             path.push(&line.get_key());
         }
+        // if !self.last_has_hyphen && line.has_hyphen() {
+        //     self.push(next.clone(), Tokens::MkArray);
+        // }
 
-        self.set_last_indent(line.get_indent());
+        self.last_indent = line.get_indent().clone();
 
         if !line.has_value() {
             self.next_mk_path = Some(path.clone());
             return;
         }
+        self.push(path, self.judge_token(line.get_value()));
+    }
 
-        let buf = line.get_value();
-        let value = match buf.as_str() {
+    fn judge_token(&self, text: String) -> Tokens {
+        match text.as_str() {
             "null" => Tokens::Null,
             "false" => Tokens::Bool(false),
             "true" => Tokens::Bool(true),
-            "" => Tokens::String(buf),
+            "" => Tokens::String(text),
             _ => {
-                if buf.chars().all(|c| c.is_numeric()) {
-                    Tokens::Number(buf.parse::<usize>().unwrap())
+                if text.chars().all(|c| c.is_numeric()) {
+                    Tokens::Number(text.parse::<usize>().unwrap())
                 } else {
-                    Tokens::String(buf)
+                    Tokens::String(text)
                 }
             },
-        };
-        self.push(path, value);
-    }
-
-    fn push_root_mkdict(&mut self) {
-        self.push(Path::new(), Tokens::MkDict);
-    }
-
-    fn push_root_enddict(&mut self) {
-        if self.get_last_indent() > 0 {
-            let mut path = self.get_last_path();
-            path.pop();
-            self.push(path, Tokens::EndDict);
         }
-        self.push(Path::new(), Tokens::EndDict);
     }
 
     fn push(&mut self, path: Path, value: Tokens) {
         self.kvs.push(Kv::with(path, value));
+    }
+
+    fn push_mkdict(&mut self, path: Path) {
+        self.push(path, Tokens::MkDict);
+    }
+
+    fn push_enddict(&mut self, path: Path) {
+        self.push(path, Tokens::EndDict);
+    }
+
+    fn append_close_tags(&mut self) {
+        if self.last_indent > 0 {
+            let mut path = self.get_last_path();
+            path.pop();
+            self.push_enddict(path);
+        }
     }
 
     fn get_last_path(&self) -> Path {
@@ -107,13 +116,5 @@ impl Parser {
             return last.get_path();
         };
         Path::new()
-    }
-
-    fn get_last_indent(&self) -> usize {
-        self.last_indent.clone()
-    }
-
-    fn set_last_indent(&mut self, indent: usize) {
-        self.last_indent = indent;
     }
 }
