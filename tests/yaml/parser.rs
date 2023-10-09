@@ -86,3 +86,24 @@ fn test_array() {
         ]),
     );
 }
+
+#[test]
+fn test_nested_dict() {
+    let text = "a:\\n  b: b-value\\n  c:\\n    d: d-value";
+    let mut parser = Parser::new();
+    let actual = parser.parse(text);
+
+    assert_eq!(
+        actual,
+        Kvs::from(vec![
+            Kv::with(Path::from("$"), Tokens::MkDict),
+            Kv::with(Path::from("$.a"), Tokens::MkDict),
+            Kv::with(Path::from("$.a.b"), Tokens::String("b-value".to_string())),
+            Kv::with(Path::from("$.a.c"), Tokens::MkDict),
+            Kv::with(Path::from("$.a.c.d"), Tokens::String("d-value".to_string())),
+            Kv::with(Path::from("$.a.c"), Tokens::EndDict),
+            Kv::with(Path::from("$.a"), Tokens::EndDict),
+            Kv::with(Path::from("$"), Tokens::EndDict),
+        ]),
+    );
+}
