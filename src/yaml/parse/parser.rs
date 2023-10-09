@@ -114,15 +114,13 @@ impl Parser {
     }
 
     fn append_close_tags(&mut self) {
-        if self.path.len() > 1 {
+        while self.path.len() > 1 {
             if self.path.is_last_index() {
                 self.path.pop();
                 self.push_endarray(self.path.clone());
-                self.path.pop();
             } else {
                 self.path.pop();
                 self.push_enddict(self.path.clone());
-                self.path.pop();
             }
         }
     }
