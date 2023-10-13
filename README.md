@@ -17,29 +17,35 @@ jsonwith json2yaml [JSON]
 
 ## Usage
 ### Format JSON
-```bash
-jsonwith format '{"a":"b"}'
+```console
+$ jsonwith format '{"a":"b"}'
+{
+  "a": "b"
+}
 ```
 Also, jsonwith reads stdin as json string.
-```bash
-echo '{"a":"b"}' | jsonwith format
+```console
+$ echo '{"a":"b"}' | jsonwith format
+{
+  "a": "b"
+}
 ```
 
 ### Format JSON with indent size
-```bash
-jsonwith format '{"a":"b"}' --indent 2
+```console
+$ jsonwith format '{"a":"b"}' --indent 4
+{
+    "a": "b"
+}
 ```
 
 ### Convert JSON to YAML
-```bash
-jsonwith json2yaml '{"a":"b"}'
+```console
+$ jsonwith json2yaml '{"a":"b"}'
+a: b
 ```
 Also, jsonwith reads stdin as json string.
-```bash
-echo '{"a":"b"}' | jsonwith json2yaml
-```
-
-### Convert JSON to YAML with indent size
-```bash
-jsonwith json2yaml '{"a":"b"}' --indent 2
+```console
+$ echo '{"a":"b"}' | jsonwith json2yaml
+a: b
 ```

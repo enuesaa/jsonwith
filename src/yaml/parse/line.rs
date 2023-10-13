@@ -1,3 +1,5 @@
+use crate::data::tokens::Tokens;
+
 #[derive(PartialEq, Clone, Debug)]
 pub enum Status {
     InIndent,
@@ -126,6 +128,23 @@ impl Line {
             return value.to_string();
         }
         String::from("")
+    }
+
+    pub fn get_value_as_token(&self) -> Tokens {
+        let text = self.get_value();
+        match text.as_str() {
+            "null" => Tokens::Null,
+            "false" => Tokens::Bool(false),
+            "true" => Tokens::Bool(true),
+            "" => Tokens::String(text),
+            _ => {
+                if text.chars().all(|c| c.is_numeric()) {
+                    Tokens::Number(text.parse::<usize>().unwrap())
+                } else {
+                    Tokens::String(text)
+                }
+            },
+        }
     }
 
     pub fn has_value(&self) -> bool {
