@@ -110,7 +110,7 @@ fn test_nested_dict() {
 
 #[test]
 fn test_dict_in_array() {
-    let text = "items:\\n- a:aa\\n  b:bb\\n- c:cc";
+    let text = "items:\\n- a:aa\\n  b:bb\\n- c:cc\\n- d:dd";
     let mut parser = Parser::new();
     let actual = parser.parse(text);
 
@@ -126,6 +126,9 @@ fn test_dict_in_array() {
             Kv::with(Path::from("$.items[1]"), Tokens::MkDict),
             Kv::with(Path::from("$.items[1].c"), Tokens::String("cc".to_string())),
             Kv::with(Path::from("$.items[1]"), Tokens::EndDict),
+            Kv::with(Path::from("$.items[2]"), Tokens::MkDict),
+            Kv::with(Path::from("$.items[2].d"), Tokens::String("dd".to_string())),
+            Kv::with(Path::from("$.items[2]"), Tokens::EndDict),
             Kv::with(Path::from("$.items"), Tokens::EndArray),
             Kv::with(Path::from("$"), Tokens::EndDict),
         ]),

@@ -19,7 +19,7 @@ impl Parser {
     }
 
     pub fn parse(&mut self, text: &str) -> Kvs {
-        self.push_mkdict(self.path.clone());
+        self.push_mkdict();
 
         let mut line = Line::new();
         for c in text.chars() {
@@ -34,65 +34,52 @@ impl Parser {
         self.push_line(line);
 
         self.append_close_tags();
-        self.push_enddict(Path::new());
 
         self.kvs.clone()
     }
 
     fn push_line(&mut self, line: Line) {
         if self.last_indent > line.get_indent() {
+            self.append_close_tag_of_prev_dict();
             self.path.pop();
-            self.push(self.path.clone(), Tokens::EndDict);
-            self.path.pop();
-            self.path.push(&line.get_key());
         }
         if self.last_indent < line.get_indent() {
             if line.has_hyphen() {
-                if self.path.is_last_index() {
-                    let index = self.path.get_last_index();
-                    self.path.modify_index(index + 1);
-                } else {
-                    self.push_mkarray(self.path.clone());
-                    self.path.push_index(0);
+                if !self.path.is_last_index() {
+                    self.push_mkarray();
                 }
+                self.plus_index();
             };
             if line.has_key() {
-                self.push_mkdict(self.path.clone());
-                self.path.push(&line.get_key());
+                self.push_mkdict();
             };
         }
         if self.last_indent == line.get_indent() {
             if line.has_hyphen() {
-                if self.path.is_last_index() {
-                    let index = self.path.get_last_index();
-                    self.path.modify_index(index + 1);
-                } else {
-                    // new dict starts here
-                    self.path.pop();
-                    self.push_enddict(self.path.clone());
-                    let index = self.path.get_last_index();
-                    self.path.modify_index(index + 1);
-                    if line.has_key() {
-                        self.push_mkdict(self.path.clone());
-                        self.path.push(&line.get_key());
-                    };
-                }
+                if !self.path.is_last_index() {
+                    self.append_close_tag_of_prev_dict();
+                };
+                self.plus_index();
+                if line.has_key() {
+                    self.push_mkdict();
+                };
             } else {
                 if self.path.is_last_index() {
                     self.path.pop();
-                    self.push_endarray(self.path.clone());
+                    self.push_endarray();
                 }
                 self.path.pop();    
-                self.path.push(&line.get_key());
             };
         };
 
         self.last_indent = line.get_indent().clone();
 
-        if !line.has_value() {
-            return;
-        }
-        self.push(self.path.clone(), self.judge_token(line.get_value()));
+        if line.has_key() {
+            self.path.push(&line.get_key());
+        };
+        if line.has_value() {
+            self.push(self.judge_token(line.get_value()));
+        };
     }
 
     fn judge_token(&self, text: String) -> Tokens {
@@ -111,34 +98,48 @@ impl Parser {
         }
     }
 
-    fn push(&mut self, path: Path, value: Tokens) {
-        self.kvs.push(Kv::with(path, value));
+    fn push(&mut self, value: Tokens) {
+        self.kvs.push(Kv::with(self.path.clone(), value));
     }
 
-    fn push_mkdict(&mut self, path: Path) {
-        self.push(path, Tokens::MkDict);
+    fn push_mkdict(&mut self) {
+        self.push(Tokens::MkDict);
     }
 
-    fn push_enddict(&mut self, path: Path) {
-        self.push(path, Tokens::EndDict);
+    fn push_enddict(&mut self) {
+        self.push(Tokens::EndDict);
     }
 
-    fn push_mkarray(&mut self, path: Path) {
-        self.push(path, Tokens::MkArray);
+    fn push_mkarray(&mut self) {
+        self.push(Tokens::MkArray);
     }
 
-    fn push_endarray(&mut self, path: Path) {
-        self.push(path, Tokens::EndArray);
+    fn push_endarray(&mut self) {
+        self.push(Tokens::EndArray);
+    }
+
+    fn plus_index(&mut self) {
+        if self.path.is_last_index() {
+            let index = self.path.get_last_index();
+            self.path.modify_index(index + 1);
+        } else {
+            self.path.push_index(0);
+        }
+    }
+
+    fn append_close_tag_of_prev_dict(&mut self) {
+        self.path.pop();
+        self.push_enddict();
     }
 
     fn append_close_tags(&mut self) {
-        while self.path.len() > 1 {
+        while self.path.len() > 0 {
             if self.path.is_last_index() {
                 self.path.pop();
-                self.push_endarray(self.path.clone());
+                self.push_endarray();
             } else {
                 self.path.pop();
-                self.push_enddict(self.path.clone());
+                self.push_enddict();
             }
         }
     }
