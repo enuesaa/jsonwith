@@ -7,7 +7,7 @@ pub enum Status {
     BreakLine,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Line {
     status: Status,
     indent: usize,
@@ -53,6 +53,7 @@ impl Line {
                 },
                 '-' => {
                     self.hyphen = true;
+                    self.indent += 2;
                     self.status = Status::InKey;
                 },
                 _ => {

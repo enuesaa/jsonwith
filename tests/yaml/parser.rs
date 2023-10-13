@@ -107,3 +107,27 @@ fn test_nested_dict() {
         ]),
     );
 }
+
+#[test]
+fn test_dict_in_array() {
+    let text = "items:\\n- a:aa\\n  b:bb\\n- c:cc";
+    let mut parser = Parser::new();
+    let actual = parser.parse(text);
+
+    assert_eq!(
+        actual,
+        Kvs::from(vec![
+            Kv::with(Path::from("$"), Tokens::MkDict),
+            Kv::with(Path::from("$.items"), Tokens::MkArray),
+            Kv::with(Path::from("$.items[0]"), Tokens::MkDict),
+            Kv::with(Path::from("$.items[0].a"), Tokens::String("aa".to_string())),
+            Kv::with(Path::from("$.items[0].b"), Tokens::String("bb".to_string())),
+            Kv::with(Path::from("$.items[0]"), Tokens::EndDict),
+            Kv::with(Path::from("$.items[1]"), Tokens::MkDict),
+            Kv::with(Path::from("$.items[1].c"), Tokens::String("cc".to_string())),
+            Kv::with(Path::from("$.items[1]"), Tokens::EndDict),
+            Kv::with(Path::from("$.items"), Tokens::EndArray),
+            Kv::with(Path::from("$"), Tokens::EndDict),
+        ]),
+    );
+}

@@ -47,10 +47,6 @@ impl Parser {
             self.path.push(&line.get_key());
         }
         if self.last_indent < line.get_indent() {
-            self.push_mkdict(self.path.clone());
-            self.path.push(&line.get_key());
-        }
-        if self.last_indent == line.get_indent() {
             if line.has_hyphen() {
                 if self.path.is_last_index() {
                     let index = self.path.get_last_index();
@@ -58,6 +54,28 @@ impl Parser {
                 } else {
                     self.push_mkarray(self.path.clone());
                     self.path.push_index(0);
+                }
+            };
+            if line.has_key() {
+                self.push_mkdict(self.path.clone());
+                self.path.push(&line.get_key());
+            };
+        }
+        if self.last_indent == line.get_indent() {
+            if line.has_hyphen() {
+                if self.path.is_last_index() {
+                    let index = self.path.get_last_index();
+                    self.path.modify_index(index + 1);
+                } else {
+                    // new dict starts here
+                    self.path.pop();
+                    self.push_enddict(self.path.clone());
+                    let index = self.path.get_last_index();
+                    self.path.modify_index(index + 1);
+                    if line.has_key() {
+                        self.push_mkdict(self.path.clone());
+                        self.path.push(&line.get_key());
+                    };
                 }
             } else {
                 if self.path.is_last_index() {
