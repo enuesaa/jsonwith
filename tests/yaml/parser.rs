@@ -134,3 +134,33 @@ fn test_dict_in_array() {
         ]),
     );
 }
+
+#[test]
+fn test_dict_in_array_has_indent() {
+    let text = "items:\\n- id: 1\\n  bb:\\n  - cc\\n  - dd\\n- id: 2\\n  bb:\\n  - ee";
+    let mut parser = Parser::new();
+    let actual = parser.parse(text);
+
+    assert_eq!(
+        actual,
+        Kvs::from(vec![
+            Kv::with(Path::from("$"), Tokens::MkDict),
+            Kv::with(Path::from("$.items"), Tokens::MkArray),
+            Kv::with(Path::from("$.items[0]"), Tokens::MkDict),
+            Kv::with(Path::from("$.items[0].id"), Tokens::Number(1)),
+            Kv::with(Path::from("$.items[0].bb"), Tokens::MkArray),
+            Kv::with(Path::from("$.items[0].bb[0]"), Tokens::String("cc".to_string())),
+            Kv::with(Path::from("$.items[0].bb[1]"), Tokens::String("dd".to_string())),
+            Kv::with(Path::from("$.items[0].bb"), Tokens::EndArray),
+            Kv::with(Path::from("$.items[0]"), Tokens::EndDict),
+            Kv::with(Path::from("$.items[1]"), Tokens::MkDict),
+            Kv::with(Path::from("$.items[1].id"), Tokens::Number(2)),
+            Kv::with(Path::from("$.items[1].bb"), Tokens::MkArray),
+            Kv::with(Path::from("$.items[1].bb[0]"), Tokens::String("ee".to_string())),
+            Kv::with(Path::from("$.items[1].bb"), Tokens::EndArray),
+            Kv::with(Path::from("$.items[1]"), Tokens::EndDict),
+            Kv::with(Path::from("$.items"), Tokens::EndArray),
+            Kv::with(Path::from("$"), Tokens::EndDict),
+        ]),
+    );
+}
