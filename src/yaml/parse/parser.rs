@@ -93,7 +93,6 @@ impl Parser {
     }
 
     fn push(&mut self, value: Tokens) {
-        // println!("{:?}", value);
         self.kvs.push(Kv::with(self.path.clone(), value));
     }
 
