@@ -41,8 +41,20 @@ impl Parser {
     fn push_line(&mut self, line: &mut Line) {
         line.flush();
         if self.last_indent > line.get_indent() {
-            self.append_close_tag();
-            self.path.pop();
+            // todo check logic
+            let retain_index = (self.last_indent - line.get_indent()) / 2;
+            while self.path.len() > retain_index + 1 {
+                self.append_close_tag();
+            };
+            if line.has_hyphen() {
+                if !self.path.is_last_index() {
+                    self.push(Tokens::MkArray);
+                };
+                self.plus_index();
+            };
+            if line.has_key() {
+                self.push(Tokens::MkDict);
+            };
         }
         if self.last_indent < line.get_indent() {
             if line.has_hyphen() {
@@ -81,6 +93,7 @@ impl Parser {
     }
 
     fn push(&mut self, value: Tokens) {
+        // println!("{:?}", value);
         self.kvs.push(Kv::with(self.path.clone(), value));
     }
 
