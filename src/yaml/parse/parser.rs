@@ -45,7 +45,7 @@ impl Parser {
             let retain_index = (self.last_indent - line.get_indent()) / 2;
             while self.path.len() > retain_index + 1 {
                 self.append_close_tag();
-            };
+            }
             if line.has_hyphen() {
                 if !self.path.is_last_index() {
                     self.push(Tokens::MkArray);

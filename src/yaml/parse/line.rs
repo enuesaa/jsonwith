@@ -40,11 +40,11 @@ impl Line {
                 'n' => {
                     self.status = Status::BreakLine;
                     return;
-                },
+                }
                 _ => {
                     // TODO: fix
                     self.status = Status::InValue;
-                },
+                }
             }
         };
 
@@ -52,34 +52,34 @@ impl Line {
             match c {
                 ' ' => {
                     self.indent += 1;
-                },
+                }
                 '-' => {
                     self.hyphen = true;
                     self.indent += 2;
                     self.status = Status::InKey;
-                },
+                }
                 _ => {
                     self.key = Some(String::from(c));
                     self.status = Status::InKey;
-                },
+                }
             };
             return;
         };
 
         if self.status == Status::InKey {
             match c {
-                ' ' => {},
+                ' ' => {}
                 ':' => {
                     self.colon = true;
                     self.status = Status::InValue;
-                },
+                }
                 _ => {
                     if let Some(k) = self.key.clone() {
                         self.key = Some(k + &String::from(c));
                     } else {
                         self.key = Some(String::from(c));
                     }
-                },
+                }
             }
             return;
         }
@@ -143,7 +143,7 @@ impl Line {
                 } else {
                     Tokens::String(text)
                 }
-            },
+            }
         }
     }
 

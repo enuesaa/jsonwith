@@ -149,14 +149,23 @@ fn test_append_close_tags_per_indent_size() {
             Kv::with(Path::from("$.items[0]"), Tokens::MkDict),
             Kv::with(Path::from("$.items[0].id"), Tokens::Number(1)),
             Kv::with(Path::from("$.items[0].bb"), Tokens::MkArray),
-            Kv::with(Path::from("$.items[0].bb[0]"), Tokens::String("cc".to_string())),
-            Kv::with(Path::from("$.items[0].bb[1]"), Tokens::String("dd".to_string())),
+            Kv::with(
+                Path::from("$.items[0].bb[0]"),
+                Tokens::String("cc".to_string())
+            ),
+            Kv::with(
+                Path::from("$.items[0].bb[1]"),
+                Tokens::String("dd".to_string())
+            ),
             Kv::with(Path::from("$.items[0].bb"), Tokens::EndArray),
             Kv::with(Path::from("$.items[0]"), Tokens::EndDict),
             Kv::with(Path::from("$.items[1]"), Tokens::MkDict),
             Kv::with(Path::from("$.items[1].id"), Tokens::Number(2)),
             Kv::with(Path::from("$.items[1].bb"), Tokens::MkArray),
-            Kv::with(Path::from("$.items[1].bb[0]"), Tokens::String("ee".to_string())),
+            Kv::with(
+                Path::from("$.items[1].bb[0]"),
+                Tokens::String("ee".to_string())
+            ),
             Kv::with(Path::from("$.items[1].bb"), Tokens::EndArray),
             Kv::with(Path::from("$.items[1]"), Tokens::EndDict),
             Kv::with(Path::from("$.items"), Tokens::EndArray),
@@ -179,16 +188,25 @@ fn test_append_close_tags_per_indent_size_with_nested_dict() {
             Kv::with(Path::from("$.items[0]"), Tokens::MkDict),
             Kv::with(Path::from("$.items[0].id"), Tokens::Number(1)),
             Kv::with(Path::from("$.items[0].bb"), Tokens::MkArray),
-            Kv::with(Path::from("$.items[0].bb[0]"), Tokens::String("cc".to_string())),
+            Kv::with(
+                Path::from("$.items[0].bb[0]"),
+                Tokens::String("cc".to_string())
+            ),
             Kv::with(Path::from("$.items[0].bb[1]"), Tokens::MkDict),
-            Kv::with(Path::from("$.items[0].bb[1].dd"),  Tokens::String("ff".to_string())),
+            Kv::with(
+                Path::from("$.items[0].bb[1].dd"),
+                Tokens::String("ff".to_string())
+            ),
             Kv::with(Path::from("$.items[0].bb[1]"), Tokens::EndDict),
             Kv::with(Path::from("$.items[0].bb"), Tokens::EndArray),
             Kv::with(Path::from("$.items[0]"), Tokens::EndDict),
             Kv::with(Path::from("$.items[1]"), Tokens::MkDict),
             Kv::with(Path::from("$.items[1].id"), Tokens::Number(2)),
             Kv::with(Path::from("$.items[1].bb"), Tokens::MkArray),
-            Kv::with(Path::from("$.items[1].bb[0]"), Tokens::String("ee".to_string())),
+            Kv::with(
+                Path::from("$.items[1].bb[0]"),
+                Tokens::String("ee".to_string())
+            ),
             Kv::with(Path::from("$.items[1].bb"), Tokens::EndArray),
             Kv::with(Path::from("$.items[1]"), Tokens::EndDict),
             Kv::with(Path::from("$.items"), Tokens::EndArray),
