@@ -1,8 +1,5 @@
 # jsonwith
-JSON Parser
-
-> **Note**
-> `jsonwith` is toy app.
+Toy JSON Parser & Formatter
 
 ## Install
 ```bash
@@ -10,13 +7,24 @@ cargo install --git https://github.com/enuesaa/jsonwith
 ```
 
 ## Commands
-```bash
-jsonwith format [JSON]
-jsonwith json2yaml [JSON]
+```console
+$ jsonwith --help
+JSON Parser
+
+Usage: jsonwith <COMMAND>
+
+Commands:
+  format     format json
+  json2yaml  convert json to yaml
+  yaml2json  convert yaml to json [under development]
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
 ```
 
 ## Usage
-### Format JSON
+### format
 ```console
 $ jsonwith format '{"a":"b"}'
 {
@@ -30,8 +38,7 @@ $ echo '{"a":"b"}' | jsonwith format
   "a": "b"
 }
 ```
-
-### Format JSON with indent size
+To specify tab size, pass `--indent` flag.
 ```console
 $ jsonwith format '{"a":"b"}' --indent 4
 {
@@ -39,7 +46,7 @@ $ jsonwith format '{"a":"b"}' --indent 4
 }
 ```
 
-### Convert JSON to YAML
+### json2yaml
 ```console
 $ jsonwith json2yaml '{"a":"b"}'
 a: b
