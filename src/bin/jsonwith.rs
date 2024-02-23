@@ -6,7 +6,7 @@ use jsonwith::{json2yaml, jsonformat, yaml2json};
 #[derive(Parser)]
 #[command(
     name = "jsonwith",
-    about = "JSON Parser",
+    about = "Toy JSON Parser & Formatter",
     disable_help_subcommand = true,
 )]
 pub struct Cli {

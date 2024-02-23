@@ -9,9 +9,9 @@ cargo install --git https://github.com/enuesaa/jsonwith
 ## Commands
 ```console
 $ jsonwith --help
-JSON Parser
+Toy JSON Parser & Formatter
 
-Usage: jsonwith <COMMAND>
+Usage: jsonwith [COMMAND]
 
 Commands:
   format     format json
@@ -19,8 +19,8 @@ Commands:
   yaml2json  convert yaml to json [under development]
 
 Options:
+  -v, --version  Print Version
   -h, --help     Print help
-  -V, --version  Print version
 ```
 
 ## Usage
