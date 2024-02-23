@@ -57,7 +57,7 @@ jobs:
           path: assets
 
       - run: ls -la assets
-      - run: shasum -a 256 release/*.tar.gz > assets/checksums.txt
+      - run: shasum -a 256 assets/*.tar.gz > assets/checksums.txt
 
       - run: |
           cat <<'EOF' | envsubst > release.md
