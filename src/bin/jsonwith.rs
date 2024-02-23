@@ -1,4 +1,4 @@
-use clap::{Args, Parser, Subcommand};
+use clap::{Args, Parser, Subcommand, crate_version, CommandFactory};
 use std::io::IsTerminal;
 
 use jsonwith::{json2yaml, jsonformat, yaml2json};
@@ -8,11 +8,13 @@ use jsonwith::{json2yaml, jsonformat, yaml2json};
     name = "jsonwith",
     about = "JSON Parser",
     disable_help_subcommand = true,
-    version
 )]
 pub struct Cli {
     #[command(subcommand)]
-    pub action: Actions,
+    pub action: Option<Actions>,
+
+    #[arg(short = 'v', long = "version", help = "Print Version", global = true)]
+    pub version: bool,
 }
 
 #[derive(Subcommand)]
@@ -53,10 +55,13 @@ pub struct Yaml2jsonArgs {
 
 fn main() {
     let args = Cli::parse();
-    let action = args.action;
+    if args.version {
+        println!("{}", crate_version!());
+        return;
+    }
 
-    match action {
-        Actions::Format(args) => {
+    match args.action {
+       Some(Actions::Format(args)) => {
             let json = args.json.unwrap_or_else(|| read_stdin());
             if json.len() == 0 {
                 println!("Error: missing required argument `json`");
@@ -65,7 +70,7 @@ fn main() {
             let result = jsonformat(&json, args.indent);
             println!("{}", result);
         }
-        Actions::Json2yaml(args) => {
+        Some(Actions::Json2yaml(args)) => {
             let json = args.json.unwrap_or_else(|| read_stdin());
             if json.len() == 0 {
                 println!("Error: missing required argument `json`");
@@ -74,7 +79,7 @@ fn main() {
             let result = json2yaml(&json, args.indent);
             println!("{}", result);
         }
-        Actions::Yaml2json(args) => {
+        Some(Actions::Yaml2json(args)) => {
             println!("Warning: The `yaml2json` subcommand is under development.");
             let yaml = args.yaml.unwrap_or_else(|| read_stdin());
             if yaml.len() == 0 {
@@ -83,6 +88,10 @@ fn main() {
             };
             let result = yaml2json(&yaml, 2);
             println!("{}", result);
+        }
+        None => {
+            let mut cmd = Cli::command();
+            let _ = cmd.print_help();
         }
     };
 }
