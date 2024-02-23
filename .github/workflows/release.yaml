@@ -10,9 +10,12 @@ permissions:
 
 jobs:
   release:
-    runs-on: ${{ matrix.job.os }}
+    runs-on: ${{ matrix.platform.os }}
     strategy:
       matrix:
+        # cross compile to these targets.
+        # see https://qiita.com/okmt765/items/ad3cdfb5850e68edcef0
+        # see https://dzfrias.dev/blog/deploy-rust-cross-platform-github-actions
         platform:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-musl
