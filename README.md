@@ -1,6 +1,8 @@
 # jsonwith
 Toy JSON Parser & Formatter 🎨
 
+[![ci](https://github.com/enuesaa/jsonwith/actions/workflows/ci.yml/badge.svg)](https://github.com/enuesaa/jsonwith/actions/workflows/ci.yml)
+
 ## Install
 ```bash
 cargo install --git https://github.com/enuesaa/jsonwith

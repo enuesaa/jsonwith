@@ -26,17 +26,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions-rs/toolchain@v1
+      - uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
-          target: ${{ matrix.platform.target }}
+          targets: ${{ matrix.platform.target }}
 
-      - uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --release --target ${{ matrix.platform.target }}
-      
-      - run: |
+      - name: build
+        run: cargo build --release --target ${{ matrix.platform.target }}
+
+      - name: package
+        run: |
           ARCHIVE_NAME=jsonwith-${{ github.ref_name }}-${{ matrix.platform.target }};
           mkdir $ARCHIVE_NAME;
           mv target/${{ matrix.platform.target }}/release/jsonwith $ARCHIVE_NAME/jsonwith;
