@@ -71,6 +71,5 @@ jobs:
 
       - uses: softprops/action-gh-release@v1
         with:
-          prerelease: true
           body_path: release.md
           files: assets/*
