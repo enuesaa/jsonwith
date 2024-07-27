@@ -1,12 +1,12 @@
 # jsonwith
-Toy JSON Parser & Formatter
+Toy JSON Parser & Formatter 🎨
 
 ## Install
 ```bash
 cargo install --git https://github.com/enuesaa/jsonwith
 ```
 
-## Commands
+## Usage
 ```console
 $ jsonwith --help
 Toy JSON Parser & Formatter
@@ -23,7 +23,7 @@ Options:
   -h, --help     Print help
 ```
 
-## Usage
+## SubCommands
 ### format
 ```console
 $ jsonwith format '{"a":"b"}'
@@ -33,7 +33,7 @@ $ jsonwith format '{"a":"b"}'
 ```
 Also, jsonwith reads stdin as json string.
 ```console
-$ echo '{"a":"b"}' | jsonwith format
+$ cat aa.json | jsonwith format
 {
   "a": "b"
 }
@@ -53,6 +53,6 @@ a: b
 ```
 Also, jsonwith reads stdin as json string.
 ```console
-$ echo '{"a":"b"}' | jsonwith json2yaml
+$ cat aa.json | jsonwith json2yaml
 a: b
 ```
