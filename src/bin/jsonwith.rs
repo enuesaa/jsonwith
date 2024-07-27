@@ -13,7 +13,8 @@ pub struct Cli {
     #[command(subcommand)]
     pub action: Option<Actions>,
 
-    #[arg(short = 'v', long = "version", help = "Print version", global = true)]
+    /// Print version
+    #[arg(short = 'v', long = "version", global = true)]
     pub version: bool,
 }
 
