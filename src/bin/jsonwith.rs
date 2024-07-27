@@ -13,43 +13,43 @@ pub struct Cli {
     #[command(subcommand)]
     pub action: Option<Actions>,
 
-    #[arg(short = 'v', long = "version", help = "Print Version", global = true)]
+    #[arg(short = 'v', long = "version", help = "Print version", global = true)]
     pub version: bool,
 }
 
 #[derive(Subcommand)]
 pub enum Actions {
-    /// format json
+    /// Format JSON
     Format(FormatArgs),
-    /// convert json to yaml
+    /// Convert JSON to YAML
     Json2yaml(Json2yamlArgs),
-    /// convert yaml to json [under development]
+    /// Convert YAML to JSON [Experimental]
     Yaml2json(Yaml2jsonArgs),
 }
 
 #[derive(Args)]
 pub struct FormatArgs {
-    /// json string like '{"a":"b"}'
+    /// JSON string like '{"a":"b"}'
     pub json: Option<String>,
 
-    /// indent size
+    /// Indent size
     #[arg(long, default_value_t = 2)]
     pub indent: usize,
 }
 
 #[derive(Args)]
 pub struct Json2yamlArgs {
-    /// json string like '{"a":"b"}'
+    /// JSON string like '{"a":"b"}'
     pub json: Option<String>,
 
-    /// indent size
+    /// Indent size
     #[arg(long, default_value_t = 2)]
     pub indent: usize,
 }
 
 #[derive(Args)]
 pub struct Yaml2jsonArgs {
-    /// yaml string like 'a: b\nc: d'
+    /// YAML string like 'a: b'
     pub yaml: Option<String>,
 }
 
@@ -64,7 +64,9 @@ fn main() {
        Some(Actions::Format(args)) => {
             let json = args.json.unwrap_or_else(|| read_stdin());
             if json.len() == 0 {
-                println!("Error: missing required argument `json`");
+                println!("Error: Missing required argument.");
+                println!("");
+                println!("Please provide JSON string like `jsonwith format '{{\"a\":\"b\"}}'`");
                 std::process::exit(0);
             };
             let result = jsonformat(&json, args.indent);
@@ -73,17 +75,21 @@ fn main() {
         Some(Actions::Json2yaml(args)) => {
             let json = args.json.unwrap_or_else(|| read_stdin());
             if json.len() == 0 {
-                println!("Error: missing required argument `json`");
+                println!("Error: Missing required argument.");
+                println!("");
+                println!("Please provide JSON string like `jsonwith format '{{\"a\":\"b\"}}'`");
                 std::process::exit(0);
             };
             let result = json2yaml(&json, args.indent);
             println!("{}", result);
         }
         Some(Actions::Yaml2json(args)) => {
-            println!("Warning: The `yaml2json` subcommand is under development.");
+            println!("Warning: The `yaml2json` is under development.");
             let yaml = args.yaml.unwrap_or_else(|| read_stdin());
             if yaml.len() == 0 {
-                println!("Error: missing required argument `yaml`");
+                println!("Error: missing required argument.");
+                println!("");
+                println!("Please provide YAML string like `jsonwith yaml2json 'a: b'`");
                 std::process::exit(0);
             };
             let result = yaml2json(&yaml, 2);

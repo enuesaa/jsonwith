@@ -16,16 +16,16 @@ Toy JSON Parser & Formatter
 Usage: jsonwith [COMMAND]
 
 Commands:
-  format     format json
-  json2yaml  convert json to yaml
-  yaml2json  convert yaml to json [under development]
+  format     Format JSON
+  json2yaml  Convert JSON to YAML
+  yaml2json  Convert YAML to JSON [Experimental]
 
 Options:
-  -v, --version  Print Version
+  -v, --version  Print version
   -h, --help     Print help
 ```
 
-## SubCommands
+## Sub Commands
 ### format
 ```console
 $ jsonwith format '{"a":"b"}'
@@ -35,7 +35,7 @@ $ jsonwith format '{"a":"b"}'
 ```
 Also, jsonwith reads stdin as json string.
 ```console
-$ cat aa.json | jsonwith format
+$ cat data.json | jsonwith format
 {
   "a": "b"
 }
@@ -55,6 +55,6 @@ a: b
 ```
 Also, jsonwith reads stdin as json string.
 ```console
-$ cat aa.json | jsonwith json2yaml
+$ cat data.json | jsonwith json2yaml
 a: b
 ```
