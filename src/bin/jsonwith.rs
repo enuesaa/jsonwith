@@ -1,4 +1,4 @@
-use clap::{Args, Parser, Subcommand, crate_version, CommandFactory};
+use clap::{crate_version, Args, CommandFactory, Parser, Subcommand};
 use std::io::IsTerminal;
 
 use jsonwith::{json2yaml, jsonformat, yaml2json};
@@ -7,7 +7,7 @@ use jsonwith::{json2yaml, jsonformat, yaml2json};
 #[command(
     name = "jsonwith",
     about = "Toy JSON Parser & Formatter",
-    disable_help_subcommand = true,
+    disable_help_subcommand = true
 )]
 pub struct Cli {
     #[command(subcommand)]
@@ -61,7 +61,7 @@ fn main() {
     }
 
     match args.action {
-       Some(Actions::Format(args)) => {
+        Some(Actions::Format(args)) => {
             let json = args.json.unwrap_or_else(|| read_stdin());
             if json.len() == 0 {
                 println!("Error: Missing required argument.");
