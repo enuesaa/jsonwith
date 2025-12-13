@@ -2,12 +2,12 @@ use jsonwith::data::kv::Kv;
 use jsonwith::data::kvs::Kvs;
 use jsonwith::data::path::Path;
 use jsonwith::data::tokens::Tokens;
-use jsonwith::json::parse::parser::Parser;
+use jsonwith::json::parse::parser::JsonParser;
 
 #[test]
 fn test_root_dict() {
     let text = "{\"a\": \"aaa\"}";
-    let mut parser = Parser::new();
+    let mut parser = JsonParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(
@@ -23,7 +23,7 @@ fn test_root_dict() {
 #[test]
 fn test_root_array() {
     let text = "[\"aaa\"]";
-    let mut parser = Parser::new();
+    let mut parser = JsonParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(
@@ -39,7 +39,7 @@ fn test_root_array() {
 #[test]
 fn test_root_string() {
     let text = "\"aaa\"";
-    let mut parser = Parser::new();
+    let mut parser = JsonParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(
@@ -54,7 +54,7 @@ fn test_root_string() {
 #[test]
 fn test_root_number() {
     let text = "107";
-    let mut parser = Parser::new();
+    let mut parser = JsonParser::new();
     let actual = parser.parse(text);
     println!("{:?}", actual);
 
@@ -67,7 +67,7 @@ fn test_root_number() {
 #[test]
 fn test_nested_dict() {
     let text = "{\"a\": \"aaa\", \"b\": {\"c\": \"ddd\"}, \"e\": 108}";
-    let mut parser = Parser::new();
+    let mut parser = JsonParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(

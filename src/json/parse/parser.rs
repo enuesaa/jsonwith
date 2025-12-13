@@ -3,10 +3,10 @@ use crate::data::tokens::Tokens;
 use crate::json::parse::context::Context;
 use crate::json::parse::context::Status;
 
-pub struct Parser {}
-impl Parser {
+pub struct JsonParser {}
+impl JsonParser {
     pub fn new() -> Self {
-        Parser {}
+        JsonParser {}
     }
 
     pub fn parse(&mut self, text: &str) -> Kvs {

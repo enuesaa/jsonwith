@@ -2,12 +2,12 @@ use jsonwith::data::kv::Kv;
 use jsonwith::data::kvs::Kvs;
 use jsonwith::data::path::Path;
 use jsonwith::data::tokens::Tokens;
-use jsonwith::yaml::parse::parser::Parser;
+use jsonwith::yaml::parse::parser::YamlParser;
 
 #[test]
 fn test_normal() {
     let text = "a: aaa";
-    let mut parser = Parser::new();
+    let mut parser = YamlParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(
@@ -23,7 +23,7 @@ fn test_normal() {
 #[test]
 fn test_number() {
     let text = "a: 99";
-    let mut parser = Parser::new();
+    let mut parser = YamlParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(
@@ -39,7 +39,7 @@ fn test_number() {
 #[test]
 fn test_bool() {
     let text = "a: true";
-    let mut parser = Parser::new();
+    let mut parser = YamlParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(
@@ -55,7 +55,7 @@ fn test_bool() {
 #[test]
 fn test_null() {
     let text = "a: null";
-    let mut parser = Parser::new();
+    let mut parser = YamlParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(
@@ -71,7 +71,7 @@ fn test_null() {
 #[test]
 fn test_array() {
     let text = "a:\\n- b\\n- c";
-    let mut parser = Parser::new();
+    let mut parser = YamlParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(
@@ -90,7 +90,7 @@ fn test_array() {
 #[test]
 fn test_nested_dict() {
     let text = "a:\\n  b: b-value\\n  c:\\n    d: d-value";
-    let mut parser = Parser::new();
+    let mut parser = YamlParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(
@@ -111,7 +111,7 @@ fn test_nested_dict() {
 #[test]
 fn test_dict_in_array() {
     let text = "items:\\n- a:aa\\n  b:bb\\n- c:cc\\n- d:dd";
-    let mut parser = Parser::new();
+    let mut parser = YamlParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(
@@ -138,7 +138,7 @@ fn test_dict_in_array() {
 #[test]
 fn test_append_close_tags_per_indent_size() {
     let text = "items:\\n- id: 1\\n  bb:\\n  - cc\\n  - dd\\n- id: 2\\n  bb:\\n  - ee";
-    let mut parser = Parser::new();
+    let mut parser = YamlParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(
@@ -177,7 +177,7 @@ fn test_append_close_tags_per_indent_size() {
 #[test]
 fn test_append_close_tags_per_indent_size_with_nested_dict() {
     let text = "items:\\n- id: 1\\n  bb:\\n  - cc\\n  - dd:ff\\n- id: 2\\n  bb:\\n  - ee";
-    let mut parser = Parser::new();
+    let mut parser = YamlParser::new();
     let actual = parser.parse(text);
 
     assert_eq!(

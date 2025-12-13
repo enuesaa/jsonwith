@@ -4,14 +4,14 @@ use crate::data::path::Path;
 use crate::data::tokens::Tokens;
 use crate::yaml::parse::line::Line;
 
-pub struct Parser {
+pub struct YamlParser {
     kvs: Kvs,
     path: Path,
     last_indent: usize,
 }
-impl Parser {
+impl YamlParser {
     pub fn new() -> Self {
-        Parser {
+        YamlParser {
             kvs: Kvs::new(),
             path: Path::new(),
             last_indent: 0,

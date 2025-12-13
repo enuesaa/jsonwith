@@ -5,14 +5,14 @@ use crate::json::render::processor::Processor;
 
 use super::process_indent::IndentProcessor;
 
-pub struct Renderer {
+pub struct JsonRenderer {
     lines: Vec<Line>,
     indent: usize,
 }
-impl Renderer {
+impl JsonRenderer {
     pub fn new(kvs: Kvs) -> Self {
         let lines: Vec<Line> = kvs.list().iter().map(|kv| Line::from(kv.clone())).collect();
-        Renderer { lines, indent: 2 }
+        JsonRenderer { lines, indent: 2 }
     }
 
     pub fn with_indent(&mut self, indent: usize) -> &mut Self {

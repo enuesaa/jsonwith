@@ -5,14 +5,14 @@ use crate::yaml::render::processor::Processor;
 use crate::yaml::render::process_dictinarray::DictInArrayProcessor;
 use crate::yaml::render::process_mapping::MappingProcessor;
 
-pub struct Renderer {
+pub struct YamlRenderer {
     lines: Vec<Line>,
     indent: usize,
 }
-impl Renderer {
+impl YamlRenderer {
     pub fn new(kvs: Kvs) -> Self {
         let lines: Vec<Line> = kvs.list().iter().map(|kv| Line::from(kv.clone())).collect();
-        Renderer { lines, indent: 2 }
+        YamlRenderer { lines, indent: 2 }
     }
 
     pub fn with_indent(&mut self, indent: usize) -> &mut Self {

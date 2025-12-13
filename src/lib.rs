@@ -2,10 +2,10 @@ pub mod data;
 pub mod json;
 pub mod yaml;
 
-use crate::json::parse::parser::Parser as JsonParser;
-use crate::json::render::renderer::Renderer as JsonRenderer;
-use crate::yaml::parse::parser::Parser as YamlParser;
-use crate::yaml::render::renderer::Renderer as YamlRenderer;
+use crate::json::parse::parser::JsonParser;
+use crate::json::render::renderer::JsonRenderer;
+use crate::yaml::parse::parser::YamlParser;
+use crate::yaml::render::renderer::YamlRenderer;
 
 pub fn jsonformat(value: &str, indent: usize) -> String {
     let kvs = JsonParser::new().parse(value);

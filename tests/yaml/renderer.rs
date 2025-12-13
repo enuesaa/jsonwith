@@ -2,11 +2,11 @@ use jsonwith::data::kv::Kv;
 use jsonwith::data::kvs::Kvs;
 use jsonwith::data::path::Path;
 use jsonwith::data::tokens::Tokens;
-use jsonwith::yaml::render::renderer::Renderer;
+use jsonwith::yaml::render::renderer::YamlRenderer;
 
 #[test]
 fn test_root_dict() {
-    let mut renderer = Renderer::new(Kvs::from(vec![
+    let mut renderer = YamlRenderer::new(Kvs::from(vec![
         Kv::with(Path::from("$"), Tokens::MkDict),
         Kv::with(Path::from("$.a"), Tokens::String("aaa".to_string())),
         Kv::with(Path::from("$"), Tokens::EndDict),
@@ -18,7 +18,7 @@ fn test_root_dict() {
 
 #[test]
 fn test_root_array() {
-    let mut renderer = Renderer::new(Kvs::from(vec![
+    let mut renderer = YamlRenderer::new(Kvs::from(vec![
         Kv::with(Path::from("$"), Tokens::MkArray),
         Kv::with(Path::from("$[0]"), Tokens::String("aaa".to_string())),
         Kv::with(Path::from("$"), Tokens::EndArray),
@@ -30,7 +30,7 @@ fn test_root_array() {
 
 #[test]
 fn test_array_in_dict() {
-    let mut renderer = Renderer::new(Kvs::from(vec![
+    let mut renderer = YamlRenderer::new(Kvs::from(vec![
         Kv::with(Path::from("$"), Tokens::MkDict),
         Kv::with(Path::from("$.a"), Tokens::MkArray),
         Kv::with(Path::from("$.a[0]"), Tokens::String("aaa".to_string())),
@@ -43,7 +43,7 @@ fn test_array_in_dict() {
 
 #[test]
 fn test_nested_dict() {
-    let mut renderer = Renderer::new(Kvs::from(vec![
+    let mut renderer = YamlRenderer::new(Kvs::from(vec![
         Kv::with(Path::from("$"), Tokens::MkDict),
         Kv::with(Path::from("$.a"), Tokens::String("aaa".to_string())),
         Kv::with(Path::from("$.b"), Tokens::MkDict),
