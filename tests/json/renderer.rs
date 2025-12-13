@@ -43,7 +43,7 @@ fn test_root_string() {
 fn test_root_number() {
     let mut renderer = JsonRenderer::new(Kvs::from(vec![Kv::with(
         Path::from("$"),
-        Tokens::Number(107),
+        Tokens::Number(107 as f64),
     )]));
     let actual = renderer.render();
 
@@ -58,7 +58,7 @@ fn test_nested_dict() {
         Kv::with(Path::from("$.b"), Tokens::MkDict),
         Kv::with(Path::from("$.b.c"), Tokens::String("ddd".to_string())),
         Kv::with(Path::from("$.b"), Tokens::EndDict),
-        Kv::with(Path::from("$.e"), Tokens::Number(108)),
+        Kv::with(Path::from("$.e"), Tokens::Number(108 as f64)),
         Kv::with(Path::from("$"), Tokens::EndDict),
     ]));
     let actual = renderer.render();

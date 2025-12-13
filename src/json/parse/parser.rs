@@ -11,7 +11,7 @@ impl JsonParser {
 
     pub fn parse(&mut self, text: &str) -> Kvs {
         let mut context = Context::new();
-        // because parse_number_value() cant judge last item when value is number, push white space to notify number.
+        // Because parse_number() cannot judge last item when value is number, push white space to notify number.
         let text = format!("{} ", text);
         for c in text.chars() {
             match context.get_status() {
@@ -85,11 +85,11 @@ impl JsonParser {
 
     fn parse_number(&mut self, context: &mut Context, c: char) {
         match c {
-            '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
+            '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '.' => {
                 context.push_buf(c);
             }
             _ => {
-                let value: usize = context.get_buf().parse().unwrap();
+                let value: f64 = context.get_buf().parse().unwrap();
                 context.resolve_value(Tokens::Number(value));
                 context.declare_in_space();
 

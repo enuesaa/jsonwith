@@ -60,7 +60,7 @@ fn test_root_number() {
 
     assert_eq!(
         actual,
-        Kvs::from(vec![Kv::with(Path::from("$"), Tokens::Number(107)),]),
+        Kvs::from(vec![Kv::with(Path::from("$"), Tokens::Number(107 as f64)),]),
     );
 }
 
@@ -78,7 +78,7 @@ fn test_nested_dict() {
             Kv::with(Path::from("$.b"), Tokens::MkDict),
             Kv::with(Path::from("$.b.c"), Tokens::String("ddd".to_string())),
             Kv::with(Path::from("$.b"), Tokens::EndDict),
-            Kv::with(Path::from("$.e"), Tokens::Number(108)),
+            Kv::with(Path::from("$.e"), Tokens::Number(108 as f64)),
             Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );

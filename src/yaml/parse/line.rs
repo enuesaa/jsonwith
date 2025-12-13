@@ -139,7 +139,7 @@ impl Line {
             "" => Tokens::String(text),
             _ => {
                 if text.chars().all(|c| c.is_numeric()) {
-                    Tokens::Number(text.parse::<usize>().unwrap())
+                    Tokens::Number(text.parse::<f64>().unwrap())
                 } else {
                     Tokens::String(text)
                 }

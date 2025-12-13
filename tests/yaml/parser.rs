@@ -30,7 +30,7 @@ fn test_number() {
         actual,
         Kvs::from(vec![
             Kv::with(Path::from("$"), Tokens::MkDict),
-            Kv::with(Path::from("$.a"), Tokens::Number(99)),
+            Kv::with(Path::from("$.a"), Tokens::Number(99 as f64)),
             Kv::with(Path::from("$"), Tokens::EndDict),
         ]),
     );
@@ -147,7 +147,7 @@ fn test_append_close_tags_per_indent_size() {
             Kv::with(Path::from("$"), Tokens::MkDict),
             Kv::with(Path::from("$.items"), Tokens::MkArray),
             Kv::with(Path::from("$.items[0]"), Tokens::MkDict),
-            Kv::with(Path::from("$.items[0].id"), Tokens::Number(1)),
+            Kv::with(Path::from("$.items[0].id"), Tokens::Number(1 as f64)),
             Kv::with(Path::from("$.items[0].bb"), Tokens::MkArray),
             Kv::with(
                 Path::from("$.items[0].bb[0]"),
@@ -160,7 +160,7 @@ fn test_append_close_tags_per_indent_size() {
             Kv::with(Path::from("$.items[0].bb"), Tokens::EndArray),
             Kv::with(Path::from("$.items[0]"), Tokens::EndDict),
             Kv::with(Path::from("$.items[1]"), Tokens::MkDict),
-            Kv::with(Path::from("$.items[1].id"), Tokens::Number(2)),
+            Kv::with(Path::from("$.items[1].id"), Tokens::Number(2 as f64)),
             Kv::with(Path::from("$.items[1].bb"), Tokens::MkArray),
             Kv::with(
                 Path::from("$.items[1].bb[0]"),
@@ -186,7 +186,7 @@ fn test_append_close_tags_per_indent_size_with_nested_dict() {
             Kv::with(Path::from("$"), Tokens::MkDict),
             Kv::with(Path::from("$.items"), Tokens::MkArray),
             Kv::with(Path::from("$.items[0]"), Tokens::MkDict),
-            Kv::with(Path::from("$.items[0].id"), Tokens::Number(1)),
+            Kv::with(Path::from("$.items[0].id"), Tokens::Number(1 as f64)),
             Kv::with(Path::from("$.items[0].bb"), Tokens::MkArray),
             Kv::with(
                 Path::from("$.items[0].bb[0]"),
@@ -201,7 +201,7 @@ fn test_append_close_tags_per_indent_size_with_nested_dict() {
             Kv::with(Path::from("$.items[0].bb"), Tokens::EndArray),
             Kv::with(Path::from("$.items[0]"), Tokens::EndDict),
             Kv::with(Path::from("$.items[1]"), Tokens::MkDict),
-            Kv::with(Path::from("$.items[1].id"), Tokens::Number(2)),
+            Kv::with(Path::from("$.items[1].id"), Tokens::Number(2 as f64)),
             Kv::with(Path::from("$.items[1].bb"), Tokens::MkArray),
             Kv::with(
                 Path::from("$.items[1].bb[0]"),

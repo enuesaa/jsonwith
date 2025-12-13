@@ -49,7 +49,7 @@ fn test_nested_dict() {
         Kv::with(Path::from("$.b"), Tokens::MkDict),
         Kv::with(Path::from("$.b.c"), Tokens::String("ddd".to_string())),
         Kv::with(Path::from("$.b"), Tokens::EndDict),
-        Kv::with(Path::from("$.e"), Tokens::Number(108)),
+        Kv::with(Path::from("$.e"), Tokens::Number(108 as f64)),
         Kv::with(Path::from("$"), Tokens::EndDict),
     ]));
     let actual = renderer.render();

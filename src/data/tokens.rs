@@ -1,7 +1,7 @@
 #[derive(Clone, Debug, PartialEq)]
 pub enum Tokens {
     String(String),
-    Number(usize),
+    Number(f64),
     Bool(bool),
     Null,
     MkArray,
