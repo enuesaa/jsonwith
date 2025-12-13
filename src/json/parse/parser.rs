@@ -48,7 +48,7 @@ impl JsonParser {
                 context.declare_in_bool();
                 context.push_buf(c);
             }
-            '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
+            '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '-' => {
                 context.declare_in_number();
                 context.push_buf(c);
             }
