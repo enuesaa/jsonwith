@@ -1,4 +1,4 @@
-use clap::{crate_version, Args, CommandFactory, Parser, Subcommand};
+use clap::{Args, CommandFactory, Parser, Subcommand, crate_version};
 use std::io::IsTerminal;
 
 use jsonwith::{json2yaml, jsonformat, yaml2json};
