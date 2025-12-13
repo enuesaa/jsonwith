@@ -78,7 +78,7 @@ fn main() {
             if json.len() == 0 {
                 println!("Error: Missing required argument.");
                 println!("");
-                println!("Please provide JSON string like `jsonwith format '{{\"a\":\"b\"}}'`");
+                println!("Please provide JSON string like `jsonwith json2yaml '{{\"a\":\"b\"}}'`");
                 std::process::exit(0);
             };
             let result = json2yaml(&json, args.indent);
