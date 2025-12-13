@@ -21,7 +21,10 @@ impl IndentProcessor {
     }
 
     fn decrement_space(&mut self) {
-        self.spaces -= self.indent.clone();
+        // TODO: this is work around. it is best to validate json structure and remove this logic.
+        if self.spaces > 0 {
+            self.spaces -= self.indent.clone();
+        }
     }
 
     fn is_last_start_array(&self) -> bool {
